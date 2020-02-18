@@ -10,7 +10,7 @@ class Attack{
     }
 
     attackStart(){
-        
+        this.to
     }
 
 }

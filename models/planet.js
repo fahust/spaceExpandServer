@@ -1,5 +1,6 @@
+module.exports =
 class Planet{
-    constructor(name,owner,timeBeforeAttack,timeRestAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,scienceLevel) {
+    constructor(name,owner,timeBeforeAttack,timeRestAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,scienceLevel,colorRed,colorGreen,colorBlue) {
         this.n = name; //name
         this.o = owner; //owner
         this.tba = timeBeforeAttack; //time before Attack
@@ -13,6 +14,10 @@ class Planet{
         this.d = defenseLevel; //defense level
         this.t = tradeLevel; //trade level
         this.s = scienceLevel; //trade level
+        this.cr1 = colorRed;
+        this.cg1 = colorGreen;
+        this.cb1 = colorBlue;
     }
+
 
 }

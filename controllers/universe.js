@@ -2,7 +2,7 @@ module.exports = app => {
     return {loadById};
 
     function loadById(req, res){
-        res.send(app.models.Universe.loadById(id));
+        res.send(app.models.Universe.loadById(req.body.id));
     }
 
     function connectUser(req, res){

@@ -28,7 +28,10 @@ function randomIntFromInterval(min, max) { // min and max included
 
         generate(){
             for (let index = 0; index <= 500; index++) {
-                this.planets.push(new Planet(this,'name',0,randomIntFromInterval(10000,90000),randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(1,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),1));
+                var fd = Date.now()+randomIntFromInterval(300000,1000000);
+                var planet = new Planet(this,'name',0,fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(1,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),1);
+                planet.generateAttackPnj();
+                this.planets.push(planet);
             }
         }
 

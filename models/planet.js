@@ -6,7 +6,7 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,name,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,scienceLevel,colorRed,colorGreen,colorBlue) {
+    constructor(universe,name,owner,timeBeginAttack,timeEndAttack,attack,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,scienceLevel,colorRed,colorGreen,colorBlue) {
         this.n = name; //name
         this.o = owner; //owner
         this.a; //attack obj
@@ -34,8 +34,9 @@ class Planet{
     }
 
     prepareAttackClient(req){
-        if(this.a.by <= 3)
-            this.a = new Attack(req.body.by,this.name,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5);
+        if(this.a.by <= 3){
+            this.a = new Attack(req.body.by,this.id,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5);
+        }
     }
 
     generateAttackPnj(){

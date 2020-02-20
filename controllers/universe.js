@@ -24,11 +24,11 @@ module.exports = app => {
 
     function launchAttack(req, res){
         app.universe.planets[req.body.id].prepareAttackClient(req);
-        //res.json(app.universe.loadById(req.body.id));
+        res.send("ok");
     }
 
     function colonize(req, res){
         app.universe.planets[req.body.id].prepareAttackClient(req);
-        //res.json(app.universe.loadById(req.body.id));
+        res.send("ok");
     }
 };

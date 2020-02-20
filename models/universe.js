@@ -4,25 +4,55 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-module.exports =
+
     
     class Universe{
 
-    constructor() {
-        this.planets = [];
-        this.generate();
-    }
-
-    loadById(id){
-        if(this.planets[id])
-            return this.planets[id];
-    }
-
-    generate(){
-        for (let index = 0; index < 5000; index++) {
-            this.planets.push(new Planet('name',0,randomIntFromInterval(10000,90000),randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(1,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),1));
-            
+        constructor() {
+            this.planets = [];
+            this.generate();
         }
+
+        loadById(id){
+            this.actualizOne(id);
+            this.planets[id].u = [];
+            var stringifiedPlanet = Object.assign(new Planet, this.planets[id]);
+            this.planets[id].u = this;
+            return stringifiedPlanet;
+        }
+
+        loadAll(){
+            this.actualizAll();
+            return this.planets;
+        }
+
+        generate(){
+            for (let index = 0; index <= 500; index++) {
+                this.planets.push(new Planet(this,'name',0,randomIntFromInterval(10000,90000),randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(1,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),1));
+            }
+        }
+
+        actualizOne(id){
+            this.planets[id].modeBlockus();
+            this.planets[id].checkFight();
+        }
+
+        actualizAll(){
+            for (let index = 0; index < this.planets.length; index++) {
+                this.planets[index].modeBlockus();
+                this.planets[index].checkFight();
+                this.planets[index].u = [];
+            }
+        }
+
+        addUtoAll(){
+            for (let index = 0; index < this.planets.length; index++) {
+                this.planets[index].u = this;
+            }
+        }
+
     }
-}
+
+    module.exports = Universe;
+
 

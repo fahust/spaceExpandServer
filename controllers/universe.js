@@ -1,42 +1,34 @@
+
+
 module.exports = app => {
-    return {loadById};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack};
 
-    function loadById(req, res){
-        res.send(app.models.Universe.loadById(req.body.id));
+    function loadById(req, res){//console.log(req)
+        res.json(app.universe.loadById(req.body.id));
     }
 
-    function connectUser(req, res){
-        app.models.User.findOne({ username: req.body.username }, function(err, user) {
-            if (err) throw err;
-        
-            // test a matching password
-            user.comparePassword(req.body.password, function(err, isMatch) {
-                if (err) throw err;
-                console.log(req.body.password, isMatch);
-                if(isMatch == true)
-                    res.send('You is connected');
-            });
-        });
+    function loadAll(req, res){
+        res.json(app.universe.loadAll());
+        app.universe.addUtoAll();
     }
 
-    function checkDeleteUser(req, res){
-        app.models.User.findOne({ username: req.body.username }, function(err, user) {
-            if (err) throw err;
-        
-            // test a matching password
-            user.comparePassword(req.body.password, function(err, isMatch) {
-                if (err) throw err;
-                console.log(req.body.password, isMatch);
-                if(isMatch == true)
-                    deleteUser(req, res, user._id);
-            });
-        });
+    function deleteShip(req, res){
+        app.universe.planets[req.body.id].deleteShip(req.body.cat,req.body.owner);
+        res.json(app.universe.loadById(req.body.id));
     }
 
-    function deleteUser(req, res, id){
-        app.models.User.findOneAndDelete({ _id: id }, function(err, user) {
-            if (err) throw err;
-            res.json('L\'utilisateur a bien été supprimé');
-        });
+    function addShip(req, res){
+        app.universe.planets[req.body.id].addShip(req.body.cat,req.body.owner);
+        res.json(app.universe.loadById(req.body.id));
+    }
+
+    function launchAttack(req, res){
+        app.universe.planets[req.body.id].prepareAttackClient(req);
+        //res.json(app.universe.loadById(req.body.id));
+    }
+
+    function colonize(req, res){
+        app.universe.planets[req.body.id].prepareAttackClient(req);
+        //res.json(app.universe.loadById(req.body.id));
     }
 };

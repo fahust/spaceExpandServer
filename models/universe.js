@@ -1,4 +1,6 @@
 var Planet = require('./planet.js');
+const fs = require('fs');
+
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -26,13 +28,41 @@ function randomIntFromInterval(min, max) { // min and max included
             return this.planets;
         }
 
+        loadSave(){
+            /*fs.readFile('../student.json', (err, data) => {
+                if (err) throw err;
+                let student = JSON.parse(data);
+                console.log(student);
+            });*/
+
+            /*try {
+                this.actualizAll();
+                let data = JSON.stringify(this.planets);
+                fs.writeFile('save.json', data, (err) => {
+                    if (err) throw err;
+                    console.log('Data written to file');
+                    this.addUtoAll();
+                });
+            } catch (err) {
+                console.error(err);
+            }*/
+        }
+
         generate(){
-            for (let index = 0; index <= 500; index++) {
+            fs.readFile('save.json', (err, data) => {
+                if (err) throw err;
+                let planets = JSON.parse(data);
+                for (let index = 0; index < planets.length; index++) {
+                    this.planets.push(Object.assign(new Planet(this), planets[index]));
+                }
+                console.log(this.planets);
+            });
+            /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
-                var planet = new Planet(this,'name',0,fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(1,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),1);
+                this.planets.push(new Planet(this,index,randomIntFromInterval(1,3),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(3,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
                 planet.generateAttackPnj();
-                this.planets.push(planet);
-            }
+            }*/
+            this.loadSave();
         }
 
         actualizOne(id){

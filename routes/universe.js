@@ -9,5 +9,11 @@ app.post('/universe/deleteship', app.controllers.universe.deleteShip);
 // 
 app.post('/universe/addship', app.controllers.universe.addShip);
 // 
+app.post('/universe/deleteDefense', app.controllers.universe.deleteDefense);
+// 
+app.post('/universe/addDefense', app.controllers.universe.addDefense);
+// 
+app.post('/universe/addTechnologie', app.controllers.universe.addTechnologie);
+// 
 app.post('/universe/launchattack', app.controllers.universe.launchAttack);
 };

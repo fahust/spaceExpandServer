@@ -40,12 +40,12 @@ class Planet{
         this.generateAttackPnj();
     }
 
-    prepareAttackClient(req){
+    prepareAttackClient(body){
         if(this.a){
             if(this.a.by <= 3)
-                this.a = new Attack(req.body.by,this.o,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5,req.body.sc6,req.body.sc7,req.body.idP);
+                this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP);
         }else{
-            this.a = new Attack(req.body.by,this.o,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5,req.body.sc6,req.body.sc7,req.body.idP);
+            this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP);
 
         }
     }

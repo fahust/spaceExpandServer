@@ -28,12 +28,7 @@ function randomIntFromInterval(min, max) { // min and max included
             return this.planets;
         }
 
-        loadSave(){
-            /*fs.readFile('../student.json', (err, data) => {
-                if (err) throw err;
-                let student = JSON.parse(data);
-                console.log(student);
-            });*/
+        Save(){
 
             /*try {
                 this.actualizAll();
@@ -55,14 +50,14 @@ function randomIntFromInterval(min, max) { // min and max included
                 for (let index = 0; index < planets.length; index++) {
                     this.planets.push(Object.assign(new Planet(this), planets[index]));
                 }
-                console.log(this.planets);
+                this.addUtoAll();
             });
             /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
                 this.planets.push(new Planet(this,index,randomIntFromInterval(1,3),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(3,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
                 planet.generateAttackPnj();
             }*/
-            this.loadSave();
+            this.Save();
         }
 
         actualizOne(id){

@@ -7,3 +7,44 @@ git push -u origin master
 
 first P all turn in local, atck by IA only
 Side client only load one P by one
+
+
+- au démarage client, coter serveur envoyé toute les P /*en fight complete, coter client faire une boucle sur TOUTE les P et pour celle non envoyé mêttre fight a 0*/
+
+- a chaque ouverture nouvelle P coter client envoyé coter serveur la P actuel
+
+- envoyé coter client a chaque construct vaisseau fini au serveur
+
+- coter client faire fight start and end avec date start et date end envoyé depuis serveur
+
+
+- faire continuellement un actualiz pour chercher si fight fini par rapport a date, si attaquant return planet
+
+
+FIGHT
+
+- quand attaqué connecté il envoi a chaque ship attaquant ou defenseur détruis une info au serveur
+
+
+- mettre une variable serveur attaquedNoConnected, quand attaqué non connecté variable reste a 1,  et a la fin du date fight si variable = 1 tout ce passe côter serveur, faire un ratio attaquant defensseur et gagnant
+
+
+FIN DU FIGHT
+
+
+- le serveur envoi la fin du fight au dernier ship detruis defense ou attack coter client attaqué
+
+- Si attaquedNoConnected et fin du fight, l'attaquant recoit l'info à sa première action (ship build,ship destroy, view planet)
+
+- 
+
+
+CONSTRUCT
+Faire ship par ship avec icone, pareil avec science combustion, propulsion , bouclier
+
+
+
+attaquant lance attack ->  attente de joueur connecté -> client receptione l'attaque -> ship destroy client to server -> Si aucune deconnection jusqu'a compter arrivé a 0 -> fin de la bataille -> enemi fui ou planet decolonize
+
+->si attaqué disconnected, blocus, si le temps du blocus est dépassé,decolonize
+

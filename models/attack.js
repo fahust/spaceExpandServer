@@ -8,8 +8,8 @@ class Attack{
         this.sc3 = shipCat3;
         this.sc4 = shipCat4;
         this.sc5 = shipCat5;
-        this.sc6 = shipCat4;
-        this.sc7 = shipCat5;
+        this.sc6 = shipCat6;
+        this.sc7 = shipCat7;
         this.idP = idPlanet;
         //this.toC = 0; //attackToConnected
     }

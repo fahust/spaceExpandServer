@@ -3,16 +3,19 @@
 module.exports = app => {
     return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie};
 
-    function loadById(req, res){//console.log(req)
-        res.json(app.universe.loadById(req.body.id));
+    function loadById(req, res){;
+        var body = JSON.parse(Object.keys(req.body))
+        res.json(app.universe.loadById(body.id));
     }
 
     function loadAll(req, res){
+        var body = JSON.parse(Object.keys(req.body))
         res.json(app.universe.loadAll());
         app.universe.addUtoAll();
     }
 
     function deleteShip(req, res){
+        var body = JSON.parse(Object.keys(req.body))
         app.universe.planets[req.body.id].deleteShip(req.body.cat,req.body.owner);
         res.json(app.universe.loadById(req.body.id));
     }
@@ -39,12 +42,15 @@ module.exports = app => {
 
     function launchAttack(req, res){
         app.universe.planets[req.body.id].prepareAttackClient(req);
+
         res.json(app.universe.loadById(req.body.id));
+
+
     }
 
     function colonize(req, res){
         app.universe.planets[req.body.id].prepareAttackClient(req);
-        //res.json(app.universe.loadById(req.body.id));
+        res.send("ok");
     }
 
 

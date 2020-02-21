@@ -58,7 +58,9 @@ function randomIntFromInterval(min, max) { // min and max included
                 console.log(this.planets);
             });
             /*for (let index = 0; index <= 500; index++) {
-                this.planets.push(new Planet(this,index,randomIntFromInterval(1,3),randomIntFromInterval(10000,90000),randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(3,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
+                var fd = Date.now()+randomIntFromInterval(300000,1000000);
+                this.planets.push(new Planet(this,index,randomIntFromInterval(1,3),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(3,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
+                planet.generateAttackPnj();
             }*/
             this.loadSave();
         }

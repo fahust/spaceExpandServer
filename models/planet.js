@@ -46,6 +46,7 @@ class Planet{
                 this.a = new Attack(req.body.by,this.o,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5,req.body.sc6,req.body.sc7,req.body.idP);
         }else{
             this.a = new Attack(req.body.by,this.o,req.body.sc1,req.body.sc2,req.body.sc3,req.body.sc4,req.body.sc5,req.body.sc6,req.body.sc7,req.body.idP);
+
         }
     }
 

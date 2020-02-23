@@ -88,7 +88,7 @@ class Planet{
     generateAttackPnj(){console.log('generate pnj')
         var randPnjFinal = 0;
         for (let index = 0; index < 15; index++) {
-            var randPnj = randomIntFromInterval(1,3);
+            var randPnj = randomIntFromInterval(2,4);
             if(randPnj != this.o)
                 randPnjFinal = randPnj;
         }

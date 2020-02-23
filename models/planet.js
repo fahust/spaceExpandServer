@@ -7,9 +7,20 @@ function randomIntFromInterval(min, max) { // min and max included
   module.exports =
 class Planet{
     constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,technoCombustion,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = 0) {
-        this.id = id; //name
+        this.id = id; //id de la planet
         this.o = owner; //owner
         this.a; //attack obj
+        this.aby;
+        //this.ato;
+        this.asc1;
+        this.asc2;
+        this.asc3;
+        this.asc4;
+        this.asc5;
+        this.asc6;
+        this.asc7;
+        this.aid;
+        this.aidP;
         this.tba = timeBeginAttack; //time begin Attack
         this.tea = timeEndAttack; //time end attack
         this.sc1 = shipCat1; //ship category 1
@@ -27,37 +38,71 @@ class Planet{
         this.tb = technoBouclier; //
         this.ta = technoAlliage; //
         this.u = universe;
-        this.lsd = Date.now();//last ship destroy
+        this.lsd = Date.now()+3600000;//last ship destroy
         this.cp = true;//connected player
-        this.ua = false;//under attack
+        this.ua = 0;//under attack
         this.lv = lastView;//last view on P by player for date rattrap
     }
 
-    endAttack(){
+    endAttack(){console.log('end attack')
         this.tba = Date.now()+randomIntFromInterval(300000,1000000);
         this.tea = this.tba+randomIntFromInterval(300000,500000);
-        this.ua = false;
+        this.ua = 0;
         this.generateAttackPnj();
     }
 
     prepareAttackClient(body){
-        if(this.a){
-            if(this.a.by <= 3)
-                this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP);
+        if(this.aby){
+            if(this.aby < 6){console.log(body)
+                this.tba = Date.now()+randomIntFromInterval(3000,5000);
+                this.tea = this.tba+randomIntFromInterval(3000000,5000000);
+                this.aby = body.by;
+                this.asc1 = body.sc1;
+                this.asc2 = body.sc2;
+                this.asc3 = body.sc3;
+                this.asc4 = body.sc4;
+                this.asc5 = body.sc5;
+                this.asc6 = body.sc6;
+                this.asc7 = body.sc7;
+                this.aid = body.id;
+                this.aidP = body.idp;
+                //this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP,this.id);
+            }
         }else{
-            this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP);
-
+            console.log(body)
+                this.tba = Date.now()+randomIntFromInterval(3000,5000);
+                this.tea = this.tba+randomIntFromInterval(3000000,5000000);
+                this.aby = body.by;
+                this.asc1 = body.sc1;
+                this.asc2 = body.sc2;
+                this.asc3 = body.sc3;
+                this.asc4 = body.sc4;
+                this.asc5 = body.sc5;
+                this.asc6 = body.sc6;
+                this.asc7 = body.sc7;
+                this.aid = body.id;
+                this.aidP = body.idp;
         }
     }
 
-    generateAttackPnj(){
+    generateAttackPnj(){console.log('generate pnj')
         var randPnjFinal = 0;
         for (let index = 0; index < 15; index++) {
-            randPnj = randomIntFromInterval(1,3);
+            var randPnj = randomIntFromInterval(1,3);
             if(randPnj != this.o)
                 randPnjFinal = randPnj;
         }
-        this.a = new Attack(randPnjFinal,this.o,randomIntFromInterval(0,this.sc1),randomIntFromInterval(1,this.sc2),randomIntFromInterval(1,this.sc3),randomIntFromInterval(0,this.sc4),randomIntFromInterval(0,this.sc5),randomIntFromInterval(0,this.sc6),randomIntFromInterval(0,this.sc7));
+        this.aby = randPnjFinal;
+        this.asc1 = randomIntFromInterval(0,this.sc1);
+        this.asc2 = randomIntFromInterval(0,this.sc2);
+        this.asc3 = randomIntFromInterval(0,this.sc3);
+        this.asc4 = randomIntFromInterval(0,this.sc4);
+        this.asc5 = randomIntFromInterval(0,this.sc5);
+        this.asc6 = randomIntFromInterval(0,this.sc6);
+        this.asc7 = randomIntFromInterval(0,this.sc7);
+        this.aid = this.o;
+        this.aidP = this.id;
+        //this.a = new Attack(randPnjFinal,this.o,randomIntFromInterval(0,this.sc1),randomIntFromInterval(1,this.sc2),randomIntFromInterval(1,this.sc3),randomIntFromInterval(0,this.sc4),randomIntFromInterval(0,this.sc5),randomIntFromInterval(0,this.sc6),randomIntFromInterval(0,this.sc7),this.id);
     }
 
     addShip(cat){
@@ -89,39 +134,39 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner){
-        if(owner == this.a.by){
+        if(owner == this.aby){console.log('atk ship destroy',cat)
             if(cat == 1) {
-                this.a.sc1 -= 1;
-                this.u.planets[this.a.idP].sc1 -= 1;
+                this.asc1 -= 1;
+                //this.u.planets[this.aidP].sc1 -= 1;
             }
             if(cat == 2) {
-                this.a.sc2 -= 1;
-                this.u.planets[this.a.idP].sc2 -= 1;
+                this.asc2 -= 1;
+                //this.u.planets[this.aidP].sc2 -= 1;
             }
             if(cat == 3) {
-                this.a.sc3 -= 1;
-                this.u.planets[this.a.idP].sc3 -= 1;
+                this.asc3 -= 1;
+                //this.u.planets[this.aidP].sc3 -= 1;
             }
             if(cat == 4) {
-                this.a.sc4 -= 1;
-                this.u.planets[this.a.idP].sc4 -= 1;
+                this.asc4 -= 1;
+                //this.u.planets[this.aidP].sc4 -= 1;
             }
             if(cat == 5) {
-                this.a.sc5 -= 1;
-                this.u.planets[this.a.idP].sc5 -= 1;
+                this.asc5 -= 1;
+                //this.u.planets[this.aidP].sc5 -= 1;
             }
             if(cat == 6) {
-                this.a.sc6 -= 1;
-                this.u.planets[this.a.idP].sc6 -= 1;
+                this.asc6 -= 1;
+                //this.u.planets[this.aidP].sc6 -= 1;
             }
             if(cat == 7) {
-                this.a.sc7 -= 1;
-                this.u.planets[this.a.idP].sc7 -= 1;
+                this.asc7 -= 1;
+                //this.u.planets[this.aidP].sc7 -= 1;
             }
-            endAttack = this.a.check();
-            if(endAttack == true)
+            //this.ato = this.ato;
+            if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.generateAttackPnj();
-        }else{
+        }else{console.log('def ship destroy',cat)
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;
@@ -129,6 +174,7 @@ class Planet{
             if(cat == 5) this.sc5 -= 1;
             if(cat == 6) this.sc6 -= 1;
             if(cat == 7) this.sc7 -= 1;
+            
             this.check();
         }
         this.lsd = Date.now();
@@ -143,40 +189,42 @@ class Planet{
     /*if player no send ship destroy mode blockus actived*/
     modeBlockus(){
         var dateNow = Date.now();
-        if(this.lsd+10000 < dateNow && this.cp == true && this.a.by > 3 ){
-            this.cp = false;
-        }
-        if(this.cp == false && this.lsd+3600000 < dateNow && this.a.by > 3 ){
-            this.decolonize();
+        if(this.aby){
+            if(this.lsd+10000 < dateNow && this.cp == true && this.aby > 5 && this.o > 5 ){
+                this.cp = false;
+            }
+            if(this.cp == false && this.lsd+3600000 < dateNow && this.aby > 5 && this.o > 5 ){
+                this.decolonize();
+            }
+        }else{
+            //this.generateAttackPnj();
         }
     }
 
     checkFight(){
-        if(Date.now() > this.tba && this.ua == false && Date.now() < this.tea){
-            this.ua = true;
-        }else if(Date.now() > this.tba && this.ua == true && Date.now() > this.tea){
-            this.endAttack();
+        if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
+            this.ua = 1;console.log('under attack',this.id)
+        }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea){
+            //this.endAttack();
         }
     }
 
-    decolonize(){
-        if(this.a){
-            this.o = this.a.by;
-            this.sc1 = 6; 
-            this.sc2 = 4; 
-            this.sc3 = 3; 
-            this.sc4 = 0; 
-            this.sc5 = 0; 
-            this.sc6 = 0; 
-            this.sc7 = 0; 
+    decolonize(){console.log('decolonize');
+            this.o = this.aby;
+            this.sc1 = this.asc1+10; 
+            this.sc2 = this.asc2; 
+            this.sc3 = this.asc3; 
+            this.sc4 = this.asc4; 
+            this.sc5 = this.asc5; 
+            this.sc6 = this.asc6; 
+            this.sc7 = this.asc7; 
             this.d = 0; //defense level
-            this.tc = 0; //techno
-            this.tl = 0; //techno
-            this.tm = 0; //techno
-            this.tb = 0; //techno
-            this.ta = 0; //techno
+            this.tc = 1; //techno
+            this.tl = 1; //techno
+            this.tm = 1; //techno
+            this.tb = 1; //techno
+            this.ta = 1; //techno
             this.endAttack();
-        }
     }
 
 

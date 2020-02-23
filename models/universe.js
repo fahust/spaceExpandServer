@@ -44,20 +44,20 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         generate(){
-            fs.readFile('save.json', (err, data) => {
+            /*fs.readFile('save.json', (err, data) => {
                 if (err) throw err;
                 let planets = JSON.parse(data);
                 for (let index = 0; index < planets.length; index++) {
                     this.planets.push(Object.assign(new Planet(this), planets[index]));
                 }
                 this.addUtoAll();
-            });
-            /*for (let index = 0; index <= 500; index++) {
+            });*/
+            for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
-                this.planets.push(new Planet(this,index,randomIntFromInterval(1,3),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(3,5),randomIntFromInterval(1,5),randomIntFromInterval(1,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
-                planet.generateAttackPnj();
-            }*/
-            this.Save();
+                this.planets.push(new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0));
+                //planet.generateAttackPnj();
+            }
+            //this.Save();
         }
 
         actualizOne(id){

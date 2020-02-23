@@ -48,3 +48,4 @@ attaquant lance attack ->  attente de joueur connecté -> client receptione l'at
 
 ->si attaqué disconnected, blocus, si le temps du blocus est dépassé,decolonize
 
+ATTAQUE SEULEMENT DEPUIS PLANETE MERE

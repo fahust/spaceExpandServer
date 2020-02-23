@@ -3,9 +3,10 @@
 module.exports = app => {
     return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie};
 
-    function loadById(req, res){;
+    function loadById(req, res){//console.log('loadbyid')
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.loadById(body.id));
+        //res.send('test')
     }
 
     function loadAll(req, res){
@@ -22,7 +23,7 @@ module.exports = app => {
 
     function addShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].addShip(body.cat);
+        app.universe.planets[body.id].addShip(body.cat);console.log(body.cat)
         res.json(app.universe.loadById(body.id));
     }
 
@@ -53,10 +54,14 @@ module.exports = app => {
 
     }
 
-    function colonize(req, res){
+    function stopAttack(){
+
+    }
+
+    /*function colonize(req, res){
         app.universe.planets[body.id].prepareAttackClient(req);
         res.send("ok");
-    }
+    }*/
 
 
 };

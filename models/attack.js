@@ -1,6 +1,6 @@
 module.exports =
 class Attack{
-    constructor(attackBy,attackTo,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,shipCat6,shipCat7,idPlanet) {
+    constructor(attackBy,attackTo,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,shipCat6,shipCat7,idPlanet,idParent) {
         this.by = attackBy;
         this.to = attackTo;
         this.sc1 = shipCat1;

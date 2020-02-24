@@ -1,7 +1,7 @@
 
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack};
 
     function loadById(req, res){//console.log('loadbyid')
         var body = JSON.parse(Object.keys(req.body));
@@ -48,14 +48,13 @@ module.exports = app => {
     function launchAttack(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].prepareAttackClient(body);
-
         res.json(app.universe.loadById(body.id));
-
-
     }
 
     function stopAttack(){
-
+        var body = JSON.parse(Object.keys(req.body));
+        app.universe.planets[body.id].prepareAttackClient(body);
+        res.json(app.universe.loadById(body.id));
     }
 
     /*function colonize(req, res){

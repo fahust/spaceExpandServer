@@ -12,11 +12,83 @@ function randomIntFromInterval(min, max) { // min and max included
 
         constructor() {
             this.planets = [];
+            this.transferShip = [];
+            this.transferMoney = [];
+            this.guilds = [];
+            this.message = [];
             this.generate();
         }
 
+        addMessage(body){
+            this.message.push(body.m);
+        }
+
+        loadLastTenMessage(){
+            lastMessage = [];
+            for (let index = this.message.length-10; index < this.message.length; index++) {
+                lastMessage.push(this.message[index]);
+            }
+            return lastMessage;
+        }
+
+        addGuild(){
+
+        }
+
+        joinGuild(){
+            
+        }
+
+        transferShipToOther(body){
+            var transfer = {};
+            transfer.sc1 = body.sc1;
+            transfer.sc2 = body.sc2;
+            transfer.sc3 = body.sc3;
+            transfer.sc4 = body.sc4;
+            transfer.sc5 = body.sc5;
+            transfer.sc6 = body.sc6;
+            transfer.sc7 = body.sc7;
+            transfer.to = body.to;
+            transfer.time = Date.now()+randomIntFromInterval(3000,5000);
+            this.transferShip.push(transfer);
+        }
+
+        transferMoneyToOther(body){
+            var transfer = {};
+            transfer.money = body.t;
+            transfer.to = body.to;
+            transfer.time = Date.now()+randomIntFromInterval(3000,5000);
+            this.transferMoney.push(transfer);
+        }
+
+        transferActualiz(){
+            for (let index = 0; index < this.transferShip.length; index++) {
+                if(this.transferShip[index].time < Date.now() ){
+                    this.planets[this.transferShip[index].to].sc1 += this.transferShip[index].sc1;
+                    this.planets[this.transferShip[index].to].sc2 += this.transferShip[index].sc2;
+                    this.planets[this.transferShip[index].to].sc3 += this.transferShip[index].sc3;
+                    this.planets[this.transferShip[index].to].sc4 += this.transferShip[index].sc4;
+                    this.planets[this.transferShip[index].to].sc5 += this.transferShip[index].sc5;
+                    this.planets[this.transferShip[index].to].sc6 += this.transferShip[index].sc6;
+                    this.planets[this.transferShip[index].to].sc7 += this.transferShip[index].sc7;
+                    delete this.transferShip[index];
+                }
+            }
+
+            for (let index = 0; index < this.transferMoney.length; index++) {
+                if(this.transferMoney[index].time < Date.now() ){
+                    this.planets[this.transferMoney[index].to].t += this.transferMoney[index].money;
+                    delete this.transferMoney[index];
+                }
+            }
+        }
+
+
         loadById(id){
             this.actualizOne(id);
+            this.transferActualiz();
+            this.planets[body.id].trade();
+            this.planets[id].lv = Date.now();
             this.planets[id].u = [];
             var stringifiedPlanet = Object.assign(new Planet, this.planets[id]);
             this.planets[id].u = this;
@@ -30,7 +102,7 @@ function randomIntFromInterval(min, max) { // min and max included
 
         Save(){
 
-            /*try {
+            try {
                 this.actualizAll();
                 let data = JSON.stringify(this.planets);
                 fs.writeFile('save.json', data, (err) => {
@@ -40,7 +112,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 });
             } catch (err) {
                 console.error(err);
-            }*/
+            }
         }
 
         generate(){

@@ -1,4 +1,3 @@
-var Attack = require('./attack.js');
 
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -31,7 +30,7 @@ class Planet{
         this.sc6 = shipCat6; //ship category 4
         this.sc7 = shipCat7; //ship category 5
         this.d = defenseLevel; //defense level
-        //this.t = tradeLevel; //
+        this.t = tradeLevel; //money
         this.tc = technoCombustion; //
         this.tl = technoLaser; //
         this.tm = technoMissile; //
@@ -44,18 +43,26 @@ class Planet{
         this.lv = lastView;//last view on P by player for date rattrap
     }
 
-    endAttack(){console.log('end attack')
+    endAttack(){console.log('end attack');
         this.tba = Date.now()+randomIntFromInterval(300000,1000000);
-        this.tea = this.tba+randomIntFromInterval(300000,500000);
+        this.tea = this.tba+randomIntFromInterval(30000000,50000000);
         this.ua = 0;
         this.generateAttackPnj();
     }
 
+    trade(){
+        if(this.t){console.log('rattrapage money',((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv));
+            this.t += ((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv);
+        }else{
+            this.t = 0;
+        }
+    }
+
     prepareAttackClient(body){
         if(this.aby){
-            if(this.aby < 6){console.log(body)
+            if(this.aby < 6){console.log(body);
                 this.tba = Date.now()+randomIntFromInterval(3000,5000);
-                this.tea = this.tba+randomIntFromInterval(3000000,5000000);
+                this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
@@ -66,12 +73,11 @@ class Planet{
                 this.asc7 = body.sc7;
                 this.aid = body.id;
                 this.aidP = body.idp;
-                //this.a = new Attack(body.by,this.o,body.sc1,body.sc2,body.sc3,body.sc4,body.sc5,body.sc6,body.sc7,body.idP,this.id);
             }
         }else{
-            console.log(body)
+            console.log(body);
                 this.tba = Date.now()+randomIntFromInterval(3000,5000);
-                this.tea = this.tba+randomIntFromInterval(3000000,5000000);
+                this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
@@ -85,7 +91,7 @@ class Planet{
         }
     }
 
-    generateAttackPnj(){console.log('generate pnj')
+    generateAttackPnj(){console.log('generate pnj');
         var randPnjFinal = 0;
         for (let index = 0; index < 15; index++) {
             var randPnj = randomIntFromInterval(2,4);
@@ -102,7 +108,6 @@ class Planet{
         this.asc7 = randomIntFromInterval(0,this.sc7);
         this.aid = this.o;
         this.aidP = this.id;
-        //this.a = new Attack(randPnjFinal,this.o,randomIntFromInterval(0,this.sc1),randomIntFromInterval(1,this.sc2),randomIntFromInterval(1,this.sc3),randomIntFromInterval(0,this.sc4),randomIntFromInterval(0,this.sc5),randomIntFromInterval(0,this.sc6),randomIntFromInterval(0,this.sc7),this.id);
     }
 
     addShip(cat){
@@ -137,36 +142,28 @@ class Planet{
         if(owner == this.aby){console.log('atk ship destroy',cat)
             if(cat == 1) {
                 this.asc1 -= 1;
-                //this.u.planets[this.aidP].sc1 -= 1;
             }
             if(cat == 2) {
                 this.asc2 -= 1;
-                //this.u.planets[this.aidP].sc2 -= 1;
             }
             if(cat == 3) {
                 this.asc3 -= 1;
-                //this.u.planets[this.aidP].sc3 -= 1;
             }
             if(cat == 4) {
                 this.asc4 -= 1;
-                //this.u.planets[this.aidP].sc4 -= 1;
             }
             if(cat == 5) {
                 this.asc5 -= 1;
-                //this.u.planets[this.aidP].sc5 -= 1;
             }
             if(cat == 6) {
                 this.asc6 -= 1;
-                //this.u.planets[this.aidP].sc6 -= 1;
             }
             if(cat == 7) {
                 this.asc7 -= 1;
-                //this.u.planets[this.aidP].sc7 -= 1;
             }
-            //this.ato = this.ato;
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.generateAttackPnj();
-        }else{console.log('def ship destroy',cat)
+        }else{console.log('def ship destroy',cat);
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;

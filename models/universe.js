@@ -143,7 +143,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.actualizOne(id);
             this.transferActualiz();
             this.planets[id].trade();
-            this.planets[id].shipBuild();
+            this.planets[id].rattrapageShipTechDef();
             this.planets[id].lv = Date.now();
             this.planets[id].u = [];
             var stringifiedPlanet = Object.assign(new Planet, this.planets[id]);
@@ -190,13 +190,13 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         actualizOne(id){
-            this.planets[id].modeBlockus();
+            //this.planets[id].modeBlockus();
             this.planets[id].checkFight();
         }
 
         actualizAll(){
             for (let index = 0; index < this.planets.length; index++) {
-                this.planets[index].modeBlockus();
+                //this.planets[index].modeBlockus();
                 this.planets[index].checkFight();
                 this.planets[index].u = [];
             }

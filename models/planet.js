@@ -188,8 +188,6 @@ class Planet{
     }
 
     addTechnologie(stat){
-        this.t += 10;
-        this.d += 10;
         if(this.r > Math.floor(stat*10000)){
             this.t += (Math.floor(stat)/100);
             if(this.t <= 100){

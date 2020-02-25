@@ -31,14 +31,68 @@ function randomIntFromInterval(min, max) { // min and max included
             return lastMessage;
         }
 
-        addGuild(){
-
+        addGuild(body){
+            if(!this.guilds[body.n]){
+                var guild = {};
+                guild.n = body.n;//name
+                guild.r = body.r;//ressource
+                guild.s = body.s;//score
+                guild.t = body.t;//techno
+                guild.m = body.cu;//maitre de guild
+                guild.o = [];//officier de guild //peuvent inviter
+                guild.u = [];
+                guild.u[body.cu] = 'master';
+                this.guilds[body.n] = guild;
+            }
         }
 
-        joinGuild(){
-            
+
+        ////GUILD
+        addGuildRessource(body){
+            this.guilds[body.n].r += body.r;
         }
 
+        takeGuildRessource(body){
+            //this.guilds[body.n].r += body.r;
+        }
+
+        addScore(body){
+            this.guilds[body.n].s += body.s;
+        }
+
+        joinGuild(body){
+            if(this.guilds[body.n] && body.cu){//cu = client user envoi le globalidfixe
+                if (this.guilds[body.n].u[body.cu] == 'invited'){
+                    this.guilds[body.n].u[body.cu] = 'recruit';
+                }
+            }
+        }
+
+        invitGuild(body){
+            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
+                    this.guilds[body.n].u[body.cui] = 'invited';//client user invited
+                }
+            } 
+        }
+
+        kickGuild(body){
+            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
+                    delete this.guilds[body.n].u[body.cui];//client user invited
+                }
+            } 
+        }
+
+        upGradeGuild(body){
+            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
+                    this.guilds[body.n].u[body.cui] = 'officier';//client user invited
+                }
+            } 
+        }
+
+        //TRANSFER
         transferShipToOther(body){
             var transfer = {};
             transfer.sc1 = body.sc1;
@@ -84,6 +138,7 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
 
+        ///LOAD
         loadById(id){
             this.actualizOne(id);
             this.transferActualiz();
@@ -100,6 +155,7 @@ function randomIntFromInterval(min, max) { // min and max included
             return this.planets;
         }
 
+        ///SAVE
         Save(){
 
             try {

@@ -55,6 +55,12 @@ module.exports = app => {
         res.json(app.universe.loadById(body.id));
     }
 
+    function transferShip(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        app.universe.planets[body.id].prepareAttackClient(body);
+        res.json(app.universe.loadById(body.id));
+    }
+
     function stopAttack(){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].prepareAttackClient(body);

@@ -41,6 +41,7 @@ class Planet{
         this.ss;
         this.st;
         this.sd;
+        this.dba;
     }
 
     endAttack(){console.log('end attack');

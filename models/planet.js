@@ -5,7 +5,7 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,tradeLevel,technoCombustion,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = 0) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technoCombustion,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.a; //attack obj
@@ -30,7 +30,7 @@ class Planet{
         this.sc6 = shipCat6; //ship category 4
         this.sc7 = shipCat7; //ship category 5
         this.d = defenseLevel; //defense level
-        this.t = tradeLevel; //money
+        this.r = ressource; //money
         this.tc = technoCombustion; //
         this.tl = technoLaser; //
         this.tm = technoMissile; //
@@ -41,6 +41,10 @@ class Planet{
         this.cp = true;//connected player
         this.ua = 0;//under attack
         this.lv = lastView;//last view on P by player for date rattrap
+        this.sr;
+        this.ss;
+        this.st;
+        this.sd;
     }
 
     endAttack(){console.log('end attack');
@@ -51,10 +55,51 @@ class Planet{
     }
 
     trade(){
-        if(this.t){console.log('rattrapage money',((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv));
-            this.t += ((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv);
+        if(this.r){//console.log('rattrapage money',(((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv))/10000);
+        //console.log('ship',(((1*1)+(1*2)+(1*3)+(1*5)+(1*10)+(1*50)+(1*100))*(Date.now()-this.lv))/10000)
+        //console.log((Date.now()-this.lv))
+            this.r += Math.floor((((this.sc1*1)+(this.sc2*2)+(this.sc3*3)+(this.sc4*5)+(this.sc5*10)+(this.sc6*50)+(this.sc7*100))*(Date.now()-this.lv))/100);
         }else{
-            this.t = 0;
+            this.r = 0;
+        }
+    }
+
+    shipBuild(){//console.log(Math.floor((Date.now()-this.lv)/5000));
+        //console.log('ss',this.ss)
+        if(this.ss >= 10 && this.ss < 20) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                this.addShip(1);
+            }
+        }
+        if(this.ss >= 20 && this.ss < 40) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                this.addShip(2);
+            }
+        }
+        if(this.ss >= 40 && this.ss < 60) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                this.addShip(3);
+            }
+        }
+        if(this.ss >= 60 && this.ss < 70) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                this.addShip(4);
+            }
+        }
+        if(this.ss >= 70 && this.ss < 80) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                this.addShip(5);
+            }
+        }
+        if(this.ss >= 80 && this.ss < 90) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                this.addShip(6);
+            }
+        }
+        if(this.ss >= 90) {
+            for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                this.addShip(7);
+            }
         }
     }
 
@@ -111,13 +156,34 @@ class Planet{
     }
 
     addShip(cat){
-        if(cat == 1) this.sc1 += 1;
-        if(cat == 2) this.sc2 += 1;
-        if(cat == 3) this.sc3 += 1;
-        if(cat == 4) this.sc4 += 1;
-        if(cat == 5) this.sc5 += 1;
-        if(cat == 6) this.sc6 += 1;
-        if(cat == 7) this.sc7 += 1;
+        if(cat == 1 && this.r > 50000) {
+            this.sc1 += 1;
+            this.r -= 50000;
+        }
+        if(cat == 2 && this.r > 200000){ 
+            this.sc2 += 1;
+            this.r -= 200000;
+        }
+        if(cat == 3 && this.r > 450000){ 
+            this.sc3 += 1;
+            this.r -= 450000;
+        }
+        if(cat == 4 && this.r > 800000){ 
+            this.sc4 += 1;
+            this.r -= 800000;
+        }
+        if(cat == 5 && this.r > 1250000){ 
+            this.sc5 += 1;
+            this.r -= 1250000;
+        }
+        if(cat == 6 && this.r > 10800000){ 
+            this.sc6 += 1;
+            this.r -= 10800000;
+        }
+        if(cat == 7 && this.r > 17150000){ 
+            this.sc7 += 1;
+            this.r -= 17150000;
+        }
     }
 
     addTechnologie(cat){
@@ -162,7 +228,7 @@ class Planet{
                 this.asc7 -= 1;
             }
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
-                this.generateAttackPnj();
+                this.endAttack();
         }else{console.log('def ship destroy',cat);
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;

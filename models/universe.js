@@ -142,7 +142,8 @@ function randomIntFromInterval(min, max) { // min and max included
         loadById(id){
             this.actualizOne(id);
             this.transferActualiz();
-            this.planets[body.id].trade();
+            this.planets[id].trade();
+            this.planets[id].shipBuild();
             this.planets[id].lv = Date.now();
             this.planets[id].u = [];
             var stringifiedPlanet = Object.assign(new Planet, this.planets[id]);

@@ -3,8 +3,12 @@
 module.exports = app => {
     return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack};
 
-    function loadById(req, res){//console.log('loadbyid')
+    function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
+        app.universe.planets[body.id].sr = body.sr;
+        app.universe.planets[body.id].ss = body.ss;
+        app.universe.planets[body.id].st = body.st;
+        app.universe.planets[body.id].sd = body.sd;
         res.json(app.universe.loadById(body.id));
         //res.send('test')
     }

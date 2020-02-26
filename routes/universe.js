@@ -16,4 +16,7 @@ app.post('/universe/addDefense', app.controllers.universe.addDefense);
 app.post('/universe/addTechnologie', app.controllers.universe.addTechnologie);
 // 
 app.post('/universe/launchattack', app.controllers.universe.launchAttack);
+// 
+app.post('/universe/transferShip', app.controllers.universe.transferShip);
+
 };

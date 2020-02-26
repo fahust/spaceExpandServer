@@ -14,6 +14,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.planets = [];
             this.transferShip = [];
             this.transferMoney = [];
+            this.commerce = [];
             this.guilds = [];
             this.message = [];
             this.generate();
@@ -31,6 +32,7 @@ function randomIntFromInterval(min, max) { // min and max included
             return lastMessage;
         }
 
+        ////GUILD
         addGuild(body){
             if(!this.guilds[body.n]){
                 var guild = {};
@@ -46,8 +48,6 @@ function randomIntFromInterval(min, max) { // min and max included
             }
         }
 
-
-        ////GUILD
         addGuildRessource(body){
             this.guilds[body.n].r += body.r;
         }
@@ -94,6 +94,8 @@ function randomIntFromInterval(min, max) { // min and max included
 
         //TRANSFER
         transferShipToOther(body){
+            if(!this.transferShip[body.cu])
+                this.transferShip[body.cu] = [];
             var transfer = {};
             transfer.sc1 = body.sc1;
             transfer.sc2 = body.sc2;
@@ -103,15 +105,37 @@ function randomIntFromInterval(min, max) { // min and max included
             transfer.sc6 = body.sc6;
             transfer.sc7 = body.sc7;
             transfer.to = body.to;
-            transfer.time = Date.now()+randomIntFromInterval(3000,5000);
-            this.transferShip.push(transfer);
+            transfer.cu = body.cu;
+            transfer.time = Date.now()+(body.d*100);//distance
+            this.transferShip[body.cu].push(transfer);
+            return transfer;
+        }
+
+        checkTransferShip(idUser,res){
+            if(this.transferShip[idUser]){
+                for (let index = 0; index < this.transferShip[idUser].length; index++) {
+                    if(Date.now() > this.transferShip[idUser][index].time){
+                        if(this.transferShip[idUser][index].to != 0){
+                            this.planets[this.transferShip[idUser][index].to].sc1 += this.transferShip[idUser][index].sc1;
+                            this.planets[this.transferShip[idUser][index].to].sc2 += this.transferShip[idUser][index].sc2;
+                            this.planets[this.transferShip[idUser][index].to].sc3 += this.transferShip[idUser][index].sc3;
+                            this.planets[this.transferShip[idUser][index].to].sc4 += this.transferShip[idUser][index].sc4;
+                            this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
+                            this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
+                            this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
+                        }else{
+                            res.json(this.transferShip[idUser][index]);
+                        }
+                    }
+                }
+            }
         }
 
         transferMoneyToOther(body){
             var transfer = {};
             transfer.money = body.t;
             transfer.to = body.to;
-            transfer.time = Date.now()+randomIntFromInterval(3000,5000);
+            transfer.time = Date.now()+(body.d*100);//distance
             this.transferMoney.push(transfer);
         }
 
@@ -139,16 +163,17 @@ function randomIntFromInterval(min, max) { // min and max included
 
 
         ///LOAD
-        loadById(id){
-            this.actualizOne(id);
+        loadById(body,res){
+            this.actualizOne(body.id);
             this.transferActualiz();
-            this.planets[id].trade();
-            this.planets[id].rattrapageShipTechDef();
-            this.planets[id].dba = Date.now()-this.planets[id].tba
-            this.planets[id].lv = Date.now();
-            this.planets[id].u = [];
-            var stringifiedPlanet = Object.assign(new Planet, this.planets[id]);
-            this.planets[id].u = this;
+            this.planets[body.id].trade();
+            this.planets[body.id].rattrapageShipTechDef();
+            this.planets[body.id].checkTransferShip(body.cu,res);
+            this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
+            this.planets[body.id].lv = Date.now();
+            this.planets[body.id].u = [];
+            var stringifiedPlanet = Object.assign(new Planet, this.planets[body.id]);
+            this.planets[body.id].u = this;
             return stringifiedPlanet;
         }
 

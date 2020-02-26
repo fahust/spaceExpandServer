@@ -21,37 +21,37 @@ module.exports = app => {
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].deleteShip(body.cat,body.owner);
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function addShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].addShip(body.cat);console.log(body.cat)
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function addDefense(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].addDefense();
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function deleteDefense(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].deleteDefense();
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function addTechnologie(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].addTechnologie();
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function launchAttack(req, res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].prepareAttackClient(body);
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     function transferShip(req, res){
@@ -62,7 +62,7 @@ module.exports = app => {
     function stopAttack(){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].prepareAttackClient(body);
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.loadById(body));
     }
 
     /*function colonize(req, res){

@@ -94,37 +94,52 @@ function randomIntFromInterval(min, max) { // min and max included
 
         //TRANSFER
         transferShipToOther(body){
-            if(!this.transferShip[body.cu])
-                this.transferShip[body.cu] = [];
-            var transfer = {};
-            transfer.sc1 = body.sc1;
-            transfer.sc2 = body.sc2;
-            transfer.sc3 = body.sc3;
-            transfer.sc4 = body.sc4;
-            transfer.sc5 = body.sc5;
-            transfer.sc6 = body.sc6;
-            transfer.sc7 = body.sc7;
-            transfer.to = body.to;
-            transfer.cu = body.cu;
-            transfer.time = Date.now()+(body.d*100);//distance
-            this.transferShip[body.cu].push(transfer);
-            return transfer;
+            if(!this.transferShip[JSON.stringify(body.cu)])
+                this.transferShip[JSON.stringify(body.cu)] = [];
+            this.planets[body.id].sc1 -= body.sc1;
+            this.planets[body.id].sc2 -= body.sc2;
+            this.planets[body.id].sc3 -= body.sc3;
+            this.planets[body.id].sc4 -= body.sc4;
+            this.planets[body.id].sc5 -= body.sc5;
+            this.planets[body.id].sc6 -= body.sc6;
+            this.planets[body.id].sc7 -= body.sc7;
+            if(body.to != 0){
+                var transfer = {};
+                transfer.sc1 = body.sc1;
+                transfer.sc2 = body.sc2;
+                transfer.sc3 = body.sc3;
+                transfer.sc4 = body.sc4;
+                transfer.sc5 = body.sc5;
+                transfer.sc6 = body.sc6;
+                transfer.sc7 = body.sc7;
+                transfer.to = body.to;
+                transfer.cu = body.cu;
+                transfer.time = Date.now()+(body.d*100);//distance
+                this.transferShip[JSON.stringify(body.cu)].push(transfer);
+            
+                console.log('transfer ship',this.transferShip[JSON.stringify(body.cu)]);
+                return transfer;
+            }
         }
 
-        checkTransferShip(idUser,res){
+        checkTransferShip(idUser){
             if(this.transferShip[idUser]){
                 for (let index = 0; index < this.transferShip[idUser].length; index++) {
-                    if(Date.now() > this.transferShip[idUser][index].time){
-                        if(this.transferShip[idUser][index].to != 0){
-                            this.planets[this.transferShip[idUser][index].to].sc1 += this.transferShip[idUser][index].sc1;
-                            this.planets[this.transferShip[idUser][index].to].sc2 += this.transferShip[idUser][index].sc2;
-                            this.planets[this.transferShip[idUser][index].to].sc3 += this.transferShip[idUser][index].sc3;
-                            this.planets[this.transferShip[idUser][index].to].sc4 += this.transferShip[idUser][index].sc4;
-                            this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
-                            this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
-                            this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
-                        }else{
-                            res.json(this.transferShip[idUser][index]);
+                    if(this.transferShip[idUser][index]){
+                        if(Date.now() > this.transferShip[idUser][index].time){
+                            if(this.transferShip[idUser][index].to != 0){
+                                this.planets[this.transferShip[idUser][index].to].sc1 += this.transferShip[idUser][index].sc1;
+                                this.planets[this.transferShip[idUser][index].to].sc2 += this.transferShip[idUser][index].sc2;
+                                this.planets[this.transferShip[idUser][index].to].sc3 += this.transferShip[idUser][index].sc3;
+                                this.planets[this.transferShip[idUser][index].to].sc4 += this.transferShip[idUser][index].sc4;
+                                this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
+                                this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
+                                this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
+                                console.log('transfered');
+                            }else{
+                                //res.json(this.transferShip[idUser][index]);
+                                delete this.transferShip[idUser][index];
+                            }
                         }
                     }
                 }
@@ -139,7 +154,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.transferMoney.push(transfer);
         }
 
-        transferActualiz(){
+        /*transferActualiz(){
             for (let index = 0; index < this.transferShip.length; index++) {
                 if(this.transferShip[index].time < Date.now() ){
                     this.planets[this.transferShip[index].to].sc1 += this.transferShip[index].sc1;
@@ -159,22 +174,24 @@ function randomIntFromInterval(min, max) { // min and max included
                     delete this.transferMoney[index];
                 }
             }
-        }
+        }*/
 
 
         ///LOAD
-        loadById(body,res){
-            this.actualizOne(body.id);
-            this.transferActualiz();
-            this.planets[body.id].trade();
-            this.planets[body.id].rattrapageShipTechDef();
-            this.planets[body.id].checkTransferShip(body.cu,res);
-            this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
-            this.planets[body.id].lv = Date.now();
-            this.planets[body.id].u = [];
-            var stringifiedPlanet = Object.assign(new Planet, this.planets[body.id]);
-            this.planets[body.id].u = this;
-            return stringifiedPlanet;
+        loadById(body){
+            if(body.id){
+                this.actualizOne(body.id);
+                //this.transferActualiz();
+                this.planets[body.id].trade();
+                this.planets[body.id].rattrapageShipTechDef();
+                this.checkTransferShip(body.cu);
+                this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
+                this.planets[body.id].lv = Date.now();
+                this.planets[body.id].u = [];
+                var stringifiedPlanet = Object.assign(new Planet, this.planets[body.id]);
+                this.planets[body.id].u = this;
+                return stringifiedPlanet;
+            }
         }
 
         loadAll(){

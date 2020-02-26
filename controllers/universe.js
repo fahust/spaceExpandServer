@@ -1,7 +1,7 @@
 
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -9,8 +9,7 @@ module.exports = app => {
         app.universe.planets[body.id].ss = body.ss;
         app.universe.planets[body.id].st = body.st;
         app.universe.planets[body.id].sd = body.sd;
-        res.json(app.universe.loadById(body.id));
-        //res.send('test')
+        res.json(app.universe.loadById(body,res));
     }
 
     function loadAll(req, res){
@@ -57,8 +56,7 @@ module.exports = app => {
 
     function transferShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].prepareAttackClient(body);
-        res.json(app.universe.loadById(body.id));
+        res.json(app.universe.transferShipToOther(body));
     }
 
     function stopAttack(){

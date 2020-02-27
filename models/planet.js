@@ -5,12 +5,11 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),guild = 0) {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.a; //attack obj
         this.aby;
-        //this.ato;
         this.asc1;
         this.asc2;
         this.asc3;
@@ -34,17 +33,17 @@ class Planet{
         this.t = technologie; //
         this.u = universe;
         this.lsd = Date.now()+3600000;//last ship destroy
-        this.cp = true;//connected player
+        //this.cp = true;//connected player
         this.ua = 0;//under attack
         this.lv = lastView;//last view on P by player for date rattrap
-        this.sr;
-        this.ss;
-        this.st;
-        this.sd;
-        this.dba;
+        this.ss;//Jauge Ship
+        this.st;//Jauge Tech
+        this.sd;//Jauge Defense
+        this.g = guild;//guild
+        //this.dba;
     }
 
-    endAttack(){console.log('end attack');
+    endAttack(){//console.log('end attack');
         this.tba = Date.now()+randomIntFromInterval(300000,1000000);
         this.tea = this.tba+randomIntFromInterval(30000000,50000000);
         this.ua = 0;
@@ -107,7 +106,7 @@ class Planet{
 
     prepareAttackClient(body){
         if(this.aby){
-            if(this.aby < 6){console.log(body);
+            if(this.aby < 6){//console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -122,7 +121,7 @@ class Planet{
                 this.aidP = body.idp;
             }
         }else{
-            console.log(body);
+            //console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -138,7 +137,7 @@ class Planet{
         }
     }
 
-    generateAttackPnj(){console.log('generate pnj');
+    generateAttackPnj(){//console.log('generate pnj');
         var randPnjFinal = 0;
         for (let index = 0; index < 15; index++) {
             var randPnj = randomIntFromInterval(2,4);
@@ -217,7 +216,7 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner){
-        if(owner == this.aby){console.log('atk ship destroy',cat)
+        if(owner == this.aby){//console.log('atk ship destroy',cat)
             if(cat == 1) {
                 this.asc1 -= 1;
             }
@@ -241,7 +240,7 @@ class Planet{
             }
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.endAttack();
-        }else{console.log('def ship destroy',cat);
+        }else{//console.log('def ship destroy',cat);
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;
@@ -253,7 +252,7 @@ class Planet{
             this.check();
         }
         this.lsd = Date.now();
-        this.cp = true;
+        //this.cp = true;
     }
 
     check(){
@@ -262,7 +261,7 @@ class Planet{
     }
 
     /*if player no send ship destroy mode blockus actived*/
-    modeBlockus(){
+    /*modeBlockus(){
         var dateNow = Date.now();
         if(this.aby){
             if(this.lsd+10000 < dateNow && this.cp == true && this.aby > 5 && this.o > 5 ){
@@ -274,17 +273,17 @@ class Planet{
         }else{
             //this.generateAttackPnj();
         }
-    }
+    }*/
 
     checkFight(){
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
-            this.ua = 1;console.log('under attack',this.id)
+            this.ua = 1;//console.log('under attack',this.id)
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea){
-            this.endAttack();console.log('time passed')
+            this.endAttack();//console.log('time passed')
         }
     }
 
-    decolonize(){console.log('decolonize');
+    decolonize(){//console.log('decolonize');
             this.o = this.aby;
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 

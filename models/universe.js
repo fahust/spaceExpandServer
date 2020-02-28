@@ -1,3 +1,4 @@
+"use strict";
 var Planet = require('./planet.js');
 const fs = require('fs');
 
@@ -36,6 +37,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.usersScore[body.cu].d = body.d;
             this.usersScore[body.cu].n = body.n;
             this.usersScore[body.cu].st = (body.r+body.s+body.t+body.d);
+            //console.log(this.usersScore);
         }
 
         loadUsersScore(body){
@@ -225,7 +227,9 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
                                 this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
                                 this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
+                                console.log(this.planets[this.transferShip[idUser][index].to].r);
                                 this.planets[this.transferShip[idUser][index].to].r += this.transferShip[idUser][index].r;
+                                console.log(this.planets[this.transferShip[idUser][index].to].r); 
                                 this.aopsc1 = this.transferShip[idUser][index].sc1;
                                 this.aopsc2 = this.transferShip[idUser][index].sc2;
                                 this.aopsc3 = this.transferShip[idUser][index].sc3;
@@ -253,9 +257,10 @@ function randomIntFromInterval(min, max) { // min and max included
                 //this.transferActualiz();
                 this.planets[body.id].trade();
                 this.planets[body.id].rattrapageShipTechDef();
-                this.checkTransferShip(body.cu);
+                if(body.cu)
+                    this.checkTransferShip(body.cu);
                 this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
-                this.planets[body.id].lv = Date.now();
+                //this.planets[body.id].lv = Date.now();
                 this.planets[body.id].u = [];
                 var stringifiedPlanet = Object.assign(new Planet(), this.planets[body.id]);
                 if (this.aopsc1+this.aopsc2+this.aopsc3+this.aopsc4+this.aopsc5+this.aopsc6+this.aopsc7 > 0 ){

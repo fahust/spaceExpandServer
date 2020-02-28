@@ -1,7 +1,9 @@
 
 
+"use strict";
+
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -9,7 +11,7 @@ module.exports = app => {
         app.universe.planets[body.id].ss = body.ss;
         app.universe.planets[body.id].st = body.st;
         app.universe.planets[body.id].sd = body.sd;
-        if(body.g != 0)
+        if(body.g)
             app.universe.planets[body.id].g = body.g;
         res.json(app.universe.loadById(body,res));
     }
@@ -29,7 +31,13 @@ module.exports = app => {
 
     function addShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].addShip(body.cat);console.log(body.cat)
+        app.universe.planets[body.id].addShip(body.cat);
+        res.json(app.universe.loadById(body));
+    }
+
+    function addShipMultipleShip(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        app.universe.planets[body.id].addShipMultipleShip(body);
         res.json(app.universe.loadById(body));
     }
 
@@ -51,9 +59,10 @@ module.exports = app => {
         res.json(app.universe.loadById(body));
     }
 
-    function addRessourceByShipEvent(req){
+    function addRessourceByShipEvent(req,res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].r += body.r;
+        res.json(app.universe.loadById(body));
     }
 
     /*MOVEMENT SHIP AND ATTACK*/
@@ -80,9 +89,20 @@ module.exports = app => {
         res.json(app.universe.loadUsersScore(body));
     }
 
-    function setUsersScore(req){
+    function setUsersScore(req, res){
         var body = JSON.parse(Object.keys(req.body));
+        //var arayPlanetOwned = [];
+        for (let index = 0; index < app.universe.planets.length; index++) {
+            if(app.universe.planets[index].o == body.cu){
+                body.t += app.universe.planets[index].t
+                //arayPlanetOwned.push(app.universe.planets[index]);//sert a renvoyer une liste des planete habité
+            }
+        }
         app.universe.setUsersScore(body);
+        var planetLoad = app.universe.loadById(body);
+        planetLoad.tsl = body.t;//tech score load
+        //console.log(planetLoad)
+        res.json(planetLoad);
     }
 
     /*MESSAGE*/

@@ -1,11 +1,13 @@
 
+"use strict";
+
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),guild = 0) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.a; //attack obj
@@ -39,11 +41,11 @@ class Planet{
         this.ss;//Jauge Ship
         this.st;//Jauge Tech
         this.sd;//Jauge Defense
-        this.g = guild;//guild
+        //this.g = guild;//guild
         //this.dba;
     }
 
-    endAttack(){//console.log('end attack');
+    endAttack(){console.log('end attack');
         this.tba = Date.now()+randomIntFromInterval(300000,1000000);
         this.tea = this.tba+randomIntFromInterval(30000000,50000000);
         this.ua = 0;
@@ -59,6 +61,7 @@ class Planet{
     }
 
     rattrapageShipTechDef(){//console.log(Math.floor((Date.now()-this.lv)/5000));
+        if(Math.floor((Date.now()-this.lv)/5000) >= 1) {this.lv = Date.now()}
         if(this.ss >= 10 && this.ss < 20) {
             for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
                 this.addShip(1);
@@ -106,7 +109,7 @@ class Planet{
 
     prepareAttackClient(body){
         if(this.aby){
-            if(this.aby < 6){//console.log(body);
+            if(this.aby < 6){console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -121,7 +124,7 @@ class Planet{
                 this.aidP = body.idp;
             }
         }else{
-            //console.log(body);
+            console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -154,6 +157,39 @@ class Planet{
         this.asc7 = randomIntFromInterval(0,this.sc7);
         this.aid = this.o;
         this.aidP = this.id;
+    }
+
+    addShipMultipleShip(body){
+        for (let index = 0; index < body.nbr; index++) {
+            if(body.cat == 1 && this.r > 50000) {
+                this.sc1 += 1;
+                this.r -= 50000;
+            }
+            if(body.cat == 2 && this.r > 200000){ 
+                this.sc2 += 1;
+                this.r -= 200000;
+            }
+            if(body.cat == 3 && this.r > 450000){ 
+                this.sc3 += 1;
+                this.r -= 450000;
+            }
+            if(body.cat == 4 && this.r > 800000){ 
+                this.sc4 += 1;
+                this.r -= 800000;
+            }
+            if(body.cat == 5 && this.r > 1250000){ 
+                this.sc5 += 1;
+                this.r -= 1250000;
+            }
+            if(body.cat == 6 && this.r > 10800000){ 
+                this.sc6 += 1;
+                this.r -= 10800000;
+            }
+            if(body.cat == 7 && this.r > 17150000){ 
+                this.sc7 += 1;
+                this.r -= 17150000;
+            }
+        }
     }
 
     addShip(cat){
@@ -216,7 +252,7 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner){
-        if(owner == this.aby){//console.log('atk ship destroy',cat)
+        if(owner == this.aby){console.log('atk ship destroy',cat)
             if(cat == 1) {
                 this.asc1 -= 1;
             }
@@ -240,7 +276,7 @@ class Planet{
             }
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.endAttack();
-        }else{//console.log('def ship destroy',cat);
+        }else{console.log('def ship destroy',cat);
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;
@@ -283,7 +319,7 @@ class Planet{
         }
     }
 
-    decolonize(){//console.log('decolonize');
+    decolonize(){console.log('decolonize');
             this.o = this.aby;
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 

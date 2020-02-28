@@ -77,11 +77,11 @@ function randomIntFromInterval(min, max) { // min and max included
             }else if(body.g != 0){
                 this.guilds[body.g].m.push();
             }
-            return loadLastTenMessage(body);
+            return this.loadLastTenMessage(body);
         }
 
         loadLastTenMessage(body){
-            lastMessage = [];
+            var lastMessage = [];
             if(body.g == 0){
                 for (let index = this.message.length-10; index < this.message.length; index++) {
                     if(this.message[index])
@@ -110,7 +110,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.u[body.cu] = 'master';
                 guild.m = [];
                 this.guilds[body.n] = guild;
-                return loadGuild(body);
+                return this.loadGuild(body);
             }
         }
 
@@ -123,7 +123,7 @@ function randomIntFromInterval(min, max) { // min and max included
         addGuildRessource(body){
             if(this.guilds[body.n]){
                 this.guilds[body.n].r += body.r;
-                return loadGuild(body);
+                return this.loadGuild(body);
             }
         }
 
@@ -132,14 +132,14 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
                     this.guilds[body.n].r += body.r;
                 }
-                return loadGuild(body);
+                return this.loadGuild(body);
             }
         }
 
         addScore(body){
             if(this.guilds[body.n]){
                 this.guilds[body.n].s += body.s;
-                return loadGuild(body);
+                return this.loadGuild(body);
             }
         }
 
@@ -148,7 +148,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'invited'){
                     this.guilds[body.n].u[body.cu] = 'recruit';
                 }
-                return loadGuild(body);
+                return this.loadGuild(body);
             }
         }
 
@@ -157,7 +157,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
                     this.guilds[body.n].u[body.cui] = 'invited';//client user invited
                 }
-                return loadGuild(body);
+                return this.loadGuild(body);
             } 
         }
 
@@ -165,8 +165,11 @@ function randomIntFromInterval(min, max) { // min and max included
             if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
                     delete this.guilds[body.n].u[body.cui];//client user invited
+                    this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) { //suprimer empty element of array
+                        return el != null || undefined; 
+                    }); 
                 }
-                return loadGuild(body);
+                return this.loadGuild(body);
             } 
         }
 
@@ -175,7 +178,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
                     this.guilds[body.n].u[body.cui] = 'officier';//client user invited
                 }
-                return loadGuild(body);
+                return this.loadGuild(body);
             } 
         }
 
@@ -205,7 +208,6 @@ function randomIntFromInterval(min, max) { // min and max included
                 transfer.cu = body.cu;
                 transfer.time = Date.now()+(body.d*100);//distance
                 this.transferShip[JSON.stringify(body.cu)].push(transfer);
-            
                 //console.log('transfer ship',this.transferShip[JSON.stringify(body.cu)]);
                 return transfer;
             }
@@ -227,9 +229,9 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
                                 this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
                                 this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
-                                console.log(this.planets[this.transferShip[idUser][index].to].r);
+                                //console.log(this.planets[this.transferShip[idUser][index].to].r);
                                 this.planets[this.transferShip[idUser][index].to].r += this.transferShip[idUser][index].r;
-                                console.log(this.planets[this.transferShip[idUser][index].to].r); 
+                                //console.log(this.planets[this.transferShip[idUser][index].to].r); 
                                 this.aopsc1 = this.transferShip[idUser][index].sc1;
                                 this.aopsc2 = this.transferShip[idUser][index].sc2;
                                 this.aopsc3 = this.transferShip[idUser][index].sc3;
@@ -254,13 +256,11 @@ function randomIntFromInterval(min, max) { // min and max included
         loadById(body){
             if(body.id){
                 this.actualizOne(body.id);
-                //this.transferActualiz();
                 this.planets[body.id].trade();
                 this.planets[body.id].rattrapageShipTechDef();
                 if(body.cu)
                     this.checkTransferShip(body.cu);
                 this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
-                //this.planets[body.id].lv = Date.now();
                 this.planets[body.id].u = [];
                 var stringifiedPlanet = Object.assign(new Planet(), this.planets[body.id]);
                 if (this.aopsc1+this.aopsc2+this.aopsc3+this.aopsc4+this.aopsc5+this.aopsc6+this.aopsc7 > 0 ){
@@ -305,21 +305,24 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         generate(){
-            /*fs.readFile('save.json', (err, data) => {
+            fs.readFile('save.json', (err, data) => {
                 if (err) throw err;
                 let planets = JSON.parse(data);
                 for (let index = 0; index < planets.length; index++) {
                     this.planets.push(Object.assign(new Planet(this), planets[index]));
                 }
                 this.addUtoAll();
-            });*/
-            for (let index = 0; index <= 500; index++) {
+            });
+            /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
                 var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0);
                 planet.generateAttackPnj();
                 this.planets.push(planet);
             }
-            //this.Save();
+            this.Save();*/
+            setInterval(() => {
+                this.Save();
+            }, 50000);
         }
 
         actualizOne(id){

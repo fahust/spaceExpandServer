@@ -41,7 +41,7 @@ class Planet{
         this.ss;//Jauge Ship
         this.st;//Jauge Tech
         this.sd;//Jauge Defense
-        //this.g = guild;//guild
+        this.g;//guild
         //this.dba;
     }
 
@@ -61,7 +61,7 @@ class Planet{
     }
 
     rattrapageShipTechDef(){//console.log(Math.floor((Date.now()-this.lv)/5000));
-        if(Math.floor((Date.now()-this.lv)/5000) >= 1) {this.lv = Date.now()}
+        if(Math.floor((Date.now()-this.lv)/5000) >= 1) {this.lv = Date.now();}
         if(this.ss >= 10 && this.ss < 20) {
             for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
                 this.addShip(1);

@@ -89,7 +89,8 @@ module.exports = app => {
         res.json(app.universe.loadUsersScore(body));
     }
 
-    function setUsersScore(req, res){
+    //FONCTIONNEL MAIS PAS D ENVOI DE LISTE PLANET
+    /*function setUsersScore(req, res){
         var body = JSON.parse(Object.keys(req.body));
         //var arayPlanetOwned = [];
         for (let index = 0; index < app.universe.planets.length; index++) {
@@ -103,7 +104,43 @@ module.exports = app => {
         planetLoad.tsl = body.t;//tech score load
         //console.log(planetLoad)
         res.json(planetLoad);
+    }*/
+
+
+    function setUsersScore(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        //var body = {};
+        //body.id = 5;
+        //body.cu = 4;//
+        app.universe.setUsersScore(body);
+        var planetLoad = app.universe.loadById(body);
+        app.universe.planets.filter(function (el) { //
+            if(el.o == body.cu){
+                planetLoad[el.id] = el.r;
+                body.t += app.universe.planets[el.id].t;
+            }
+        }); 
+        planetLoad.tsl = body.t;//tech score load
+        res.json(planetLoad);
     }
+
+    //A TESTER LISTE RECEPTION FOREACH FORTEMENT IMPOSSIBLE
+    /*function setUsersScore(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        var arayPlanetOwned = [];
+        for (let index = 0; index < app.universe.planets.length; index++) {
+            if(app.universe.planets[index].o == body.cu){
+                body.t += app.universe.planets[index].t;
+                arayPlanetOwned.push(app.universe.planets[index]);//sert a renvoyer une liste des planete habité
+            }
+        }
+        app.universe.setUsersScore(body);
+        var planetLoad = app.universe.loadById(body);
+        planetLoad.tsl = body.t;//tech score load
+        arayPlanetOwned.push(planetLoad);
+        //console.log(planetLoad)
+        res.json(arayPlanetOwned);
+    }*/
 
     /*MESSAGE*/
     function addMessage(req, res){

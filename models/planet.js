@@ -317,7 +317,7 @@ class Planet{
     checkFight(){
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
             this.ua = 1;//console.log('under attack',this.id)
-        }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea){
+        }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){
             this.endAttack();//console.log('time passed')
         }
     }

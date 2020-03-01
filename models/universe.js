@@ -80,7 +80,7 @@ function randomIntFromInterval(min, max) { // min and max included
                     }
                     if(duplicate == false){
                         breakIndex += 1;
-                        str += str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                        str = str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                     }
                     duplicate = false;
                 }

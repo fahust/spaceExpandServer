@@ -315,10 +315,24 @@ class Planet{
     }*/
 
     checkFight(){
+        if(this.sc1 < 0)
+            this.sc1 = 0;
+        if(this.sc2 < 0)
+            this.sc2 = 0;
+        if(this.sc3 < 0)
+            this.sc3 = 0;
+        if(this.sc4 < 0)
+            this.sc4 = 0;
+        if(this.sc5 < 0)
+            this.sc5 = 0;
+        if(this.sc6 < 0)
+            this.sc6 = 0;
+        if(this.sc7 < 0)
+            this.sc7 = 0;
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
             this.ua = 1;//console.log('under attack',this.id)
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){
-            this.endAttack();//console.log('time passed')
+            this.decolonize();//console.log('time passed')
         }
     }
 

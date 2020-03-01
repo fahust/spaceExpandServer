@@ -31,7 +31,7 @@ function randomIntFromInterval(min, max) { // min and max included
         /*SCORE*/
         setUsersScore(body){
             var userExist = false;
-            for (let index = 0; index < this.usersScore.length; index++) {
+            for (let index = 0; index < this.usersScore.length; index++){
                 if(this.usersScore[index]){
                     if (this.usersScore[index].cu == body.cu){
                         userExist = true;
@@ -58,7 +58,7 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         loadUsersScore(body){
-            var usersScore = [];
+            var duplicate = false;
             var closest = 500000;
             var userClose;
             this.usersScore.sort(function (a, b) {
@@ -74,9 +74,15 @@ function randomIntFromInterval(min, max) { // min and max included
             var str = "";
             for (let index = indexClose-10; index < this.usersScore.length; index++) {//console.log(index)
                 if(this.usersScore[index]){
-                    usersScore.push(this.usersScore[index]);
-                    breakIndex += 1;
-                    str += str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                    if(this.usersScore[index-1]){
+                        if(this.usersScore[index-1].cu == this.usersScore[index].cu)
+                            duplicate = true
+                    }
+                    if(duplicate == false){
+                        breakIndex += 1;
+                        str += str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                    }
+                    duplicate = false;
                 }
                 if(breakIndex > 6)
                     break;

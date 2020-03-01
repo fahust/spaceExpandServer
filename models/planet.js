@@ -10,6 +10,7 @@ class Planet{
     constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
         this.id = id; //id de la planet
         this.o = owner; //owner
+        this.on; //owner
         this.a; //attack obj
         this.aby;
         this.asc1;
@@ -45,8 +46,8 @@ class Planet{
         //this.dba;
     }
 
-    endAttack(){console.log('end attack');
-        this.tba = Date.now()+randomIntFromInterval(300000,1000000);
+    endAttack(){//console.log('end attack');
+        this.tba = Date.now()+randomIntFromInterval(100000,10000000);
         this.tea = this.tba+randomIntFromInterval(30000000,50000000);
         this.ua = 0;
         this.generateAttackPnj();
@@ -54,62 +55,64 @@ class Planet{
 
     trade(){
         if(this.r){//console.log('rattrapage money',(((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv))/10000);
-            this.r += Math.floor((((this.sc1*1)+(this.sc2*2)+(this.sc3*3)+(this.sc4*5)+(this.sc5*10)+(this.sc6*50)+(this.sc7*100))*(Date.now()-this.lv))/100);
+            this.r += Math.floor((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/1000);
         }else{
             this.r = 0;
         }
     }
 
     rattrapageShipTechDef(){//console.log(Math.floor((Date.now()-this.lv)/5000));
-        if(Math.floor((Date.now()-this.lv)/5000) >= 1) {this.lv = Date.now();}
-        if(this.ss >= 10 && this.ss < 20) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
-                this.addShip(1);
+        if(Math.floor((Date.now()-this.lv)/5000) > 1) {
+            if(this.ss >= 10 && this.ss < 20) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                    this.addShip(1);
+                }
             }
-        }
-        if(this.ss >= 20 && this.ss < 40) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
-                this.addShip(2);
+            if(this.ss >= 20 && this.ss < 40) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                    this.addShip(2);
+                }
             }
-        }
-        if(this.ss >= 40 && this.ss < 60) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
-                this.addShip(3);
+            if(this.ss >= 40 && this.ss < 60) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                    this.addShip(3);
+                }
             }
-        }
-        if(this.ss >= 60 && this.ss < 70) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
-                this.addShip(4);
+            if(this.ss >= 60 && this.ss < 70) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                    this.addShip(4);
+                }
             }
-        }
-        if(this.ss >= 70 && this.ss < 80) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
-                this.addShip(5);
+            if(this.ss >= 70 && this.ss < 80) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                    this.addShip(5);
+                }
             }
-        }
-        if(this.ss >= 80 && this.ss < 90) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
-                this.addShip(6);
+            if(this.ss >= 80 && this.ss < 90) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                    this.addShip(6);
+                }
             }
-        }
-        if(this.ss >= 90) {
-            for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
-                this.addShip(7);
+            if(this.ss >= 90) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                    this.addShip(7);
+                }
             }
-        }
 
-        if(this.st > 10){
-            this.addTechnologie(this.st);
-        }
+            if(this.st > 10){
+                this.addTechnologie(this.st);
+            }
 
-        if(this.sd > 10){
-            this.addDefense(this.sd);
+            if(this.sd > 10){
+                this.addDefense(this.sd);
+            }
+            this.lv = Date.now();
         }
     }
 
     prepareAttackClient(body){
         if(this.aby){
-            if(this.aby < 6){console.log(body);
+            if(this.aby < 6){//console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -124,7 +127,7 @@ class Planet{
                 this.aidP = body.idp;
             }
         }else{
-            console.log(body);
+            //console.log(body);
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
@@ -252,7 +255,7 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner){
-        if(owner == this.aby){console.log('atk ship destroy',cat)
+        if(owner == this.aby){//console.log('atk ship destroy',cat)
             if(cat == 1) {
                 this.asc1 -= 1;
             }
@@ -276,7 +279,7 @@ class Planet{
             }
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.endAttack();
-        }else{console.log('def ship destroy',cat);
+        }else{//console.log('def ship destroy',cat);
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;
@@ -319,7 +322,7 @@ class Planet{
         }
     }
 
-    decolonize(){console.log('decolonize');
+    decolonize(){//console.log('decolonize');
             this.o = this.aby;
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 

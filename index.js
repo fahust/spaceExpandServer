@@ -1,6 +1,6 @@
 const express = require('express'); 
 const app = express();
-const port = 3000;
+const port = 31095;
 //const fs = require('fs');
 var minify = require('express-minify');
 app.use(minify());

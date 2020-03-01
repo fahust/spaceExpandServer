@@ -30,13 +30,30 @@ function randomIntFromInterval(min, max) { // min and max included
 
         /*SCORE*/
         setUsersScore(body){
-            this.usersScore[body.cu] = {};
-            this.usersScore[body.cu].r = body.r;
-            this.usersScore[body.cu].s = body.s;
-            this.usersScore[body.cu].t = body.t;
-            this.usersScore[body.cu].d = body.d;
-            this.usersScore[body.cu].n = body.n;
-            this.usersScore[body.cu].st = (body.r+body.s+body.t+body.d);
+            var userExist = false;
+            for (let index = 0; index < this.usersScore.length; index++) {
+                if(this.usersScore[index]){
+                    if (this.usersScore[index].cu == body.cu){
+                        userExist = true;
+                        this.usersScore[index].r = body.r;
+                        this.usersScore[index].s = body.s;
+                        this.usersScore[index].t = body.t;
+                        this.usersScore[index].d = body.d;
+                        this.usersScore[index].n = body.n;
+                        break;
+                    }
+                }
+            }
+            if(userExist == false){
+                this.usersScore[body.cu] = {};
+                this.usersScore[body.cu].r = body.r;
+                this.usersScore[body.cu].s = body.s;
+                this.usersScore[body.cu].t = body.t;
+                this.usersScore[body.cu].d = body.d;
+                this.usersScore[body.cu].n = body.n;
+                this.usersScore[body.cu].cu = body.cu;
+                this.usersScore[body.cu].st = (Math.floor(body.r/100000)+body.s+body.t+(body.d*10));
+            }
             //console.log(this.usersScore);
         }
 
@@ -54,20 +71,21 @@ function randomIntFromInterval(min, max) { // min and max included
             this.usersScore.reverse();
             var indexClose = this.usersScore.indexOf(userClose);
             var breakIndex = 0;
+            var str = "";
             for (let index = indexClose-10; index < this.usersScore.length; index++) {//console.log(index)
                 if(this.usersScore[index]){
                     usersScore.push(this.usersScore[index]);
                     breakIndex += 1;
+                    str += str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                 }
-                if(breakIndex > 10)
+                if(breakIndex > 6)
                     break;
             }
-            //console.log(usersScore);
             this.usersScore = this.usersScore.filter(function (el) { //suprimer empty element of array
                 return el != null || undefined; 
             }); 
             //console.log(this.usersScore);
-            return usersScore;
+            return str;//usersScore;
         }
 
         /*MESSAGE*/
@@ -255,6 +273,10 @@ function randomIntFromInterval(min, max) { // min and max included
         ///LOAD
         loadById(body){
             if(body.id){
+                if(body.n){
+                    if(body.cu == this.planets[body.id].o)
+                    this.planets[body.id].on = body.n
+                }
                 this.actualizOne(body.id);
                 this.planets[body.id].trade();
                 this.planets[body.id].rattrapageShipTechDef();
@@ -280,6 +302,7 @@ function randomIntFromInterval(min, max) { // min and max included
                     this.aopsc7 = 0;
                 }
                 this.planets[body.id].u = this;
+                //console.log(stringifiedPlanet)
                 return stringifiedPlanet;
             }
         }
@@ -322,7 +345,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.Save();*/
             setInterval(() => {
                 this.Save();
-            }, 50000);
+            }, 500000000);
         }
 
         actualizOne(id){

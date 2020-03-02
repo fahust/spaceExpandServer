@@ -48,7 +48,7 @@ class Planet{
 
     endAttack(){//console.log('end attack');
         this.tba = Date.now()+randomIntFromInterval(100000,10000000);
-        this.tea = this.tba+randomIntFromInterval(30000000,50000000);
+        this.tea = this.tba+86400000 ;//1jour
         this.ua = 0;
         this.generateAttackPnj();
     }
@@ -116,13 +116,13 @@ class Planet{
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
-                this.asc1 = body.sc1;
-                this.asc2 = body.sc2;
-                this.asc3 = body.sc3;
-                this.asc4 = body.sc4;
-                this.asc5 = body.sc5;
-                this.asc6 = body.sc6;
-                this.asc7 = body.sc7;
+                this.asc1 = randomIntFromInterval(1,body.sc1);
+                this.asc2 = randomIntFromInterval(1,body.sc2);
+                this.asc3 = randomIntFromInterval(1,body.sc3);
+                this.asc4 = randomIntFromInterval(1,body.sc4);
+                this.asc5 = randomIntFromInterval(0,body.sc5);
+                this.asc6 = randomIntFromInterval(0,body.sc6);
+                this.asc7 = randomIntFromInterval(0,body.sc7);
                 this.aid = body.id;
                 this.aidP = body.idp;
             }
@@ -131,13 +131,13 @@ class Planet{
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
-                this.asc1 = body.sc1;
-                this.asc2 = body.sc2;
-                this.asc3 = body.sc3;
-                this.asc4 = body.sc4;
-                this.asc5 = body.sc5;
-                this.asc6 = body.sc6;
-                this.asc7 = body.sc7;
+                this.asc1 = randomIntFromInterval(1,body.sc1);
+                this.asc2 = randomIntFromInterval(1,body.sc2);
+                this.asc3 = randomIntFromInterval(1,body.sc3);
+                this.asc4 = randomIntFromInterval(1,body.sc4);
+                this.asc5 = randomIntFromInterval(0,body.sc5);
+                this.asc6 = randomIntFromInterval(0,body.sc6);
+                this.asc7 = randomIntFromInterval(0,body.sc7);
                 this.aid = body.id;
                 this.aidP = body.idp;
         }

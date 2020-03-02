@@ -343,7 +343,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.Save();*/
             setInterval(() => {
                 this.Save();
-            }, 500000000);
+            }, 26400000);
         }
 
         actualizOne(id){

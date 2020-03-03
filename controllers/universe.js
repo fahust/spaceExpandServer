@@ -62,7 +62,8 @@ module.exports = app => {
     function addRessourceByShipEvent(req,res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].r += body.r;
-        res.json(app.universe.loadById(body));
+        response = {}
+        res.json(response);//app.universe.loadById(body)
     }
 
     /*MOVEMENT SHIP AND ATTACK*/

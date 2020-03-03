@@ -152,14 +152,6 @@ class Planet{
         }
         this.aby = randPnjFinal;
         if(this.aby < 7){
-            this.asc1 = randomIntFromInterval(1,this.sc1);
-            this.asc2 = randomIntFromInterval(1,this.sc2);
-            this.asc3 = randomIntFromInterval(1,this.sc3);
-            this.asc4 = randomIntFromInterval(0,this.sc4);
-            this.asc5 = randomIntFromInterval(0,this.sc5);
-            this.asc6 = randomIntFromInterval(0,this.sc6);
-            this.asc7 = randomIntFromInterval(0,this.sc7);
-        }else{
             this.asc1 = randomIntFromInterval(this.sc1,this.sc1*2);
             this.asc2 = randomIntFromInterval(this.sc2,this.sc2*2);
             this.asc3 = randomIntFromInterval(this.sc3,this.sc3*2);
@@ -167,6 +159,14 @@ class Planet{
             this.asc5 = randomIntFromInterval(this.sc5,this.sc5*2);
             this.asc6 = randomIntFromInterval(this.sc6,this.sc6*2);
             this.asc7 = randomIntFromInterval(this.sc7,this.sc7*2);
+        }else{
+            this.asc1 = randomIntFromInterval(1,this.sc1);
+            this.asc2 = randomIntFromInterval(1,this.sc2);
+            this.asc3 = randomIntFromInterval(1,this.sc3);
+            this.asc4 = randomIntFromInterval(0,this.sc4);
+            this.asc5 = randomIntFromInterval(0,this.sc5);
+            this.asc6 = randomIntFromInterval(0,this.sc6);
+            this.asc7 = randomIntFromInterval(0,this.sc7);
         }
         this.aid = this.o;
         this.aidP = this.id;
@@ -308,21 +308,6 @@ class Planet{
         if(this.sc1+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7 <= 9)
             this.decolonize();
     }
-
-    /*if player no send ship destroy mode blockus actived*/
-    /*modeBlockus(){
-        var dateNow = Date.now();
-        if(this.aby){
-            if(this.lsd+10000 < dateNow && this.cp == true && this.aby > 5 && this.o > 5 ){
-                this.cp = false;
-            }
-            if(this.cp == false && this.lsd+3600000 < dateNow && this.aby > 5 && this.o > 5 ){
-                this.decolonize();
-            }
-        }else{
-            //this.generateAttackPnj();
-        }
-    }*/
 
     checkFight(){
         if(this.sc1 < 0)

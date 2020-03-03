@@ -116,13 +116,13 @@ class Planet{
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
-                this.asc1 = randomIntFromInterval(1,body.sc1);
-                this.asc2 = randomIntFromInterval(1,body.sc2);
-                this.asc3 = randomIntFromInterval(1,body.sc3);
-                this.asc4 = randomIntFromInterval(1,body.sc4);
-                this.asc5 = randomIntFromInterval(0,body.sc5);
-                this.asc6 = randomIntFromInterval(0,body.sc6);
-                this.asc7 = randomIntFromInterval(0,body.sc7);
+                this.asc1 = body.sc1;
+                this.asc2 = body.sc2;
+                this.asc3 = body.sc3;
+                this.asc4 = body.sc4;
+                this.asc5 = body.sc5;
+                this.asc6 = body.sc6;
+                this.asc7 = body.sc7;
                 this.aid = body.id;
                 this.aidP = body.idp;
             }
@@ -131,13 +131,13 @@ class Planet{
                 this.tba = Date.now()+(body.d*100);
                 this.tea = this.tba+randomIntFromInterval(300000000,500000000);
                 this.aby = body.by;
-                this.asc1 = randomIntFromInterval(1,body.sc1);
-                this.asc2 = randomIntFromInterval(1,body.sc2);
-                this.asc3 = randomIntFromInterval(1,body.sc3);
-                this.asc4 = randomIntFromInterval(1,body.sc4);
-                this.asc5 = randomIntFromInterval(0,body.sc5);
-                this.asc6 = randomIntFromInterval(0,body.sc6);
-                this.asc7 = randomIntFromInterval(0,body.sc7);
+                this.asc1 = body.sc1;
+                this.asc2 = body.sc2;
+                this.asc3 = body.sc3;
+                this.asc4 = body.sc4;
+                this.asc5 = body.sc5;
+                this.asc6 = body.sc6;
+                this.asc7 = body.sc7;
                 this.aid = body.id;
                 this.aidP = body.idp;
         }
@@ -151,13 +151,23 @@ class Planet{
                 randPnjFinal = randPnj;
         }
         this.aby = randPnjFinal;
-        this.asc1 = randomIntFromInterval(0,this.sc1);
-        this.asc2 = randomIntFromInterval(0,this.sc2);
-        this.asc3 = randomIntFromInterval(0,this.sc3);
-        this.asc4 = randomIntFromInterval(0,this.sc4);
-        this.asc5 = randomIntFromInterval(0,this.sc5);
-        this.asc6 = randomIntFromInterval(0,this.sc6);
-        this.asc7 = randomIntFromInterval(0,this.sc7);
+        if(this.aby < 7){
+            this.asc1 = randomIntFromInterval(1,this.sc1);
+            this.asc2 = randomIntFromInterval(1,this.sc2);
+            this.asc3 = randomIntFromInterval(1,this.sc3);
+            this.asc4 = randomIntFromInterval(0,this.sc4);
+            this.asc5 = randomIntFromInterval(0,this.sc5);
+            this.asc6 = randomIntFromInterval(0,this.sc6);
+            this.asc7 = randomIntFromInterval(0,this.sc7);
+        }else{
+            this.asc1 = randomIntFromInterval(this.sc1,this.sc1*2);
+            this.asc2 = randomIntFromInterval(this.sc2,this.sc2*2);
+            this.asc3 = randomIntFromInterval(this.sc3,this.sc3*2);
+            this.asc4 = randomIntFromInterval(this.sc4,this.sc4*2);
+            this.asc5 = randomIntFromInterval(this.sc5,this.sc5*2);
+            this.asc6 = randomIntFromInterval(this.sc6,this.sc6*2);
+            this.asc7 = randomIntFromInterval(this.sc7,this.sc7*2);
+        }
         this.aid = this.o;
         this.aidP = this.id;
     }

@@ -62,7 +62,7 @@ module.exports = app => {
     function addRessourceByShipEvent(req,res){
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].r += body.r;
-        response = {}
+        var response = {};
         res.json(response);//app.universe.loadById(body)
     }
 
@@ -110,7 +110,10 @@ module.exports = app => {
     /*MESSAGE*/
     function addMessage(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        res.json(app.universe.addMessage(body));
+        var planetLoad = app.universe.loadById(body);
+        planetLoad.chat = app.universe.addMessage(body);
+        console.log(planetLoad.chat)
+        res.json(planetLoad);
     }
     
     function loadLastTenMessage(req, res){

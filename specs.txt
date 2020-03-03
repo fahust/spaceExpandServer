@@ -49,3 +49,30 @@ attaquant lance attack ->  attente de joueur connecté -> client receptione l'at
 ->si attaqué disconnected, blocus, si le temps du blocus est dépassé,decolonize
 
 ATTAQUE SEULEMENT DEPUIS PLANETE MERE
+
+
+
+
+IDEE SCENAR
+
+-> Pirater les ordinateur centrale pour empêcher le droit de vote
+
+-> envoyer un virus pour empêcher la reproduction de la faction
+
+-> partager vos avancé scientifique avec la faction
+
+-> Proposer vos technologie millitaire
+
+-> aider a matter la révolte
+
+-> éliminer les éco-teroriste
+
+-> transport d'esclave
+
+-> bloquer une ligne commercial
+
+-> receptionner des réfugié politique
+
+-> emprisoné des énemies de la faction pour assurer leur protection
+
+-> une mine sur un astéroide c'est effondré, envoyé des secours

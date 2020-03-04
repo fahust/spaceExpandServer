@@ -89,31 +89,35 @@ function randomIntFromInterval(min, max) { // min and max included
         /*MESSAGE*/
         addMessage(body){
             var message = {};
-            if(body.g == 0){//guild 0
-                message.m = body.m
-                message.g = body.g
-                message.d = Date.now().toString();
-                message.t = 1; //type 1 no guild no private
-                if(body.by)//id
-                    message.by = body.by;
-                if(body.byn)//name
-                    message.byn = body.byn;
-                if(body.to && body.ton){//id //name
-                    message.to = body.to;
-                    message.ton = body.ton;
-                    message.t = 2; //type 2 no guild but private
+            if(body.m != ""){
+                if(body.g == ""){//guild 0
+                    message.m = body.m
+                    message.g = body.g
+                    let current_datetime = new Date()
+                    let formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
+                    message.d = formatted_date;
+                    message.t = 1; //type 1 no guild no private
+                    if(body.by)//id
+                        message.by = body.by;
+                    if(body.byn)//name
+                        message.byn = body.byn;
+                    if(body.to && body.ton){//id //name
+                        message.to = body.to;
+                        message.ton = body.ton;
+                        message.t = 2; //type 2 no guild but private
+                    }
+                    this.message.push(message);
+                }else if(body.g != ""){
+                    message.g = body.g
+                    message.m = body.m
+                    message.d = Date.now().toString();
+                    message.t = 3; //type 1 no guild no private
+                    if(body.by)//id
+                        message.by = body.by;
+                    if(body.byn)//name
+                        message.byn = body.byn;
+                    this.guilds[body.g].m.push(message);
                 }
-                this.message.push(message);
-            }else if(body.g != 0){
-                message.g = body.g
-                message.m = body.m
-                message.d = Date.now().toString();
-                message.t = 3; //type 1 no guild no private
-                if(body.by)//id
-                    message.by = body.by;
-                if(body.byn)//name
-                    message.byn = body.byn;
-                this.guilds[body.g].m.push(message);
             }
             return this.loadLastTenMessage(body);
         }
@@ -121,7 +125,7 @@ function randomIntFromInterval(min, max) { // min and max included
         loadLastTenMessage(body){
             var str = "";
             //if(body.g == 0){
-                for (let index = this.message.length-10; index < this.message.length; index++) {
+                for (let index = this.message.length-20; index < this.message.length; index++) {
                     if(this.message[index] && body.g == this.message[index].g)
                         str = str+'line'+"-"+"id"+"-"+this.message[index].m+"-"+this.message[index].to+"-"+this.message[index].d+"-"+this.message[index].by+"-"+this.message[index].ton+"-"+this.message[index].byn+"-"+this.message[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                 }
@@ -244,7 +248,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 transfer.r = body.r;
                 transfer.to = body.to;
                 transfer.cu = body.cu;
-                transfer.time = Date.now()+(body.d*100);//distance
+                transfer.time = Date.now()+(body.d*1000);//distance
                 this.transferShip[JSON.stringify(body.cu)].push(transfer);
                 //console.log('transfer ship',this.transferShip[JSON.stringify(body.cu)]);
                 return transfer;
@@ -322,6 +326,7 @@ function randomIntFromInterval(min, max) { // min and max included
                     this.aopsc7 = 0;
                 }
                 this.planets[body.id].u = this;
+                this.planets[body.id].dn = Date.now();//
                 //console.log(stringifiedPlanet)
                 return stringifiedPlanet;
             }

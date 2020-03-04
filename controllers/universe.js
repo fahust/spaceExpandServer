@@ -119,6 +119,7 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         var obj = {};
         obj.chat = app.universe.loadLastTenMessage(body)
+        //console.log(obj.chat);
         res.json(obj);
     }
 

@@ -100,15 +100,13 @@ function randomIntFromInterval(min, max) { // min and max included
             var str = "";
             if(body.g == 0){
                 for (let index = this.message.length-10; index < this.message.length; index++) {
-                    //console.log(this.message[index]);
                     if(this.message[index])
                         str = str+'line'+"-"+"id"+"-"+this.message[index]+"-"+"destid"+"-"+"dated"+"-"+"envoyeurid"+"-"+"destname"+"-"+'envoyeurname'+"-"+'type'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
-                    //lastMessage.push(this.message[index]);
                 }
             }else if(body.g != 0){
                 for (let index = this.guilds[body.g].m.length-10; index < this.guilds[body.g].m.length; index++) {
                     if(this.guilds[body.g].m[index])
-                        lastMessage.push(this.guilds[body.g].m[index]);
+                        str = str+'line'+"-"+"id"+"-"+this.guilds[body.g].m[index]+"-"+"destid"+"-"+"dated"+"-"+"envoyeurid"+"-"+"destname"+"-"+'envoyeurname'+"-"+'type'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                 }
             }
             return str;

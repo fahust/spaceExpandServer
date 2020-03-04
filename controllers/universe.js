@@ -25,8 +25,8 @@ module.exports = app => {
     /*BUILD AND DESTROY SHIP / DEF / TECH / */
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].deleteShip(body.cat,body.owner);
-        res.json(app.universe.loadById(body));
+        res.json(app.universe.planets[body.id].deleteShip(body.cat,body.owner));
+        //res.json(app.universe.loadById(body));
     }
 
     function addShip(req, res){
@@ -110,15 +110,16 @@ module.exports = app => {
     /*MESSAGE*/
     function addMessage(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        var planetLoad = app.universe.loadById(body);
-        planetLoad.chat = app.universe.addMessage(body);
-        console.log(planetLoad.chat)
-        res.json(planetLoad);
+        var obj = {};
+        obj.chat = app.universe.addMessage(body);
+        res.json(obj);
     }
     
     function loadLastTenMessage(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        res.json(app.universe.loadLastTenMessage(body));
+        var obj = {};
+        obj.chat = app.universe.loadLastTenMessage(body)
+        res.json(obj);
     }
 
     /*GUILD*/

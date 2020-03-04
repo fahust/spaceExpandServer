@@ -10,7 +10,7 @@ class Planet{
     constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
         this.id = id; //id de la planet
         this.o = owner; //owner
-        this.on; //owner
+        this.on; //ownername
         this.a; //attack obj
         this.aby;
         this.asc1;
@@ -47,7 +47,7 @@ class Planet{
     }
 
     endAttack(){//console.log('end attack');
-        this.tba = Date.now()+randomIntFromInterval(100000,10000000);
+        this.tba = Date.now()+randomIntFromInterval(16400000,86400000);
         this.tea = this.tba+86400000 ;//1jour
         this.ua = 0;
         this.generateAttackPnj();
@@ -113,8 +113,8 @@ class Planet{
     prepareAttackClient(body){
         if(this.aby){
             if(this.aby < 6){//console.log(body);
-                this.tba = Date.now()+(body.d*100);
-                this.tea = this.tba+randomIntFromInterval(300000000,500000000);
+                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+                this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
@@ -128,8 +128,8 @@ class Planet{
             }
         }else{
             //console.log(body);
-                this.tba = Date.now()+(body.d*100);
-                this.tea = this.tba+randomIntFromInterval(300000000,500000000);
+                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+                this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
@@ -151,7 +151,7 @@ class Planet{
                 randPnjFinal = randPnj;
         }
         this.aby = randPnjFinal;
-        if(this.aby < 7){
+        if(this.o < 7){
             this.asc1 = randomIntFromInterval(this.sc1,this.sc1*2);
             this.asc2 = randomIntFromInterval(this.sc2,this.sc2*2);
             this.asc3 = randomIntFromInterval(this.sc3,this.sc3*2);
@@ -266,27 +266,20 @@ class Planet{
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner){
         if(owner == this.aby){//console.log('atk ship destroy',cat)
-            if(cat == 1) {
+            if(cat == 1) 
                 this.asc1 -= 1;
-            }
-            if(cat == 2) {
+            if(cat == 2) 
                 this.asc2 -= 1;
-            }
-            if(cat == 3) {
+            if(cat == 3) 
                 this.asc3 -= 1;
-            }
-            if(cat == 4) {
+            if(cat == 4) 
                 this.asc4 -= 1;
-            }
-            if(cat == 5) {
+            if(cat == 5) 
                 this.asc5 -= 1;
-            }
-            if(cat == 6) {
+            if(cat == 6) 
                 this.asc6 -= 1;
-            }
-            if(cat == 7) {
+            if(cat == 7) 
                 this.asc7 -= 1;
-            }
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.endAttack();
         }else{//console.log('def ship destroy',cat);
@@ -301,6 +294,15 @@ class Planet{
             this.check();
         }
         this.lsd = Date.now();
+        var obj = {};
+        if(cat == 1) obj.sc1 = this.sc1;
+        if(cat == 2) obj.sc2 = this.sc2;
+        if(cat == 3) obj.sc3 = this.sc3;
+        if(cat == 4) obj.sc4 = this.sc4;
+        if(cat == 5) obj.sc5 = this.sc5;
+        if(cat == 6) obj.sc6 = this.sc6;
+        if(cat == 7) obj.sc7 = this.sc7;
+        return obj;
         //this.cp = true;
     }
 

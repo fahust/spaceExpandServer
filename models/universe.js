@@ -88,27 +88,49 @@ function randomIntFromInterval(min, max) { // min and max included
 
         /*MESSAGE*/
         addMessage(body){
+            var message = {};
             if(body.g == 0){//guild 0
-                this.message.push(body.m);
+                message.m = body.m
+                message.g = body.g
+                message.d = Date.now().toString();
+                message.t = 1; //type 1 no guild no private
+                if(body.by)//id
+                    message.by = body.by;
+                if(body.byn)//name
+                    message.byn = body.byn;
+                if(body.to && body.ton){//id //name
+                    message.to = body.to;
+                    message.ton = body.ton;
+                    message.t = 2; //type 2 no guild but private
+                }
+                this.message.push(message);
             }else if(body.g != 0){
-                this.guilds[body.g].m.push();
+                message.g = body.g
+                message.m = body.m
+                message.d = Date.now().toString();
+                message.t = 3; //type 1 no guild no private
+                if(body.by)//id
+                    message.by = body.by;
+                if(body.byn)//name
+                    message.byn = body.byn;
+                this.guilds[body.g].m.push(message);
             }
             return this.loadLastTenMessage(body);
         }
 
         loadLastTenMessage(body){
             var str = "";
-            if(body.g == 0){
+            //if(body.g == 0){
                 for (let index = this.message.length-10; index < this.message.length; index++) {
-                    if(this.message[index])
-                        str = str+'line'+"-"+"id"+"-"+this.message[index]+"-"+"destid"+"-"+"dated"+"-"+"envoyeurid"+"-"+"destname"+"-"+'envoyeurname'+"-"+'type'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                    if(this.message[index] && body.g == this.message[index].g)
+                        str = str+'line'+"-"+"id"+"-"+this.message[index].m+"-"+this.message[index].to+"-"+this.message[index].d+"-"+this.message[index].by+"-"+this.message[index].ton+"-"+this.message[index].byn+"-"+this.message[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                 }
-            }else if(body.g != 0){
+            /*}else if(body.g != 0){
                 for (let index = this.guilds[body.g].m.length-10; index < this.guilds[body.g].m.length; index++) {
                     if(this.guilds[body.g].m[index])
-                        str = str+'line'+"-"+"id"+"-"+this.guilds[body.g].m[index]+"-"+"destid"+"-"+"dated"+"-"+"envoyeurid"+"-"+"destname"+"-"+'envoyeurname'+"-"+'type'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                        str = str+'line'+"-"+"id"+"-"+this.message[index].m+"-"+this.message[index].to+"-"+this.message[index].d+"-"+this.message[index].by+"-"+this.message[index].ton+"-"+this.message[index].byn+"-"+this.message[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
                 }
-            }
+            }*/
             return str;
         }
 

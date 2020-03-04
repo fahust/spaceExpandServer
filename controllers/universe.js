@@ -25,7 +25,7 @@ module.exports = app => {
     /*BUILD AND DESTROY SHIP / DEF / TECH / */
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        res.json(app.universe.planets[body.id].deleteShip(body.cat,body.owner));
+        res.json(app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id));
         //res.json(app.universe.loadById(body));
     }
 

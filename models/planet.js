@@ -264,7 +264,7 @@ class Planet{
     }
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
-    deleteShip(cat,owner){
+    deleteShip(cat,owner,id){
         if(owner == this.aby){//console.log('atk ship destroy',cat)
             if(cat == 1) 
                 this.asc1 -= 1;
@@ -302,6 +302,7 @@ class Planet{
         if(cat == 5) obj.sc5 = this.sc5;
         if(cat == 6) obj.sc6 = this.sc6;
         if(cat == 7) obj.sc7 = this.sc7;
+        obj.id = id;
         return obj;
         //this.cp = true;
     }

@@ -47,7 +47,7 @@ class Planet{
     }
 
     endAttack(){//console.log('end attack');
-        this.tba = Date.now()+randomIntFromInterval(16400000,86400000);
+        this.tba = Date.now()+randomIntFromInterval(1640000,8600000);
         this.tea = this.tba+86400000 ;//1jour
         this.ua = 0;
         this.generateAttackPnj();
@@ -113,7 +113,7 @@ class Planet{
     prepareAttackClient(body){
         if(this.aby){
             if(this.aby < 6){//console.log(body);
-                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+                this.tba = Date.now()+(body.d*100);//diviser par 10 la distance coter client
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
@@ -128,7 +128,7 @@ class Planet{
             }
         }else{
             //console.log(body);
-                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+                this.tba = Date.now()+(body.d*100);//diviser par 10 la distance coter client
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;

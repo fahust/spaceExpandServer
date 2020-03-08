@@ -7,10 +7,10 @@ module.exports = app => {
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].sr = body.sr;
-        app.universe.planets[body.id].ss = body.ss;
-        app.universe.planets[body.id].st = body.st;
-        app.universe.planets[body.id].sd = body.sd;
+        if(body.sr) app.universe.planets[body.id].sr = body.sr;
+        if(body.ss) app.universe.planets[body.id].ss = body.ss;
+        if(body.st) app.universe.planets[body.id].st = body.st;
+        if(body.sd) app.universe.planets[body.id].sd = body.sd;
         if(body.g)
             app.universe.planets[body.id].g = body.g;
         res.json(app.universe.loadById(body,res));
@@ -97,12 +97,30 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         app.universe.setUsersScore(body);
         var planetLoad = app.universe.loadById(body);
+        var lts =""; //list travel ship
+        var lfs =""; //list fight ship
         app.universe.planets.filter(function (el) { 
+            if(el.aby == body.cu){
+                lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
+            }
+            if(el.o == body.cu && /*el.aby > 7 && */el.ua > 0 ){//si planet owned attacked now
+                lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
+            }
             if(el.o == body.cu){
                 planetLoad[el.id] = el.r;
                 body.t += app.universe.planets[el.id].t;
             }
         }); 
+        if(app.universe.transferShip[JSON.stringify(body.cu)]){
+            app.universe.transferShip[body.cu].forEach(element => {
+                lts = lts+JSON.stringify(element.to)+"|"
+            });
+            /*for (let index = 0; index < app.universe.transferShip[body.cu].length; index++) {
+                lts = lts+JSON.stringify(app.universe.transferShip[body.cu][index].to)+"|"
+            }*/
+        }
+        planetLoad.lts = lts;"none";//list travel ship
+        planetLoad.lfs = lfs;"none"//list fight ship
         planetLoad.tsl = body.t;//tech score load
         res.json(planetLoad);
     }

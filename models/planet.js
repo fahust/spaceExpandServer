@@ -34,6 +34,18 @@ class Planet{
         this.d = defenseLevel; //defense level
         this.r = ressource; //money
         this.t = technologie; //
+        this.t0; //laser
+        this.t2; //missile
+        this.t3; //shield
+        this.t4; //alloy
+        this.t5; //plasma
+        this.t6; //combustion
+        this.at0; //laser atk
+        this.at2; //missile atk
+        this.at3; //shield atk
+        this.at4; //alloy atk
+        this.at5; //plasma atk
+        this.at6; //combustion atk
         this.u = universe;
         this.lsd = Date.now()+3600000;//last ship destroy
         //this.cp = true;//connected player
@@ -113,7 +125,7 @@ class Planet{
     prepareAttackClient(body){
         if(this.aby){
             if(this.aby < 6){//console.log(body);
-                this.tba = Date.now()+(body.d*100);//diviser par 10 la distance coter client
+                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
@@ -123,12 +135,18 @@ class Planet{
                 this.asc5 = body.sc5;
                 this.asc6 = body.sc6;
                 this.asc7 = body.sc7;
+                this.at0 = body.at0;
+                this.at2 = body.at2;
+                this.at3 = body.at3;
+                this.at4 = body.at4;
+                this.at5 = body.at5;
+                this.at6 = body.at6;
                 this.aid = body.id;
                 this.aidP = body.idp;
             }
         }else{
             //console.log(body);
-                this.tba = Date.now()+(body.d*100);//diviser par 10 la distance coter client
+                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;

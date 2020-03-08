@@ -152,13 +152,26 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.u[body.cu] = 'master';
                 guild.m = [];
                 this.guilds[body.n] = guild;
-                return this.loadGuild(body);
+                guild.cg = 1
+                return guild;
             }
+            return guild;
         }
 
         loadGuild(body){
-            if(this.guilds[body.n]){
+            if(this.guilds[body.n] && body.n != ""){
                 return this.guilds[body.n];
+            }else{
+                var obj = {};
+                this.guilds.forEach(guild => {
+                    if(guild.u[body.cu]){
+                        if(user == 'invited'){
+                            return obj.icu = guild.name;
+                        }else{
+                            return this.guilds[body.n]
+                        }
+                    }
+                });
             }
         }
 
@@ -199,7 +212,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
                     this.guilds[body.n].u[body.cui] = 'invited';//client user invited
                 }
-                return this.loadGuild(body);
+                return this.guilds[body.n];
             } 
         }
 
@@ -297,6 +310,12 @@ function randomIntFromInterval(min, max) { // min and max included
         ///LOAD
         loadById(body){
             if(body.id){
+                if(body.t0) this.planets[body.id].t0 = body.t0
+                if(body.t2) this.planets[body.id].t2 = body.t2
+                if(body.t3) this.planets[body.id].t3 = body.t3
+                if(body.t4) this.planets[body.id].t4 = body.t4
+                if(body.t5) this.planets[body.id].t5 = body.t5
+                if(body.t6) this.planets[body.id].t6 = body.t6
                 if(body.n){
                     if(body.cu == this.planets[body.id].o)
                     this.planets[body.id].on = body.n
@@ -326,7 +345,6 @@ function randomIntFromInterval(min, max) { // min and max included
                     this.aopsc7 = 0;
                 }
                 this.planets[body.id].u = this;
-                this.planets[body.id].dn = Date.now();//
                 //console.log(stringifiedPlanet)
                 return stringifiedPlanet;
             }

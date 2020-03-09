@@ -1,6 +1,5 @@
 module.exports = app => {
 
-    //require('./user')(app);
     require('./universe')(app);
 
     // HOME

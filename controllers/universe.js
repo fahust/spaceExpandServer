@@ -17,7 +17,6 @@ module.exports = app => {
     }
 
     function loadAll(req, res){
-        //var body = JSON.parse(Object.keys(req.body))
         res.json(app.universe.loadAll());
         app.universe.addUtoAll();
     }
@@ -26,7 +25,6 @@ module.exports = app => {
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id));
-        //res.json(app.universe.loadById(body));
     }
 
     function addShip(req, res){
@@ -63,7 +61,7 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].r += body.r;
         var response = {};
-        res.json(response);//app.universe.loadById(body)
+        res.json(response);
     }
 
     /*MOVEMENT SHIP AND ATTACK*/
@@ -100,13 +98,14 @@ module.exports = app => {
         var lts =""; //list travel ship
         var lfs =""; //list fight ship
         app.universe.planets.filter(function (el) { 
-            if(el.aby == body.cu){
+            if(el.aby == body.cu)
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
-            }
-            if(el.o == body.cu && /*el.aby > 7 && */el.ua > 0 ){//si planet owned attacked now
+            if(el.o == body.cu && /*el.aby > 7 && */el.ua > 0 )//si planet owned attacked now
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
-            }
             if(el.o == body.cu){
+                app.universe.planets[el.id].el.rc = body.rc;
+                app.universe.planets[el.id].el.rx = body.rx;
+                app.universe.planets[el.id].el.rd = body.rd;
                 planetLoad[el.id] = el.r;
                 body.t += app.universe.planets[el.id].t;
             }
@@ -115,12 +114,9 @@ module.exports = app => {
             app.universe.transferShip[body.cu].forEach(element => {
                 lts = lts+JSON.stringify(element.to)+"|"
             });
-            /*for (let index = 0; index < app.universe.transferShip[body.cu].length; index++) {
-                lts = lts+JSON.stringify(app.universe.transferShip[body.cu][index].to)+"|"
-            }*/
         }
-        planetLoad.lts = lts;"none";//list travel ship
-        planetLoad.lfs = lfs;"none"//list fight ship
+        planetLoad.lts = lts;//list travel ship
+        planetLoad.lfs = lfs;//list fight ship
         planetLoad.tsl = body.t;//tech score load
         res.json(planetLoad);
     }
@@ -137,7 +133,6 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         var obj = {};
         obj.chat = app.universe.loadLastTenMessage(body)
-        //console.log(obj.chat);
         res.json(obj);
     }
 

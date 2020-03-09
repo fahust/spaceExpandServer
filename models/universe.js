@@ -54,7 +54,6 @@ function randomIntFromInterval(min, max) { // min and max included
                 this.usersScore[body.cu].cu = body.cu;
                 this.usersScore[body.cu].st = (Math.floor(body.r/100000)+body.s+body.t+(body.d*10));
             }
-            //console.log(this.usersScore);
         }
 
         loadUsersScore(body){
@@ -82,7 +81,6 @@ function randomIntFromInterval(min, max) { // min and max included
             this.usersScore = this.usersScore.filter(function (el) { //suprimer empty element of array
                 return el != null || undefined; 
             }); 
-            //console.log(this.usersScore);
             return str;//usersScore;
         }
 
@@ -124,17 +122,15 @@ function randomIntFromInterval(min, max) { // min and max included
 
         loadLastTenMessage(body){
             var str = "";
-            //if(body.g == 0){
-                for (let index = this.message.length-20; index < this.message.length; index++) {
-                    if(this.message[index] && body.g == this.message[index].g)
-                        str = str+'line'+"-"+"id"+"-"+this.message[index].m+"-"+this.message[index].to+"-"+this.message[index].d+"-"+this.message[index].by+"-"+this.message[index].ton+"-"+this.message[index].byn+"-"+this.message[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
-                }
-            /*}else if(body.g != 0){
-                for (let index = this.guilds[body.g].m.length-10; index < this.guilds[body.g].m.length; index++) {
-                    if(this.guilds[body.g].m[index])
-                        str = str+'line'+"-"+"id"+"-"+this.message[index].m+"-"+this.message[index].to+"-"+this.message[index].d+"-"+this.message[index].by+"-"+this.message[index].ton+"-"+this.message[index].byn+"-"+this.message[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
-                }
-            }*/
+            var messages = [];
+            for (let index = this.message.length-200; index < this.message.length; index++) {
+                if(this.message[index] && body.g == this.message[index].g && body.t == this.message[index].t)
+                    messages.push(this.message[index])
+            }
+            for (let index = messages.length-20; index < messages.length; index++) {
+                if(messages[index] && body.g == messages[index].g)
+                    str = str+'line'+"-"+"id"+"-"+messages[index].m+"-"+messages[index].to+"-"+messages[index].d+"-"+messages[index].by+"-"+messages[index].ton+"-"+messages[index].byn+"-"+messages[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+            }
             return str;
         }
 
@@ -183,7 +179,7 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         takeGuildRessource(body){
-            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+            if(this.guilds[body.n]){
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
                     this.guilds[body.n].r += body.r;
                 }
@@ -199,7 +195,7 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         joinGuild(body){
-            if(this.guilds[body.n] && body.cu){//cu = client user envoi le globalidfixe
+            if(this.guilds[body.n] && body.cu){
                 if (this.guilds[body.n].u[body.cu] == 'invited'){
                     this.guilds[body.n].u[body.cu] = 'recruit';
                 }
@@ -208,19 +204,19 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         invitMember(body){
-            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+            if(this.guilds[body.n]){
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
-                    this.guilds[body.n].u[body.cui] = 'invited';//client user invited
+                    this.guilds[body.n].u[body.cui] = 'invited';
                 }
                 return this.guilds[body.n];
             } 
         }
 
         kickMember(body){
-            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
+            if(this.guilds[body.n]){
                 if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
-                    delete this.guilds[body.n].u[body.cui];//client user invited
-                    this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) { //suprimer empty element of array
+                    delete this.guilds[body.n].u[body.cui];
+                    this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) {
                         return el != null || undefined; 
                     }); 
                 }
@@ -229,10 +225,9 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         upGradeMember(body){
-            if(this.guilds[body.n]){//cu = client user envoi le globalidfixe
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
-                    this.guilds[body.n].u[body.cui] = 'officier';//client user invited
-                }
+            if(this.guilds[body.n]){
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master')
+                    this.guilds[body.n].u[body.cui] = 'officier';
                 return this.loadGuild(body);
             } 
         }
@@ -263,14 +258,13 @@ function randomIntFromInterval(min, max) { // min and max included
                 transfer.cu = body.cu;
                 transfer.time = Date.now()+(body.d*1000);//distance
                 this.transferShip[JSON.stringify(body.cu)].push(transfer);
-                //console.log('transfer ship',this.transferShip[JSON.stringify(body.cu)]);
                 return transfer;
             }
         }
 
         checkTransferShip(idUser){
             if(this.transferShip[idUser]){
-                this.transferShip[idUser] = this.transferShip[idUser].filter(function (el) { //suprimer empty element of array
+                this.transferShip[idUser] = this.transferShip[idUser].filter(function (el) {
                     return el != null || undefined; 
                 }); 
                 for (let index = 0; index < this.transferShip[idUser].length; index++) {
@@ -284,9 +278,7 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.planets[this.transferShip[idUser][index].to].sc5 += this.transferShip[idUser][index].sc5;
                                 this.planets[this.transferShip[idUser][index].to].sc6 += this.transferShip[idUser][index].sc6;
                                 this.planets[this.transferShip[idUser][index].to].sc7 += this.transferShip[idUser][index].sc7;
-                                //console.log(this.planets[this.transferShip[idUser][index].to].r);
                                 this.planets[this.transferShip[idUser][index].to].r += this.transferShip[idUser][index].r;
-                                //console.log(this.planets[this.transferShip[idUser][index].to].r); 
                                 this.aopsc1 = this.transferShip[idUser][index].sc1;
                                 this.aopsc2 = this.transferShip[idUser][index].sc2;
                                 this.aopsc3 = this.transferShip[idUser][index].sc3;
@@ -295,9 +287,7 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.aopsc6 = this.transferShip[idUser][index].sc6;
                                 this.aopsc7 = this.transferShip[idUser][index].sc7;
                                 delete this.transferShip[idUser][index];
-                                //console.log('transfered');
                             }else{
-                                //res.json(this.transferShip[idUser][index]);
                                 delete this.transferShip[idUser][index];
                             }
                         }
@@ -345,7 +335,6 @@ function randomIntFromInterval(min, max) { // min and max included
                     this.aopsc7 = 0;
                 }
                 this.planets[body.id].u = this;
-                //console.log(stringifiedPlanet)
                 return stringifiedPlanet;
             }
         }
@@ -357,6 +346,24 @@ function randomIntFromInterval(min, max) { // min and max included
 
         ///SAVE
         Save(){
+            try {
+                let data = JSON.stringify(this.transferShip);
+                fs.writeFile('saveTransfer.json', data, (err) => {
+                    if (err) throw err;
+                    console.log('Data written to file');
+                });
+            } catch (err) {
+                console.error(err);
+            }
+            try {
+                let data = JSON.stringify(this.guilds);
+                fs.writeFile('saveGuilds.json', data, (err) => {
+                    if (err) throw err;
+                    console.log('Data written to file');
+                });
+            } catch (err) {
+                console.error(err);
+            }
             try {
                 this.actualizAll();
                 let data = JSON.stringify(this.planets);
@@ -379,9 +386,18 @@ function randomIntFromInterval(min, max) { // min and max included
                 }
                 this.addUtoAll();
             });
+            fs.readFile('saveTransfer.json', (err, data) => {
+                if (err) throw err;
+                this.transferShip = JSON.parse(data);
+            });
+            fs.readFile('saveGuilds.json', (err, data) => {
+                if (err) throw err;
+                this.guilds = JSON.parse(data);
+            });
+
             /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
-                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0);
+                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,1,1,1);
                 planet.generateAttackPnj();
                 this.planets.push(planet);
             }
@@ -397,7 +413,6 @@ function randomIntFromInterval(min, max) { // min and max included
 
         actualizAll(){
             for (let index = 0; index < this.planets.length; index++) {
-                //this.planets[index].modeBlockus();
                 this.planets[index].checkFight();
                 this.planets[index].u = [];
             }

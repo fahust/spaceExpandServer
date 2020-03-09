@@ -7,7 +7,7 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now()) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),rc = 1,rx = 1,rd = 1) {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.on; //ownername
@@ -55,14 +55,10 @@ class Planet{
         this.st;//Jauge Tech
         this.sd;//Jauge Defense
         this.g;//guild
+        this.rc = rc;//reputation cehenyth
+        this.rx = rx;//reputation xahor
+        this.rd = rd;//reputation dominion
         //this.dba;
-    }
-
-    endAttack(){//console.log('end attack');
-        this.tba = Date.now()+randomIntFromInterval(1640000,8600000);
-        this.tea = this.tba+86400000 ;//1jour
-        this.ua = 0;
-        this.generateAttackPnj();
     }
 
     trade(){
@@ -73,42 +69,35 @@ class Planet{
         }
     }
 
-    rattrapageShipTechDef(){//console.log(Math.floor((Date.now()-this.lv)/5000));
+    rattrapageShipTechDef(){
         if(Math.floor((Date.now()-this.lv)/5000) > 1) {
             if(this.ss >= 10 && this.ss < 20) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
                     this.addShip(1);
-                }
             }
             if(this.ss >= 20 && this.ss < 40) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
                     this.addShip(2);
-                }
             }
             if(this.ss >= 40 && this.ss < 60) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
                     this.addShip(3);
-                }
             }
             if(this.ss >= 60 && this.ss < 70) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
                     this.addShip(4);
-                }
             }
             if(this.ss >= 70 && this.ss < 80) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
                     this.addShip(5);
-                }
             }
             if(this.ss >= 80 && this.ss < 90) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) 
                     this.addShip(6);
-                }
             }
             if(this.ss >= 90) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) {
+                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) 
                     this.addShip(7);
-                }
             }
 
             if(this.st > 10){
@@ -124,8 +113,8 @@ class Planet{
 
     prepareAttackClient(body){
         if(this.aby){
-            if(this.aby < 6){//console.log(body);
-                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+            if(this.aby < 6){
+                this.tba = Date.now()+(body.d*1000);
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
@@ -145,8 +134,7 @@ class Planet{
                 this.aidP = body.idp;
             }
         }else{
-            //console.log(body);
-                this.tba = Date.now()+(body.d*1000);//diviser par 10 la distance coter client
+                this.tba = Date.now()+(body.d*1000);
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
                 this.asc1 = body.sc1;
@@ -161,7 +149,7 @@ class Planet{
         }
     }
 
-    generateAttackPnj(){//console.log('generate pnj');
+    generateAttackPnj(){
         var randPnjFinal = 0;
         for (let index = 0; index < 15; index++) {
             var randPnj = randomIntFromInterval(2,4);
@@ -188,6 +176,13 @@ class Planet{
         }
         this.aid = this.o;
         this.aidP = this.id;
+        timebonus = 1;
+        if(randPnj == 2) timebonus = this.rc;
+        if(randPnj == 3) timebonus = this.rx;
+        if(randPnj == 4) timebonus = this.rd;
+        this.tba = Date.now()+(randomIntFromInterval(1640000,8600000)*(1+(timebonus/5)));
+        this.tea = this.tba+86400000 ;//1jour
+        this.ua = 0;
     }
 
     addShipMultipleShip(body){
@@ -283,24 +278,17 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner,id){
-        if(owner == this.aby){//console.log('atk ship destroy',cat)
-            if(cat == 1) 
-                this.asc1 -= 1;
-            if(cat == 2) 
-                this.asc2 -= 1;
-            if(cat == 3) 
-                this.asc3 -= 1;
-            if(cat == 4) 
-                this.asc4 -= 1;
-            if(cat == 5) 
-                this.asc5 -= 1;
-            if(cat == 6) 
-                this.asc6 -= 1;
-            if(cat == 7) 
-                this.asc7 -= 1;
+        if(owner == this.aby){
+            if(cat == 1) this.asc1 -= 1;
+            if(cat == 2) this.asc2 -= 1;
+            if(cat == 3) this.asc3 -= 1;
+            if(cat == 4) this.asc4 -= 1;
+            if(cat == 5) this.asc5 -= 1;
+            if(cat == 6) this.asc6 -= 1;
+            if(cat == 7) this.asc7 -= 1;
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
-                this.endAttack();
-        }else{//console.log('def ship destroy',cat);
+                this.generateAttackPnj();
+        }else{
             if(cat == 1) this.sc1 -= 1;
             if(cat == 2) this.sc2 -= 1;
             if(cat == 3) this.sc3 -= 1;
@@ -322,7 +310,6 @@ class Planet{
         if(cat == 7) obj.sc7 = this.sc7;
         obj.id = id;
         return obj;
-        //this.cp = true;
     }
 
     check(){
@@ -331,28 +318,21 @@ class Planet{
     }
 
     checkFight(){
-        if(this.sc1 < 0)
-            this.sc1 = 0;
-        if(this.sc2 < 0)
-            this.sc2 = 0;
-        if(this.sc3 < 0)
-            this.sc3 = 0;
-        if(this.sc4 < 0)
-            this.sc4 = 0;
-        if(this.sc5 < 0)
-            this.sc5 = 0;
-        if(this.sc6 < 0)
-            this.sc6 = 0;
-        if(this.sc7 < 0)
-            this.sc7 = 0;
+        if(this.sc1 < 0) this.sc1 = 0;
+        if(this.sc2 < 0) this.sc2 = 0;
+        if(this.sc3 < 0) this.sc3 = 0;
+        if(this.sc4 < 0) this.sc4 = 0;
+        if(this.sc5 < 0) this.sc5 = 0;
+        if(this.sc6 < 0) this.sc6 = 0;
+        if(this.sc7 < 0) this.sc7 = 0;
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
-            this.ua = 1;//console.log('under attack',this.id)
+            this.ua = 1;
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){
-            this.decolonize();//console.log('time passed')
+            this.decolonize();
         }
     }
 
-    decolonize(){//console.log('decolonize');
+    decolonize(){
             this.o = this.aby;
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 
@@ -363,7 +343,7 @@ class Planet{
             this.sc7 = this.asc7; 
             this.d = 0; //defense level
             this.t = 1; //techno
-            this.endAttack();
+            this.generateAttackPnj();
     }
 
 

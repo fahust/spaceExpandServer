@@ -100,9 +100,9 @@ function randomIntFromInterval(min, max) { // min and max included
                         message.by = body.by;
                     if(body.byn)//name
                         message.byn = body.byn;
-                    if(body.to && body.ton){//id //name
+                    if(body.to){//id //name
                         message.to = body.to;
-                        message.ton = body.ton;
+                        message.ton = 'test';//body.ton;
                         message.t = 2; //type 2 no guild but private
                     }
                     this.message.push(message);
@@ -115,7 +115,9 @@ function randomIntFromInterval(min, max) { // min and max included
                         message.by = body.by;
                     if(body.byn)//name
                         message.byn = body.byn;
-                    this.guilds[body.g].m.push(message);
+                    //if(this.guilds[body.g])
+                        //this.guilds[body.g].m.push(message);
+                    this.message.push(message);
                 }
             }
             return this.loadLastTenMessage(body);
@@ -125,8 +127,13 @@ function randomIntFromInterval(min, max) { // min and max included
             var str = "";
             var messages = [];
             for (let index = this.message.length-200; index < this.message.length; index++) {
-                if(this.message[index] && body.g == this.message[index].g && body.t == this.message[index].t)
+                if(this.message[index] && body.g == this.message[index].g && body.t == this.message[index].t && body.t == 1){
                     messages.push(this.message[index])
+                }else if(this.message[index] && body.t == 2 && body.t == this.message[index].t && (body.cu == this.message[index].to || body.cu == this.message[index].by)){
+                    messages.push(this.message[index])
+                }else if(this.message[index] && body.t == 3 && body.g == this.message[index].g){
+                    messages.push(this.message[index])
+                }
             }
             for (let index = messages.length-20; index < messages.length; index++) {
                 if(messages[index] && body.g == messages[index].g)
@@ -144,13 +151,11 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.s = body.s;//score
                 guild.t = body.t;//techno
                 guild.ma = body.cu;//maitre de guild
-                guild.o = [];//officier de guild //peuvent inviter
-                guild.u = [];
+                guild.idg = randomIntFromInterval(10,999999);
+                guild.o = {};//officier de guild //peuvent inviter
+                guild.u = {};
                 guild.u[body.cu] = 'master';
-                guild[body.n].u = guild[body.n].u.filter(function (el) {
-                    return el != null || undefined; 
-                }); 
-                guild.m = [];
+                guild.m = [];//message
                 this.guilds[body.n] = guild;
                 guild.cg = 1
                 return guild;
@@ -165,7 +170,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 var obj = {};
                 this.guilds.forEach(guild => {
                     if(guild.u[body.cu]){
-                        if(user == 'invited'){
+                        if(guild.u[body.cu] == 'invited'){
                             return obj.icu = guild.name;
                         }else{
                             return this.guilds[body.n]
@@ -200,33 +205,24 @@ function randomIntFromInterval(min, max) { // min and max included
 
         joinGuild(body){
             if(this.guilds[body.n] && body.cu){
-                if (this.guilds[body.n].u[body.cu] == 'invited'){
+                if (this.guilds[body.n].u[body.cu] == 'invited')
                     this.guilds[body.n].u[body.cu] = 'recruit';
-                }
-                this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) {
-                    return el != null || undefined; 
-                }); 
                 return this.loadGuild(body);
             }
         }
 
         invitMember(body){
             if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' )
                     this.guilds[body.n].u[body.cui] = 'invited';
-                }
                 return this.guilds[body.n];
             } 
         }
 
         kickMember(body){
             if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master'){
+                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master')
                     delete this.guilds[body.n].u[body.cui];
-                    this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) {
-                        return el != null || undefined; 
-                    }); 
-                }
                 return this.loadGuild(body);
             } 
         }

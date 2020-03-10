@@ -143,6 +143,7 @@ module.exports = app => {
     function addGuild(req, res){//enregistrer coter client sa guild pour l'envoyer ensuite au serveur sur les planete dont il est proprietaire pour ensuite send ship a d'autre membre de guild (this.g)
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.addGuild(body));
+        delete app.universe.guilds[body.n].cg
     }
     
     function loadGuild(req, res){

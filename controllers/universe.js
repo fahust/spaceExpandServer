@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,addEventParticipant,sendShipEvent,deleteShipEventParticipant};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -184,8 +184,26 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.upGradeMember(body));
     }
-    
 
+    
+    //EVENT
+    
+    function addEventParticipant(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.addEventParticipant(body));
+    }
+    
+    function sendShipEvent(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sendShipEvent(body));
+    }
+    
+    function deleteShipEventParticipant(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.deleteShipEventParticipant(body));
+    }
+    
+    
     
 
     

@@ -18,6 +18,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.commerce = [];
             this.guilds = [];
             this.message = [];
+            this.event = 0;
             this.aopsc1 = 0;
             this.aopsc2 = 0;
             this.aopsc3 = 0;
@@ -423,6 +424,147 @@ function randomIntFromInterval(min, max) { // min and max included
                 this.planets[index].u = this;
             }
         }
+
+        /*HTTP : 
+        //creation des ship event galactic
+            if http[? "ua"] = 1 {
+                if !instance_exists(obj_deathStar){
+                    with(instance_create(obj_deathStar)){
+                        planetparent = 2
+                    }
+                }
+                for (index = 0; index < 6; index++) {
+                    if index = 0 {scnow = http[? "sc2"] }
+                    if index = 1 {scnow = http[? "sc3"]}
+                    if index = 2 {scnow = http[? "sc4"]}
+                    if index = 3 {scnow = http[? "sc5"]}
+                    if index = 4 {scnow = http[? "sc6"]}
+                    if index = 5 {scnow = http[? "sc7"]}
+                    global.typeEvent = index+2
+                    for (index = 0; index < sc2.length; index++) {
+                        with(instance_create(obj_ship)){
+                            if (other.index = 0 && obj_highscore.http[? "soc"] = global.typeEvent)
+                                enemy = global.idfixe 
+                            noAttackPvp = 1;
+                            type = global.typeEvent;
+                            augmenter le temps de vol, 2 minute alarm
+                            toutelesvariable;
+                        }
+                    }
+                }
+            }
+            if !is_undefined(http[? "gift"]){
+                ds_grid_add(obj_planetary.planetary,money,http[? "gift"])
+                with(obj_deathStar){
+                    explosion = 1;
+                }
+            }
+            
+            //Envoi quand ship owner destroy
+            //Envoi quand -hp death star by ship owner
+            */
+
+        endEvent(){
+            this.event.tba = Date.now()+(randomIntFromInterval(1640000,8600000));//time before attack
+            this.event.tea = this.tba+(86400000/12);//2heure
+            this.event.ua = 0;
+        }
+
+        startEvent(){
+            if(Date.now() > this.event.tba && this.event.ua == 0){
+                this.event.ua = 1;
+                this.event.hp = 1000000000
+            }
+        }
+
+        addEventParticipant(body){
+            if(!this.event.p[body.cu]){
+                var participant = {};
+                participant.sc2 = body.sc2;
+                participant.sc3 = body.sc3;
+                participant.sc4 = body.sc4;
+                participant.sc5 = body.sc5;
+                participant.sc6 = body.sc6;
+                participant.sc7 = body.sc7;
+                participant.cu = body.cu;//global.idfixe
+                participant.cun = body.cun;//global.name
+                this.event.p[participant.cu] = participant;
+                this.event.p = this.event.p.filter(function (el) { //suprimer empty element of array
+                    return el != null || undefined; 
+                }); 
+            }
+        }
+
+        substractHpEvent(body){
+            this.event.hp -= body.hp;
+        }
+
+        sendShipEvent(body){//envoi un ship de chaque participant
+            if(this.event.ua == 0)
+                this.startEvent();
+            if(body.hp)
+                this.substractHpEvent(body)
+            var obj = {
+                tsc2: 0,
+                tsc3: 0,
+                tsc4: 0,
+                tsc5: 0,
+                tsc6: 0,
+                tsc7: 0,
+            };
+            if(this.event.hp <= 0 && this.event.p[body.cu]){
+                this.endEvent();
+                delete this.event.p[body.cu];
+                this.event.p = this.event.p.filter(function (el) {
+                    return el != null || undefined; 
+                }); 
+                obj.gift = 10000000;//explode death star side client
+            }
+
+            this.event.p.forEach(participant => {
+                if(participant.sc2 > 0){tsc2 += 1;var soc = 2;}else
+                if(participant.sc3 > 0){tsc3 += 1;var soc = 3;}else
+                if(participant.sc4 > 0){tsc4 += 1;var soc = 4;}else
+                if(participant.sc5 > 0){tsc5 += 1;var soc = 5;}else
+                if(participant.sc6 > 0){tsc6 += 1;var soc = 6;}else
+                if(participant.sc7 > 0){tsc7 += 1;var soc = 7;}
+                if(body.cu = participant.cu)
+                    obj.soc = soc;//coter client a la premiere catégorie soc créer, en faire enemy global.idfixe avec couleur differente et seul lui envoi c dgt hp et son destroy si destroy
+            })
+            return obj;
+        }
+
+
+        deleteShipEventParticipant(body){
+            if(this.event.p[body.cu]){
+                if(body.sc2 > 0){
+                    if(this.event.p[body.cu].sc2 >= body.sc2){this.event.p[body.cu].sc2 -= body.sc2}else{this.event.p[body.cu].sc2 = 0}
+                }
+                if(body.sc3 > 0){
+                    if(this.event.p[body.cu].sc3 >= body.sc3){this.event.p[body.cu].sc3 -= body.sc3}else{this.event.p[body.cu].sc3 = 0}
+                }
+                if(body.sc4 > 0){
+                    if(this.event.p[body.cu].sc4 >= body.sc4){this.event.p[body.cu].sc4 -= body.sc4}else{this.event.p[body.cu].sc4 = 0}
+                }
+                if(body.sc5 > 0){
+                    if(this.event.p[body.cu].sc5 >= body.sc5){this.event.p[body.cu].sc5 -= body.sc5}else{this.event.p[body.cu].sc5 = 0}
+                }
+                if(body.sc6 > 0){
+                    if(this.event.p[body.cu].sc6 >= body.sc6){this.event.p[body.cu].sc6 -= body.sc6}else{this.event.p[body.cu].sc6 = 0}
+                }
+                if(body.sc7 > 0){
+                    if(this.event.p[body.cu].sc7 >= body.sc7){this.event.p[body.cu].sc7 -= body.sc7}else{this.event.p[body.cu].sc7 = 0}
+                }
+                if(this.event.p[body.cu].sc2+this.event.p[body.cu].sc3+this.event.p[body.cu].sc4+this.event.p[body.cu].sc5+this.event.p[body.cu].sc6+this.event.p[body.cu].sc7 <= 0){
+                    delete this.event.p[body.cu];
+                    this.event.p = this.event.p.filter(function (el) { //suprimer empty element of array
+                        return el != null || undefined; 
+                    }); 
+                }
+            }
+            return {};
+        }
+
 
     }
 

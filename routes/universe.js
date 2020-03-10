@@ -50,4 +50,13 @@ app.post('/universe/kickmember', app.controllers.universe.kickMember);
 // 
 app.post('/universe/upgrademember', app.controllers.universe.upGradeMember);
 
+// 
+app.post('/universe/addeventparticipant', app.controllers.universe.addEventParticipant);
+// 
+app.post('/universe/sendshipevent', app.controllers.universe.sendShipEvent);
+// 
+app.post('/universe/deleteshipeventparticipant', app.controllers.universe.deleteShipEventParticipant);
+
+
+
 }

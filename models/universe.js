@@ -73,7 +73,7 @@ function randomIntFromInterval(min, max) { // min and max included
             for (let index = indexClose-10; index < this.usersScore.length; index++) {//console.log(index)
                 if(this.usersScore[index]){
                         breakIndex += 1;
-                        str = str+this.usersScore[index].n+"-"+"test"+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+'test'+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                        str = str+this.usersScore[index].n+"-"+""+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+''+"-"+''+"-"+''+"-"+''+"-|";
                 }
                 if(breakIndex > 6)
                     break;
@@ -129,7 +129,7 @@ function randomIntFromInterval(min, max) { // min and max included
             }
             for (let index = messages.length-20; index < messages.length; index++) {
                 if(messages[index] && body.g == messages[index].g)
-                    str = str+'line'+"-"+"id"+"-"+messages[index].m+"-"+messages[index].to+"-"+messages[index].d+"-"+messages[index].by+"-"+messages[index].ton+"-"+messages[index].byn+"-"+messages[index].t+"-"+'test'+"-"+'test'+"-"+'test'+"-|";
+                    str = str+''+"-"+""+"-"+messages[index].m+"-"+messages[index].to+"-"+messages[index].d+"-"+messages[index].by+"-"+messages[index].ton+"-"+messages[index].byn+"-"+messages[index].t+"-"+''+"-"+''+"-"+''+"-|";
             }
             return str;
         }

@@ -49,7 +49,7 @@ class Planet{
         this.u = universe;
         this.lsd = Date.now()+3600000;//last ship destroy
         //this.cp = true;//connected player
-        this.ua = 0;//under attack
+        this.ua;//under attack
         this.lv = lastView;//last view on P by player for date rattrap
         this.ss;//Jauge Ship
         this.st;//Jauge Tech
@@ -176,10 +176,10 @@ class Planet{
         }
         this.aid = this.o;
         this.aidP = this.id;
-        timebonus = 1;
-        if(randPnj == 2) timebonus = this.rc;
+        var timebonus = 1;
+        if(randPnj == 2) timebonus = this.rd;
         if(randPnj == 3) timebonus = this.rx;
-        if(randPnj == 4) timebonus = this.rd;
+        if(randPnj == 4) timebonus = this.rc;
         this.tba = Date.now()+(randomIntFromInterval(1640000,8600000)*(1+(timebonus/5)));
         this.tea = this.tba+86400000 ;//1jour
         this.ua = 0;

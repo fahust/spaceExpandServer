@@ -146,6 +146,9 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.o = [];//officier de guild //peuvent inviter
                 guild.u = [];
                 guild.u[body.cu] = 'master';
+                guild[body.n].u = guild[body.n].u.filter(function (el) {
+                    return el != null || undefined; 
+                }); 
                 guild.m = [];
                 this.guilds[body.n] = guild;
                 guild.cg = 1
@@ -199,6 +202,9 @@ function randomIntFromInterval(min, max) { // min and max included
                 if (this.guilds[body.n].u[body.cu] == 'invited'){
                     this.guilds[body.n].u[body.cu] = 'recruit';
                 }
+                this.guilds[body.n].u = this.guilds[body.n].u.filter(function (el) {
+                    return el != null || undefined; 
+                }); 
                 return this.loadGuild(body);
             }
         }
@@ -308,7 +314,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 if(body.t6) this.planets[body.id].t6 = body.t6
                 if(body.n){
                     if(body.cu == this.planets[body.id].o)
-                    this.planets[body.id].on = body.n
+                        this.planets[body.id].on = body.n
                 }
                 this.actualizOne(body.id);
                 this.planets[body.id].trade();

@@ -97,15 +97,18 @@ module.exports = app => {
         var planetLoad = app.universe.loadById(body);
         var lts =""; //list travel ship
         var lfs =""; //list fight ship
+        //app.universe.planets.forEach(el => {
         app.universe.planets.filter(function (el) { 
             if(el.aby == body.cu)
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
-            if(el.o == body.cu && /*el.aby > 7 && */el.ua > 0 )//si planet owned attacked now
+            if(el.o == body.cu && el.ua > 0 )//si planet owned attacked now
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
             if(el.o == body.cu){
-                app.universe.planets[el.id].el.rc = body.rc;
-                app.universe.planets[el.id].el.rx = body.rx;
-                app.universe.planets[el.id].el.rd = body.rd;
+                app.universe.planets[el.id].rc = body.rc;
+                app.universe.planets[el.id].rx = body.rx;
+                app.universe.planets[el.id].rd = body.rd;
+                el.n = body.n;
+                planetLoad[el.id] = body.n;
                 planetLoad[el.id] = el.r;
                 body.t += app.universe.planets[el.id].t;
             }

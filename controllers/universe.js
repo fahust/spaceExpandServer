@@ -104,6 +104,7 @@ module.exports = app => {
             if(el.o == body.cu && el.ua > 0 )//si planet owned attacked now
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
             if(el.o == body.cu){
+                app.universe.planets[el.id].g = body.g;
                 app.universe.planets[el.id].rc = body.rc;
                 app.universe.planets[el.id].rx = body.rx;
                 app.universe.planets[el.id].rd = body.rd;

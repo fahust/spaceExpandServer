@@ -85,6 +85,20 @@ function randomIntFromInterval(min, max) { // min and max included
             return str;//usersScore;
         }
 
+        loadUsersGuild(body){
+            var breakIndex = 0;
+            var str = "";
+            for (let index = 0; index < this.guilds[body.gn].u.length; index++) {//console.log(index)
+                if(this.guilds[body.gn].u[index]){
+                        breakIndex += 1;
+                        str = str+this.guilds[body.gn].u[index].t+"-"+this.guilds[body.gn].u[index].n+"-"+Object.keys(this.guilds[body.gn].u[index])+"-"+"|";
+                }
+                if(breakIndex > 30)
+                    break;
+            }
+            return str;//usersScore;
+        }
+
         /*MESSAGE*/
         addMessage(body){
             var message = {};
@@ -127,16 +141,16 @@ function randomIntFromInterval(min, max) { // min and max included
             var str = "";
             var messages = [];
             for (let index = this.message.length-200; index < this.message.length; index++) {
-                if(this.message[index] && body.g == this.message[index].g && body.t == this.message[index].t && body.t == 1){
+                if(this.message[index] && body.t == 1 && body.t == this.message[index].t && body.g == this.message[index].g ){
                     messages.push(this.message[index])
                 }else if(this.message[index] && body.t == 2 && body.t == this.message[index].t && (body.cu == this.message[index].to || body.cu == this.message[index].by)){
                     messages.push(this.message[index])
-                }else if(this.message[index] && body.t == 3 && body.g == this.message[index].g){
+                }else if(this.message[index] && body.t == 3 && body.t == this.message[index].t && body.g == this.message[index].g){
                     messages.push(this.message[index])
                 }
             }
             for (let index = messages.length-20; index < messages.length; index++) {
-                if(messages[index] && body.g == messages[index].g)
+                if(messages[index])
                     str = str+''+"-"+""+"-"+messages[index].m+"-"+messages[index].to+"-"+messages[index].d+"-"+messages[index].by+"-"+messages[index].ton+"-"+messages[index].byn+"-"+messages[index].t+"-"+''+"-"+''+"-"+''+"-|";
             }
             return str;
@@ -154,7 +168,9 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.idg = randomIntFromInterval(10,999999);
                 guild.o = {};//officier de guild //peuvent inviter
                 guild.u = {};
-                guild.u[body.cu] = 'master';
+                guild.u[body.cu] = {};
+                guild.u[body.cu].t = 'master';
+                guild.u[body.cu].n = body.cun;
                 guild.m = [];//message
                 this.guilds[body.n] = guild;
                 guild.cg = 1
@@ -170,10 +186,10 @@ function randomIntFromInterval(min, max) { // min and max included
                 var obj = {};
                 this.guilds.forEach(guild => {
                     if(guild.u[body.cu]){
-                        if(guild.u[body.cu] == 'invited'){
-                            return obj.icu = guild.name;
+                        if(guild.u[body.cu].t == 'invited'){
+                            return obj.icu = guild.n;
                         }else{
-                            return this.guilds[body.n]
+                            return obj;//this.guilds[body.n];
                         }
                     }
                 });
@@ -189,7 +205,7 @@ function randomIntFromInterval(min, max) { // min and max included
 
         takeGuildRessource(body){
             if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' ){
+                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master' ){
                     this.guilds[body.n].r += body.r;
                 }
                 return this.loadGuild(body);
@@ -204,33 +220,37 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         joinGuild(body){
-            if(this.guilds[body.n] && body.cu){
-                if (this.guilds[body.n].u[body.cu] == 'invited')
-                    this.guilds[body.n].u[body.cu] = 'recruit';
+            if(this.guilds[body.n] && body.cu && this.guilds[body.n].u[body.cu]){
+                if (this.guilds[body.n].u[body.cu].t == 'invited'){
+                    this.guilds[body.n].u[body.cu].n = body.cun;
+                    this.guilds[body.n].u[body.cu].t = 'recruit';
+                }
                 return this.loadGuild(body);
             }
         }
 
         invitMember(body){
-            if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master' )
-                    this.guilds[body.n].u[body.cui] = 'invited';
+            if(this.guilds[body.n] && this.guilds[body.n].u[body.cu]){
+                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master' ){
+                    this.guilds[body.n].u[body.cui] = {};
+                    this.guilds[body.n].u[body.cui].t = 'invited';
+                }
                 return this.guilds[body.n];
             } 
         }
 
         kickMember(body){
-            if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master')
+            if(this.guilds[body.n] && this.guilds[body.n].u[body.cu] && this.guilds[body.n].u[body.cui]){
+                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master')
                     delete this.guilds[body.n].u[body.cui];
                 return this.loadGuild(body);
             } 
         }
 
         upGradeMember(body){
-            if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu] == 'officier' || this.guilds[body.n].u[body.cu] == 'master')
-                    this.guilds[body.n].u[body.cui] = 'officier';
+            if(this.guilds[body.n] && this.guilds[body.n].u[body.cu] && this.guilds[body.n].u[body.cui]){
+                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master')
+                    this.guilds[body.n].u[body.cui].t = 'officier';
                 return this.loadGuild(body);
             } 
         }
@@ -539,24 +559,18 @@ function randomIntFromInterval(min, max) { // min and max included
 
         deleteShipEventParticipant(body){
             if(this.event.p[body.cu]){
-                if(body.sc2 > 0){
+                if(body.sc2 > 0)
                     if(this.event.p[body.cu].sc2 >= body.sc2){this.event.p[body.cu].sc2 -= body.sc2}else{this.event.p[body.cu].sc2 = 0}
-                }
-                if(body.sc3 > 0){
+                if(body.sc3 > 0)
                     if(this.event.p[body.cu].sc3 >= body.sc3){this.event.p[body.cu].sc3 -= body.sc3}else{this.event.p[body.cu].sc3 = 0}
-                }
-                if(body.sc4 > 0){
+                if(body.sc4 > 0)
                     if(this.event.p[body.cu].sc4 >= body.sc4){this.event.p[body.cu].sc4 -= body.sc4}else{this.event.p[body.cu].sc4 = 0}
-                }
-                if(body.sc5 > 0){
+                if(body.sc5 > 0)
                     if(this.event.p[body.cu].sc5 >= body.sc5){this.event.p[body.cu].sc5 -= body.sc5}else{this.event.p[body.cu].sc5 = 0}
-                }
-                if(body.sc6 > 0){
+                if(body.sc6 > 0)
                     if(this.event.p[body.cu].sc6 >= body.sc6){this.event.p[body.cu].sc6 -= body.sc6}else{this.event.p[body.cu].sc6 = 0}
-                }
-                if(body.sc7 > 0){
+                if(body.sc7 > 0)
                     if(this.event.p[body.cu].sc7 >= body.sc7){this.event.p[body.cu].sc7 -= body.sc7}else{this.event.p[body.cu].sc7 = 0}
-                }
                 if(this.event.p[body.cu].sc2+this.event.p[body.cu].sc3+this.event.p[body.cu].sc4+this.event.p[body.cu].sc5+this.event.p[body.cu].sc6+this.event.p[body.cu].sc7 <= 0){
                     delete this.event.p[body.cu];
                     this.event.p = this.event.p.filter(function (el) { //suprimer empty element of array

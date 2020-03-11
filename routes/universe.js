@@ -49,6 +49,9 @@ app.post('/universe/invitmember', app.controllers.universe.invitMember);
 app.post('/universe/kickmember', app.controllers.universe.kickMember);
 // 
 app.post('/universe/upgrademember', app.controllers.universe.upGradeMember);
+// 
+app.post('/universe/loadusersguild', app.controllers.universe.loadUsersGuild);
+
 
 // 
 app.post('/universe/addeventparticipant', app.controllers.universe.addEventParticipant);

@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,addEventParticipant,sendShipEvent,deleteShipEventParticipant};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -186,6 +186,13 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.upGradeMember(body));
     }
+
+    function loadUsersGuild(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.loadUsersGuild(body));
+    }
+
+    
 
     
     //EVENT

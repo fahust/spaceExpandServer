@@ -87,14 +87,18 @@ function randomIntFromInterval(min, max) { // min and max included
 
         loadUsersGuild(body){
             var breakIndex = 0;
-            var str = "";
-            for (let index = 0; index < this.guilds[body.gn].u.length; index++) {//console.log(index)
-                if(this.guilds[body.gn].u[index]){
-                        breakIndex += 1;
-                        str = str+this.guilds[body.gn].u[index].t+"-"+this.guilds[body.gn].u[index].n+"-"+Object.keys(this.guilds[body.gn].u[index])+"-"+"|";
+            var str = "---------------------|";
+            if(this.guilds[body.gn]){
+                var str = "";
+                //for (let index = -1; index < this.guilds[body.gn].u.length; index++) {console.log(index)
+                for(var prop in this.guilds[body.gn].u) {
+                    if(prop){//console.log(this.guilds[body.gn].u[prop]);
+                            breakIndex += 1;
+                            str = str+this.guilds[body.gn].u[prop].t+"-"+this.guilds[body.gn].u[prop].n+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"|";
+                    }
+                    if(breakIndex > 30)
+                        break;
                 }
-                if(breakIndex > 30)
-                    break;
             }
             return str;//usersScore;
         }
@@ -103,11 +107,11 @@ function randomIntFromInterval(min, max) { // min and max included
         addMessage(body){
             var message = {};
             if(body.m != ""){
+                var current_datetime = new Date()
+                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
                 if(body.g == ""){//guild 0
                     message.m = body.m
                     message.g = body.g
-                    let current_datetime = new Date()
-                    let formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + " " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
                     message.d = formatted_date;
                     message.t = 1; //type 1 no guild no private
                     if(body.by)//id
@@ -123,7 +127,7 @@ function randomIntFromInterval(min, max) { // min and max included
                 }else if(body.g != ""){
                     message.g = body.g
                     message.m = body.m
-                    message.d = Date.now().toString();
+                    message.d = formatted_date;
                     message.t = 3; //type 1 no guild no private
                     if(body.by)//id
                         message.by = body.by;

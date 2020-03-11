@@ -189,7 +189,9 @@ module.exports = app => {
 
     function loadUsersGuild(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        res.json(app.universe.loadUsersGuild(body));
+        var obj = {};
+        obj.chat = app.universe.loadUsersGuild(body);//console.log(obj);
+        res.json(obj);
     }
 
     

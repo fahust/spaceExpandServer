@@ -108,7 +108,7 @@ function randomIntFromInterval(min, max) { // min and max included
             var message = {};
             if(body.m != ""){
                 var current_datetime = new Date()
-                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
+                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
                 if(body.g == ""){//guild 0
                     message.m = body.m
                     message.g = body.g
@@ -191,15 +191,18 @@ function randomIntFromInterval(min, max) { // min and max included
                 return this.guilds[body.n];
             }else{
                 var obj = {};
-                this.guilds.forEach(guild => {
-                    if(guild.u[body.cu]){
-                        if(guild.u[body.cu].t == 'invited'){
-                            return obj.icu = guild.n;
-                        }else{
-                            return obj;
+                if(this.guilds){
+                    for(var guild in this.guilds){
+                        if(this.guilds[guild].u[body.cu]){
+                            if(this.guilds[guild].u[body.cu].t == 'invited'){
+                                obj.icu = this.guilds[guild].n;
+                                return obj;
+                            }else{
+                                return obj;
+                            }
                         }
-                    }
-                });
+                    };
+                }
             }
         }
 

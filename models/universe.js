@@ -17,6 +17,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.transferShip = [];
             this.commerce = [];
             this.guilds = [];
+            this.gift = [];
             this.message = [];
             this.event = 0;
             this.aopsc1 = 0;
@@ -90,17 +91,16 @@ function randomIntFromInterval(min, max) { // min and max included
             var str = "---------------------|";
             if(this.guilds[body.gn]){
                 var str = "";
-                //for (let index = -1; index < this.guilds[body.gn].u.length; index++) {console.log(index)
                 for(var prop in this.guilds[body.gn].u) {
                     if(prop){//console.log(this.guilds[body.gn].u[prop]);
                             breakIndex += 1;
-                            str = str+this.guilds[body.gn].u[prop].t+"-"+this.guilds[body.gn].u[prop].n+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"-"+"|";
+                            str = str+this.guilds[body.gn].u[prop].t+this.guilds[body.gn].u[prop].n+"-"+""+"-"+this.guilds[body.gn].u[prop].stal+"-"+this.guilds[body.gn].u[prop].sr+"-"+this.guilds[body.gn].u[prop].ss+"-"+this.guilds[body.gn].u[prop].st+"-"+this.guilds[body.gn].u[prop].sd+"-"+prop+"-"+"-"+"-"+"-"+"-"+"|";
                     }
                     if(breakIndex > 30)
                         break;
                 }
             }
-            return str;//usersScore;
+            return str;
         }
 
         /*MESSAGE*/
@@ -133,8 +133,6 @@ function randomIntFromInterval(min, max) { // min and max included
                         message.by = body.by;
                     if(body.byn)//name
                         message.byn = body.byn;
-                    //if(this.guilds[body.g])
-                        //this.guilds[body.g].m.push(message);
                     this.message.push(message);
                 }
             }
@@ -171,8 +169,13 @@ function randomIntFromInterval(min, max) { // min and max included
                 guild.ma = body.cu;//maitre de guild
                 guild.idg = randomIntFromInterval(10,999999);
                 guild.o = {};//officier de guild //peuvent inviter
-                guild.u = {};
+                guild.u = {};//users
                 guild.u[body.cu] = {};
+                guild.u[body.cu].sr = body.cur;
+                guild.u[body.cu].ss = body.cus;
+                guild.u[body.cu].st = body.cut;
+                guild.u[body.cu].sd = body.cud;
+                guild.u[body.cu].stal = (Math.floor(body.cur/100000)+body.cus+body.cut+(body.cud*10));
                 guild.u[body.cu].t = 'master';
                 guild.u[body.cu].n = body.cun;
                 guild.m = [];//message
@@ -193,7 +196,7 @@ function randomIntFromInterval(min, max) { // min and max included
                         if(guild.u[body.cu].t == 'invited'){
                             return obj.icu = guild.n;
                         }else{
-                            return obj;//this.guilds[body.n];
+                            return obj;
                         }
                     }
                 });
@@ -227,6 +230,11 @@ function randomIntFromInterval(min, max) { // min and max included
             if(this.guilds[body.n] && body.cu && this.guilds[body.n].u[body.cu]){
                 if (this.guilds[body.n].u[body.cu].t == 'invited'){
                     this.guilds[body.n].u[body.cu].n = body.cun;
+                    this.guilds[body.n].u[body.cu].sr = body.r;
+                    this.guilds[body.n].u[body.cu].ss = body.s;
+                    this.guilds[body.n].u[body.cu].st = body.t;
+                    this.guilds[body.n].u[body.cu].sd = body.d;
+                    this.guilds[body.n].u[body.cu].stal = (Math.floor(body.r/100000)+body.s+body.t+(body.d*10));
                     this.guilds[body.n].u[body.cu].t = 'recruit';
                 }
                 return this.loadGuild(body);
@@ -345,6 +353,9 @@ function randomIntFromInterval(min, max) { // min and max included
                 this.planets[body.id].dba = Date.now()-this.planets[body.id].tba
                 this.planets[body.id].u = [];
                 var stringifiedPlanet = Object.assign(new Planet(), this.planets[body.id]);
+                var gift = this.getPrimeOnPlanet(body);
+                if(gift != undefined)
+                    stringifiedPlanet.gift = gift;
                 if (this.aopsc1+this.aopsc2+this.aopsc3+this.aopsc4+this.aopsc5+this.aopsc6+this.aopsc7 > 0 ){
                     stringifiedPlanet.aopsc1 = this.aopsc1;
                     stringifiedPlanet.aopsc2 = this.aopsc2;
@@ -585,6 +596,21 @@ function randomIntFromInterval(min, max) { // min and max included
             return {};
         }
 
+
+
+        addPrimeOnPlanet(body){
+            this.planets[body.id].p += 1;
+        }
+    
+        getPrimeOnPlanet(body){
+            var gift;
+            if(this.gift[body.cu]){
+                gift = this.gift[body.cu]
+                delete this.gift[body.cu];
+            }
+            return gift;
+        }
+    
 
     }
 

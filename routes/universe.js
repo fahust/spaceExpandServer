@@ -61,5 +61,10 @@ app.post('/universe/sendshipevent', app.controllers.universe.sendShipEvent);
 app.post('/universe/deleteshipeventparticipant', app.controllers.universe.deleteShipEventParticipant);
 
 
+// 
+app.post('/universe/addprimeonplanet', app.controllers.universe.addPrimeOnPlanet);
+
+
+
 
 }

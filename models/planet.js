@@ -7,7 +7,7 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),rc = 1,rx = 1,rd = 1) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),rc = 1,rx = 1,rd = 1,p = 0) {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.on; //ownername
@@ -58,6 +58,7 @@ class Planet{
         this.rc = rc;//reputation cehenyth
         this.rx = rx;//reputation xahor
         this.rd = rd;//reputation dominion
+        this.p = p;//prime
         //this.dba;
     }
 
@@ -278,6 +279,7 @@ class Planet{
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
     deleteShip(cat,owner,id){
+        var gift;
         if(owner == this.aby){
             if(cat == 1) this.asc1 -= 1;
             if(cat == 2) this.asc2 -= 1;
@@ -296,8 +298,7 @@ class Planet{
             if(cat == 5) this.sc5 -= 1;
             if(cat == 6) this.sc6 -= 1;
             if(cat == 7) this.sc7 -= 1;
-            
-            this.check();
+            gift = this.check();
         }
         this.lsd = Date.now();
         var obj = {};
@@ -308,13 +309,23 @@ class Planet{
         if(cat == 5) obj.sc5 = this.sc5;
         if(cat == 6) obj.sc6 = this.sc6;
         if(cat == 7) obj.sc7 = this.sc7;
+        if(gift != undefined)
+            obj.giftuser = gift;
         obj.id = id;
         return obj;
     }
 
     check(){
-        if(this.sc1+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7 <= 9)
+        if(this.sc1+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7 <= 9){
+            var gift = {
+                by : this.aby,
+                p : this.p,
+            }
             this.decolonize();
+            if(this.gift.aby > 7)
+                return gift;
+        }
+        return undefined;
     }
 
     checkFight(){

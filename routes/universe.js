@@ -31,8 +31,14 @@ app.post('/universe/setusersscore', app.controllers.universe.setUsersScore);
 app.post('/universe/addmessage', app.controllers.universe.addMessage);
 // 
 app.post('/universe/loadlasttenmessage', app.controllers.universe.loadLastTenMessage);
+
+
 // 
 app.post('/universe/addguild', app.controllers.universe.addGuild);
+// 
+app.post('/universe/quitguild', app.controllers.universe.quitGuild);
+// 
+app.post('/universe/changenameuserguild', app.controllers.universe.changeNameUserGuild);
 // 
 app.post('/universe/loadguild', app.controllers.universe.loadGuild);
 // 

@@ -186,6 +186,33 @@ function randomIntFromInterval(min, max) { // min and max included
             return guild;
         }
 
+        quitGuild(body){
+            if(this.guilds[body.n] && body.cu && this.guilds[body.n].u[body.cu]){
+                delete this.guilds[body.n].u[body.cu]
+                var count = 0;
+                for (var k in this.guilds[body.n].u) {
+                    if (this.guilds[body.n].u.hasOwnProperty(k)) {
+                    ++count;
+                    }
+                }
+                if(count == 0){
+                    delete this.guilds[body.n]
+                }
+            }
+            return {};
+        }
+
+        changeNameUserGuild(body){
+            if(this.guilds[body.n] && body.cu && body.cunn && this.guilds[body.n].u[body.cu]){
+                guild.u[body.cu].n = body.cun;
+            }
+            /*if(this.guilds[body.n] && body.cu && body.cunn && this.guilds[body.n].u[body.cu]){
+                var oldUser = this.guilds[body.n].u[body.cu];
+                this.guilds[body.n].u[body.cunn] = oldUser;
+                delete this.guilds[body.n].u[body.cu];
+            }*/
+        }
+
         loadGuild(body){
             if(this.guilds[body.n] && body.n != ""){
                 return this.guilds[body.n];

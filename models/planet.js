@@ -71,43 +71,37 @@ class Planet{
     }
 
     rattrapageShipTechDef(){
-        if(Math.floor((Date.now()-this.lv)/5000) > 1) {
+        var loopBuilt = Math.floor((Date.now()-this.lv)/5000);
+        if(loopBuilt > 1){
             if(this.ss >= 10 && this.ss < 20) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(1);
-            }
-            if(this.ss >= 20 && this.ss < 40) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
+            }else if(this.ss >= 20 && this.ss < 40) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(2);
-            }
-            if(this.ss >= 40 && this.ss < 60) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
+            }else if(this.ss >= 40 && this.ss < 60) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(3);
-            }
-            if(this.ss >= 60 && this.ss < 70) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
+            }else if(this.ss >= 60 && this.ss < 70) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(4);
-            }
-            if(this.ss >= 70 && this.ss < 80) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/5000); index++) 
+            }else if(this.ss >= 70 && this.ss < 80) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(5);
-            }
-            if(this.ss >= 80 && this.ss < 90) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) 
+            }else if(this.ss >= 80 && this.ss < 90) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(6);
-            }
-            if(this.ss >= 90) {
-                for (let index = 0; index < Math.floor((Date.now()-this.lv)/1000000); index++) 
+            }else if(this.ss >= 90) {
+                for (let index = 0; index < loopBuilt; index++) 
                     this.addShip(7);
             }
 
-            if(this.st > 10){
+            if(this.st > 10)
                 this.addTechnologie(this.st);
-            }
 
-            if(this.sd > 10){
+            if(this.sd > 10)
                 this.addDefense(this.sd);
-            }
+
             this.lv = Date.now();
         }
     }
@@ -281,34 +275,34 @@ class Planet{
     deleteShip(cat,owner,id){
         var gift;
         if(owner == this.aby){
-            if(cat == 1) this.asc1 -= 1;
-            if(cat == 2) this.asc2 -= 1;
-            if(cat == 3) this.asc3 -= 1;
-            if(cat == 4) this.asc4 -= 1;
-            if(cat == 5) this.asc5 -= 1;
-            if(cat == 6) this.asc6 -= 1;
-            if(cat == 7) this.asc7 -= 1;
+            if(cat == 1 && this.asc1 > 0){this.asc1 -= 1;}
+            else if(cat == 2 && this.asc2 > 0){this.asc2 -= 1;}
+            else if(cat == 3 && this.asc3 > 0){this.asc3 -= 1;}
+            else if(cat == 4 && this.asc4 > 0){this.asc4 -= 1;}
+            else if(cat == 5 && this.asc5 > 0){this.asc5 -= 1;}
+            else if(cat == 6 && this.asc6 > 0){this.asc6 -= 1;}
+            else if(cat == 7 && this.asc7 > 0){this.asc7 -= 1;}
             if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
                 this.generateAttackPnj();
         }else{
-            if(cat == 1) this.sc1 -= 1;
-            if(cat == 2) this.sc2 -= 1;
-            if(cat == 3) this.sc3 -= 1;
-            if(cat == 4) this.sc4 -= 1;
-            if(cat == 5) this.sc5 -= 1;
-            if(cat == 6) this.sc6 -= 1;
-            if(cat == 7) this.sc7 -= 1;
+            if(cat == 1 && this.sc1 > 0){this.sc1 -= 1;}
+            else if(cat == 2 && this.sc2 > 0){this.sc2 -= 1;}
+            else if(cat == 3 && this.sc3 > 0){this.sc3 -= 1;}
+            else if(cat == 4 && this.sc4 > 0){this.sc4 -= 1;}
+            else if(cat == 5 && this.sc5 > 0){this.sc5 -= 1;}
+            else if(cat == 6 && this.sc6 > 0){this.sc6 -= 1;}
+            else if(cat == 7 && this.sc7 > 0){this.sc7 -= 1;}
             gift = this.check();
         }
         this.lsd = Date.now();
-        var obj = {};
-        if(cat == 1) obj.sc1 = this.sc1;
+        /*var obj = {};
+        if(cat == 1)obj.sc1 = this.sc1;
         if(cat == 2) obj.sc2 = this.sc2;
         if(cat == 3) obj.sc3 = this.sc3;
         if(cat == 4) obj.sc4 = this.sc4;
         if(cat == 5) obj.sc5 = this.sc5;
         if(cat == 6) obj.sc6 = this.sc6;
-        if(cat == 7) obj.sc7 = this.sc7;
+        if(cat == 7) obj.sc7 = this.sc7;*/
         if(gift != undefined)
             obj.giftuser = gift;
         obj.id = id;
@@ -329,13 +323,13 @@ class Planet{
     }
 
     checkFight(){
-        if(this.sc1 < 0) this.sc1 = 0;
+        /*if(this.sc1 < 0) this.sc1 = 0;
         if(this.sc2 < 0) this.sc2 = 0;
         if(this.sc3 < 0) this.sc3 = 0;
         if(this.sc4 < 0) this.sc4 = 0;
         if(this.sc5 < 0) this.sc5 = 0;
         if(this.sc6 < 0) this.sc6 = 0;
-        if(this.sc7 < 0) this.sc7 = 0;
+        if(this.sc7 < 0) this.sc7 = 0;*/
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
             this.ua = 1;
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){

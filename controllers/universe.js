@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -22,10 +22,10 @@ module.exports = app => {
     /*BUILD AND DESTROY SHIP / DEF / TECH / */
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        var response = app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id)
+        var response = app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id);
         if(response.giftuser != undefined)
             app.universe.gift[response.giftuser.by] = response.giftuser.p;
-        res.json(response);
+        res.json({});
     }
 
     function addShip(req, res){
@@ -78,9 +78,9 @@ module.exports = app => {
     }
 
     function stopAttack(){
-        var body = JSON.parse(Object.keys(req.body));
+        /*var body = JSON.parse(Object.keys(req.body));
         app.universe.planets[body.id].prepareAttackClient(body);
-        res.json(app.universe.loadById(body));
+        res.json(app.universe.loadById(body));*/
     }
 
     /*SCORE*/
@@ -94,11 +94,14 @@ module.exports = app => {
 
     function setUsersScore(req, res){
         var body = JSON.parse(Object.keys(req.body));
+        if(body.sr) app.universe.planets[body.id].sr = body.sr;
+        if(body.ss) app.universe.planets[body.id].ss = body.ss;
+        if(body.st) app.universe.planets[body.id].st = body.st;
+        if(body.sd) app.universe.planets[body.id].sd = body.sd;
         app.universe.setUsersScore(body);
         var planetLoad = app.universe.loadById(body);
         var lts =""; //list travel ship
         var lfs =""; //list fight ship
-        //app.universe.planets.forEach(el => {
         app.universe.planets.filter(function (el) { 
             if(el.aby == body.cu)
                 lfs = lfs+JSON.stringify(el.id)+/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
@@ -146,6 +149,16 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.addGuild(body));
         delete app.universe.guilds[body.n].cg
+    }
+
+    function changeNameUserGuild(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeNameUserGuild(body));
+    }
+
+    function quitGuild(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.quitGuild(body));
     }
     
     function loadGuild(req, res){

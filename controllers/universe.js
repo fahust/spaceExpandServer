@@ -25,7 +25,7 @@ module.exports = app => {
         var response = app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id)
         if(response.giftuser != undefined)
             app.universe.gift[response.giftuser.by] = response.giftuser.p;
-        //res.json(response);
+        res.json(response);
     }
 
     function addShip(req, res){

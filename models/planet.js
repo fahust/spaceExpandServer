@@ -295,8 +295,8 @@ class Planet{
             gift = this.check();
         }
         this.lsd = Date.now();
-        /*var obj = {};
-        if(cat == 1)obj.sc1 = this.sc1;
+        var obj = {};
+        /*if(cat == 1)obj.sc1 = this.sc1;
         if(cat == 2) obj.sc2 = this.sc2;
         if(cat == 3) obj.sc3 = this.sc3;
         if(cat == 4) obj.sc4 = this.sc4;

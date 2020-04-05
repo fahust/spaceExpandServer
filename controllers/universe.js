@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet,questAddParticipation,listBioByPage,getBio};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -22,7 +22,7 @@ module.exports = app => {
     /*BUILD AND DESTROY SHIP / DEF / TECH / */
     function deleteShip(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        var response = app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id);
+        var response = app.universe.planets[body.id].deleteShip(body.cat,body.owner,body.id,app.universe);
         if(response.giftuser != undefined)
             app.universe.gift[response.giftuser.by] = response.giftuser.p;
         res.json({});
@@ -73,7 +73,7 @@ module.exports = app => {
 
     function launchAttack(req, res){
         var body = JSON.parse(Object.keys(req.body));
-        app.universe.planets[body.id].prepareAttackClient(body);
+        app.universe.planets[body.id].prepareAttackClient(body,app.universe);
         res.json(app.universe.loadById(body));
     }
 
@@ -234,6 +234,20 @@ module.exports = app => {
         res.json(app.universe.addPrimeOnPlanet(body));
     }
     
+    function questAddParticipation(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.questAddParticipation(body));
+    }
+
+    function listBioByPage(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.listBioByPage(body));
+    }
+
+    function getBio(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.getBio(body));
+    }
     
     
 

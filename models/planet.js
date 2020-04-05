@@ -7,7 +7,7 @@ function randomIntFromInterval(min, max) { // min and max included
   
   module.exports =
 class Planet{
-    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),rc = 1,rx = 1,rd = 1,p = 0) {
+    constructor(universe,id,owner,timeBeginAttack,timeEndAttack,attackedBy,shipCat1,shipCat2,shipCat3,shipCat4,shipCat5,defenseLevel,ressource,technologie,technoLaser,technoMissile,technoBouclier,technoAlliage,shipCat6,shipCat7,lastView = Date.now(),rc = 1,rx = 1,rd = 1,p = 0,bio = [],abyn = "") {
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.on; //ownername
@@ -59,59 +59,139 @@ class Planet{
         this.rx = rx;//reputation xahor
         this.rd = rd;//reputation dominion
         this.p = p;//prime
+        this.bio = bio;
+        this.abyn = abyn;
         //this.dba;
     }
 
     trade(){
-        if(this.r){//console.log('rattrapage money',(((this.sc1*1)+(this.sc1*2)+(this.sc1*3)+(this.sc1*5)+(this.sc1*10)+(this.sc1*50)+(this.sc1*100))*(Date.now()-this.lv))/10000);
-            this.r += Math.floor((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/1000);
+        if(this.r){
+            if(this.o < 7){
+                var gainR = Math.floor((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/10000);
+                if(gainR > 1){
+                    this.r += gainR;
+                }else{
+                    gainR = 1;
+                    this.r += gainR;
+                }
+            }else{
+                var gainR = Math.floor((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/2500);
+                this.r += gainR;
+            }
         }else{
-            this.r = 0;
+            gainR = 0;
+            this.r = gainR;
         }
+        return gainR;
     }
 
     rattrapageShipTechDef(){
         var loopBuilt = Math.floor((Date.now()-this.lv)/5000);
+        var str ='';
+        var strt ="";
+        var strd ="";
+        var nbr = 0;
         if(loopBuilt > 1){
-            if(this.ss >= 10 && this.ss < 20) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(1);
+            var strr = this.trade();
+            if(this.ss >= 10 && this.ss < 20 ) {
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 50000){
+                        this.addShip(1);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Horus, ';
             }else if(this.ss >= 20 && this.ss < 40) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(2);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 200000){
+                        this.addShip(2);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Eagle, ';
             }else if(this.ss >= 40 && this.ss < 60) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(3);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 450000){
+                        this.addShip(3);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Terhen, ';
             }else if(this.ss >= 60 && this.ss < 70) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(4);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 800000){
+                        this.addShip(4);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Baltyor, ';
             }else if(this.ss >= 70 && this.ss < 80) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(5);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 1250000){
+                        this.addShip(5);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Emperor, ';
             }else if(this.ss >= 80 && this.ss < 90) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(6);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 10800000){
+                        this.addShip(6);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Crusader, ';
             }else if(this.ss >= 90) {
-                for (let index = 0; index < loopBuilt; index++) 
-                    this.addShip(7);
+                nbr = 0;
+                for (let index = 0; index < loopBuilt; index++) {
+                    if(this.r > 17150000){
+                        this.addShip(7);
+                        nbr += 1;
+                    }else{
+                        break;
+                    }
+                }
+                str = str+nbr+' Imperator, ';
             }
-
             if(this.st > 10)
-                this.addTechnologie(this.st);
-
+                strt = this.addTechnologie(this.st);
             if(this.sd > 10)
-                this.addDefense(this.sd);
-
+                strd = this.addDefense(this.sd);
+            if(loopBuilt >= 100){
+                strconstruct = "and he solves a construction of ";
+                if(str == "" && strd == "" && strt == "")
+                var strconstruct = "";
+                this.setBio("Building","An intense production on this planet has been launched "+strconstruct+str+strd+strt+", with a gain of "+strr+" Ressource");
+            }
             this.lv = Date.now();
         }
     }
 
-    prepareAttackClient(body){
+    prepareAttackClient(body,universe){
         if(this.aby){
             if(this.aby < 6){
                 this.tba = Date.now()+(body.d*1000);
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
+                this.abyn = body.n;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
                 this.asc3 = body.sc3;
@@ -132,6 +212,7 @@ class Planet{
                 this.tba = Date.now()+(body.d*1000);
                 this.tea = this.tba+86400000;
                 this.aby = body.by;
+                this.abyn = body.n;
                 this.asc1 = body.sc1;
                 this.asc2 = body.sc2;
                 this.asc3 = body.sc3;
@@ -139,9 +220,16 @@ class Planet{
                 this.asc5 = body.sc5;
                 this.asc6 = body.sc6;
                 this.asc7 = body.sc7;
+                this.at0 = body.at0;
+                this.at2 = body.at2;
+                this.at3 = body.at3;
+                this.at4 = body.at4;
+                this.at5 = body.at5;
+                this.at6 = body.at6;
                 this.aid = body.id;
                 this.aidP = body.idp;
         }
+        //universe.messageInfo[body.by] = "your fleet of a "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships was sent to attack the planet [nameplanet:"+this.id+"]."
     }
 
     generateAttackPnj(){
@@ -152,6 +240,9 @@ class Planet{
                 randPnjFinal = randPnj;
         }
         this.aby = randPnjFinal;
+        if(this.abyn == 1) this.abyn = "Cehenyth";
+        if(this.abyn == 2) this.abyn = "Xahor";
+        if(this.abyn == 3) this.abyn = "Dominion";
         if(this.o < 7){
             this.asc1 = randomIntFromInterval(this.sc1,this.sc1*2);
             this.asc2 = randomIntFromInterval(this.sc2,this.sc2*2);
@@ -249,10 +340,12 @@ class Planet{
             this.t += (Math.floor(stat)/100);
             if(this.t <= 100){
                 this.r -= Math.floor(stat*10000);
+                return "a "+(Math.floor(stat)/100)+" % improvement in technology";
             }else{
                 this.t = 100;
             }
         }
+        return "";
     }
 
     addDefense(stat){
@@ -260,10 +353,12 @@ class Planet{
             this.d += (Math.floor(stat)/100);
             if(this.d <= 100){
                 this.r -= Math.floor(stat*10000);
+                return "a "+(Math.floor(stat)/100)+" % improvement in technology";
             }else{
                 this.d = 100;
             }
         }
+        return "";
     }
 
     deleteDefense(){
@@ -272,7 +367,7 @@ class Planet{
     }
 
     /*delete ship only on actual planet of client connected, send only by client owner planet*/
-    deleteShip(cat,owner,id){
+    deleteShip(cat,owner,id,universe){
         var gift;
         if(owner == this.aby){
             if(cat == 1 && this.asc1 > 0){this.asc1 -= 1;}
@@ -292,59 +387,90 @@ class Planet{
             else if(cat == 5 && this.sc5 > 0){this.sc5 -= 1;}
             else if(cat == 6 && this.sc6 > 0){this.sc6 -= 1;}
             else if(cat == 7 && this.sc7 > 0){this.sc7 -= 1;}
-            gift = this.check();
+            gift = this.check(universe);
         }
         this.lsd = Date.now();
         var obj = {};
-        /*if(cat == 1)obj.sc1 = this.sc1;
-        if(cat == 2) obj.sc2 = this.sc2;
-        if(cat == 3) obj.sc3 = this.sc3;
-        if(cat == 4) obj.sc4 = this.sc4;
-        if(cat == 5) obj.sc5 = this.sc5;
-        if(cat == 6) obj.sc6 = this.sc6;
-        if(cat == 7) obj.sc7 = this.sc7;*/
         if(gift != undefined)
             obj.giftuser = gift;
         obj.id = id;
         return obj;
     }
 
-    check(){
+    check(universe){
         if(this.sc1+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7 <= 9){
             var gift = {
                 by : this.aby,
                 p : this.p,
             }
-            this.decolonize();
+            this.decolonize(universe);
             if(this.gift.aby > 7)
                 return gift;
         }
         return undefined;
     }
 
-    checkFight(){
-        /*if(this.sc1 < 0) this.sc1 = 0;
-        if(this.sc2 < 0) this.sc2 = 0;
-        if(this.sc3 < 0) this.sc3 = 0;
-        if(this.sc4 < 0) this.sc4 = 0;
-        if(this.sc5 < 0) this.sc5 = 0;
-        if(this.sc6 < 0) this.sc6 = 0;
-        if(this.sc7 < 0) this.sc7 = 0;*/
+    checkFight(universe){
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
+            this.setBio("Under attack","A fleet of the "+this.abyn+" faction, composed of "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships attack this planet");
             this.ua = 1;
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){
-            this.decolonize();
+            this.decolonize(universe);
         }
     }
 
-    decolonize(){
+    listBioByPage(body){
+        if(body.page){
+            this.bio.reverse();
+            var obj = {};
+            var str = '';
+            var page = 1;
+            var nbrPage = Math.floor(this.bio.length/10)+1;
+            //if(nbrPage < 1) nbrPage = 1;
+            if(body.page > 1){page = (body.page*5)}
+            for (let index = 0+(page); index < page+10; index++) {
+                if(this.bio[index]) str = str+this.bio[index].t+"|";
+            }
+            this.bio.reverse();
+            obj.listbio = str;
+            obj.nbrpage = nbrPage;
+            return obj;
+        }
+    }
+
+    getBio(body){
+        var obj = {};
+        for (let index = 0; index < this.bio.length; index++){
+            if(body.bio == this.bio[index].t){
+                obj.t = this.bio[index].t;
+                obj.d = this.bio[index].d;
+                obj.d1 = this.bio[index].d1;
+            }
+        }
+        return obj;
+    }
+
+    setBio(t,d1){
+        var bio = {};
+        var current_datetime = new Date();
+        var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "  -  " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() ;
+        bio.t = this.bio.length+" - "+t;
+        bio.d = formatted_date;
+        bio.d1 = d1;
+        this.bio.push(bio);
+    }
+
+    decolonize(universe){
+            this.setBio("Conquest","The planet once owned by "+this.on+" was conquered and is now owned by "+this.abyn+" faction");
+            //universe.messageInfo = "you have conquered the planet [nameplanet:"+this.id+"] that was once owned by "+this.on+", your fleet of "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships now takes possession of the planet.";
+            //universe.messageInfo = "Your planet [nameplanet:"+this.id+"] was conquered by the Julian player."
             this.o = this.aby;
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 
             this.sc3 = this.asc3; 
             this.sc4 = this.asc4; 
             this.sc5 = this.asc5; 
-            this.sc6 = this.asc6; 
+            this.sc6 = this.asc6;
             this.sc7 = this.asc7; 
             this.d = 0; //defense level
             this.t = 1; //techno

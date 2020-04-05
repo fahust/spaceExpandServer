@@ -70,6 +70,13 @@ app.post('/universe/deleteshipeventparticipant', app.controllers.universe.delete
 // 
 app.post('/universe/addprimeonplanet', app.controllers.universe.addPrimeOnPlanet);
 
+app.post('/universe/questaddparticipation', app.controllers.universe.questAddParticipation);
+
+app.post('/universe/listbiobypage', app.controllers.universe.listBioByPage);
+
+app.post('/universe/getbio', app.controllers.universe.getBio);
+
+
 
 
 

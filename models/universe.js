@@ -18,7 +18,12 @@ function randomIntFromInterval(min, max) { // min and max included
             this.commerce = [];
             this.guilds = [];
             this.gift = [];
+            this.giftQuest = {};
+            this.giftQuest.p = {};
+            this.quest = {};
+            this.quest.p = {};
             this.message = [];
+            this.messageInfo = {};
             this.event = 0;
             this.aopsc1 = 0;
             this.aopsc2 = 0;
@@ -72,7 +77,7 @@ function randomIntFromInterval(min, max) { // min and max included
             var indexClose = this.usersScore.indexOf(userClose);
             var breakIndex = 0;
             var str = "";
-            for (let index = indexClose-10; index < this.usersScore.length; index++) {//console.log(index)
+            for (let index = indexClose-10; index < this.usersScore.length; index++) {
                 if(this.usersScore[index]){
                         breakIndex += 1;
                         str = str+this.usersScore[index].n+"-"+""+"-"+this.usersScore[index].st+"-"+this.usersScore[index].r+"-"+this.usersScore[index].s+"-"+this.usersScore[index].t+"-"+this.usersScore[index].d+"-"+''+"-"+''+"-"+''+"-"+''+"-"+''+"-|";
@@ -92,9 +97,9 @@ function randomIntFromInterval(min, max) { // min and max included
             if(this.guilds[body.gn]){
                 var str = "";
                 for(var prop in this.guilds[body.gn].u) {
-                    if(prop){//console.log(this.guilds[body.gn].u[prop]);
+                    if(prop){
                             breakIndex += 1;
-                            str = str+this.guilds[body.gn].u[prop].t+this.guilds[body.gn].u[prop].n+"-"+""+"-"+this.guilds[body.gn].u[prop].stal+"-"+this.guilds[body.gn].u[prop].sr+"-"+this.guilds[body.gn].u[prop].ss+"-"+this.guilds[body.gn].u[prop].st+"-"+this.guilds[body.gn].u[prop].sd+"-"+prop+"-"+"-"+"-"+"-"+"-"+"|";
+                            str = str+this.guilds[body.gn].u[prop].t.toUpperCase()+" : "+this.guilds[body.gn].u[prop].n+"-"+""+"-"+this.guilds[body.gn].u[prop].stal+"-"+this.guilds[body.gn].u[prop].sr+"-"+this.guilds[body.gn].u[prop].ss+"-"+this.guilds[body.gn].u[prop].st+"-"+this.guilds[body.gn].u[prop].sd+"-"+prop+"-"+"-"+"-"+"-"+"-"+"|";
                     }
                     if(breakIndex > 30)
                         break;
@@ -139,6 +144,14 @@ function randomIntFromInterval(min, max) { // min and max included
             return this.loadLastTenMessage(body);
         }
 
+        messageInfoSet(){
+            "you have conquered the planet that was once owned by the Julian player, your fleet of one hundred ships now takes possession of the planet."//conquired
+            "Your planet was conquered by the Julian player."//decolonize
+            "your fleet of a hundred ships was sent to your planet with a hundred resources in its hold."//fleet trip travel
+            "your fleet of a hundred ships was sent to attack the player's home planet."//fleet trip attack
+            "your fleet of a hundred ships was sent to attack the player's home planet."//under attack
+        }
+
         loadLastTenMessage(body){
             var str = "";
             var messages = [];
@@ -153,7 +166,7 @@ function randomIntFromInterval(min, max) { // min and max included
             }
             for (let index = messages.length-20; index < messages.length; index++) {
                 if(messages[index])
-                    str = str+''+"-"+""+"-"+messages[index].m+"-"+messages[index].to+"-"+messages[index].d+"-"+messages[index].by+"-"+messages[index].ton+"-"+messages[index].byn+"-"+messages[index].t+"-"+''+"-"+''+"-"+''+"-|";
+                    str = str+/*''+"-"+""+"-"+*/messages[index].m/*+"-"*/+"-"+messages[index].d+"-"+messages[index].by+"-"+/*messages[index].ton+"-"*/messages[index].byn+/*"-"+messages[index].t+*/"|";
             }
             return str;
         }
@@ -163,7 +176,7 @@ function randomIntFromInterval(min, max) { // min and max included
             if(!this.guilds[body.n]){
                 var guild = {};
                 guild.n = body.n;//name
-                guild.r = body.r;//ressource
+                guild.r = 0;//ressource
                 guild.s = body.s;//score
                 guild.t = body.t;//techno
                 guild.ma = body.cu;//maitre de guild
@@ -199,7 +212,11 @@ function randomIntFromInterval(min, max) { // min and max included
                     delete this.guilds[body.n]
                 }
             }
-            return {};
+            var obj = {};
+            obj.cg = 0;
+            obj.n = undefined;
+            obj.icu = undefined;
+            return obj;
         }
 
         changeNameUserGuild(body){
@@ -235,18 +252,21 @@ function randomIntFromInterval(min, max) { // min and max included
 
         addGuildRessource(body){
             if(this.guilds[body.n]){
-                this.guilds[body.n].r += body.r;
+                this.guilds[body.n].r += 1000000;
                 return this.loadGuild(body);
             }
         }
 
         takeGuildRessource(body){
+            var obj = {};
             if(this.guilds[body.n]){
-                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master' ){
-                    this.guilds[body.n].r += body.r;
+                if ((this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master') && this.guilds[body.n].r >= 1000000 ){
+                    this.guilds[body.n].r -= 1000000;
+                    obj.rgain = 1;
                 }
-                return this.loadGuild(body);
+                return obj;//this.loadGuild(body);
             }
+            return obj;
         }
 
         addScore(body){
@@ -299,6 +319,7 @@ function randomIntFromInterval(min, max) { // min and max included
 
         /*TRANSFER SHIP AND RESSOURCE*/
         transferShipToOther(body){
+            //this.messageInfo[body.cu] = "your fleet of a "+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7+" was sent to your planet [nameplanet:"+body.to+"] with "+body.r+"resources in its hold."
             if(!this.transferShip[JSON.stringify(body.cu)])
                 this.transferShip[JSON.stringify(body.cu)] = [];
             this.planets[body.id].sc1 -= body.sc1;
@@ -352,6 +373,7 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.aopsc6 = this.transferShip[idUser][index].sc6;
                                 this.aopsc7 = this.transferShip[idUser][index].sc7;
                                 delete this.transferShip[idUser][index];
+                                //this.setBio("Fleet trip","A fleet composed of "+str+strd+strt+"And a gain of "+strr+" Ressource");
                             }else{
                                 delete this.transferShip[idUser][index];
                             }
@@ -365,6 +387,7 @@ function randomIntFromInterval(min, max) { // min and max included
         ///LOAD
         loadById(body){
             if(body.id){
+                var biosave = this.planets[body.id].bio;
                 if(body.t0) this.planets[body.id].t0 = body.t0
                 if(body.t2) this.planets[body.id].t2 = body.t2
                 if(body.t3) this.planets[body.id].t3 = body.t3
@@ -376,7 +399,6 @@ function randomIntFromInterval(min, max) { // min and max included
                         this.planets[body.id].on = body.n
                 }
                 this.actualizOne(body.id);
-                this.planets[body.id].trade();
                 this.planets[body.id].rattrapageShipTechDef();
                 if(body.cu)
                     this.checkTransferShip(body.cu);
@@ -386,6 +408,10 @@ function randomIntFromInterval(min, max) { // min and max included
                 var gift = this.getPrimeOnPlanet(body);
                 if(gift != undefined)
                     stringifiedPlanet.gift = gift;
+                if(this.giftQuest.p[body.cu]){
+                    stringifiedPlanet.giftQuest = 
+                    delete this.giftQuest.p[body.cu];
+                }
                 if (this.aopsc1+this.aopsc2+this.aopsc3+this.aopsc4+this.aopsc5+this.aopsc6+this.aopsc7 > 0 ){
                     stringifiedPlanet.aopsc1 = this.aopsc1;
                     stringifiedPlanet.aopsc2 = this.aopsc2;
@@ -402,7 +428,14 @@ function randomIntFromInterval(min, max) { // min and max included
                     this.aopsc6 = 0;
                     this.aopsc7 = 0;
                 }
+                stringifiedPlanet.questR = this.quest.r;
+                stringifiedPlanet.questS = this.quest.s;
+                stringifiedPlanet.questRmax = this.quest.rmax;
+                stringifiedPlanet.questSmax = this.quest.smax;
+                stringifiedPlanet.questId = this.quest.id;
+                stringifiedPlanet.bio = {};
                 this.planets[body.id].u = this;
+                this.planets[body.id].bio = biosave;
                 return stringifiedPlanet;
             }
         }
@@ -465,23 +498,25 @@ function randomIntFromInterval(min, max) { // min and max included
 
             /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
-                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,1,1,1);
+                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,1,1,1,1,1,{});
                 planet.generateAttackPnj();
                 this.planets.push(planet);
             }
             this.Save();*/
+            this.createQuest();
+            this.questCheck();
             setInterval(() => {
                 this.Save();
             }, 26400000);
         }
 
         actualizOne(id){
-            this.planets[id].checkFight();
+            this.planets[id].checkFight(this);
         }
 
         actualizAll(){
             for (let index = 0; index < this.planets.length; index++) {
-                this.planets[index].checkFight();
+                this.planets[index].checkFight(this);
                 this.planets[index].u = [];
             }
         }
@@ -589,12 +624,12 @@ function randomIntFromInterval(min, max) { // min and max included
             }
 
             this.event.p.forEach(participant => {
-                if(participant.sc2 > 0){tsc2 += 1;var soc = 2;}else
-                if(participant.sc3 > 0){tsc3 += 1;var soc = 3;}else
-                if(participant.sc4 > 0){tsc4 += 1;var soc = 4;}else
-                if(participant.sc5 > 0){tsc5 += 1;var soc = 5;}else
-                if(participant.sc6 > 0){tsc6 += 1;var soc = 6;}else
-                if(participant.sc7 > 0){tsc7 += 1;var soc = 7;}
+                if(participant.sc2 > 0){obj.tsc2 += 1;var soc = 2;}else
+                if(participant.sc3 > 0){obj.tsc3 += 1;var soc = 3;}else
+                if(participant.sc4 > 0){obj.tsc4 += 1;var soc = 4;}else
+                if(participant.sc5 > 0){obj.tsc5 += 1;var soc = 5;}else
+                if(participant.sc6 > 0){obj.tsc6 += 1;var soc = 6;}else
+                if(participant.sc7 > 0){obj.tsc7 += 1;var soc = 7;}
                 if(body.cu = participant.cu)
                     obj.soc = soc;//coter client a la premiere catégorie soc créer, en faire enemy global.idfixe avec couleur differente et seul lui envoi c dgt hp et son destroy si destroy
             })
@@ -630,6 +665,8 @@ function randomIntFromInterval(min, max) { // min and max included
 
         addPrimeOnPlanet(body){
             this.planets[body.id].p += 1;
+            this.setBio("Hunting bounty","The planet received a million ressource hunting bounty");
+            return this.loadById(body);
         }
     
         getPrimeOnPlanet(body){
@@ -639,6 +676,61 @@ function randomIntFromInterval(min, max) { // min and max included
                 delete this.gift[body.cu];
             }
             return gift;
+        }
+
+
+        createQuest(){
+            this.quest.p = {};//participant
+            this.quest.rmax = randomIntFromInterval(1000000,10000000);//ressourcemax
+            this.quest.smax = randomIntFromInterval(100,10000);//shipmax 
+            this.quest.r = 0;
+            this.quest.s = 0;
+            this.quest.tbe = Date.now()+3600000;//time before end//1 hour
+            var newquest;
+            for (let index = 0; index < 10; index++) {
+                newquest = randomIntFromInterval(1,10);
+                if(newquest != this.quest.id)
+                    break;
+            }
+            this.quest.id = newquest;
+            //console.log(this.quest);
+        }
+
+        questAddParticipation(body){
+            this.quest.p[body.cu] = {};
+            this.quest.p[body.cu].r += body.r;
+            this.quest.p[body.cu].s += body.s;
+            this.quest.r += body.r;
+            this.quest.s += body.s;
+            if(this.quest.r > this.quest.rmax)
+                this.quest.r = this.quest.rmax;
+            if(this.quest.s > this.quest.smax)
+                this.quest.s = this.quest.smax;
+            this.quest.p[body.cu].cu = body.cu;
+        }
+
+        questCheck(){
+            if(Date.now() > this.quest.tbe)
+                this.questEnd();
+        }
+
+        questEnd(){
+            if(this.quest.p){
+                for (let index = 0; index < this.quest.p.length; index++) {
+                    this.giftQuest[this.quest.p[index].cu] = this.quest.p[index].r+(this.quest.p[index].s*1000);
+                }
+            }
+            delete this.quest.p;
+            if(Date.now() > this.quest.tbe+(3600000/4))//laisser la quete finish 1 quart d'h
+                this.createQuest();
+        }
+
+        listBioByPage(body){
+            return this.planets[body.id].listBioByPage(body);;
+        }
+
+        getBio(body){
+            return this.planets[body.id].getBio(body);
         }
     
 

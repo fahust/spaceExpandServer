@@ -56,6 +56,8 @@ app.post('/universe/kickmember', app.controllers.universe.kickMember);
 // 
 app.post('/universe/upgrademember', app.controllers.universe.upGradeMember);
 // 
+app.post('/universe/downgrademember', app.controllers.universe.downGradeMember);
+// 
 app.post('/universe/loadusersguild', app.controllers.universe.loadUsersGuild);
 
 
@@ -75,6 +77,13 @@ app.post('/universe/questaddparticipation', app.controllers.universe.questAddPar
 app.post('/universe/listbiobypage', app.controllers.universe.listBioByPage);
 
 app.post('/universe/getbio', app.controllers.universe.getBio);
+
+//
+app.post('/universe/getquest', app.controllers.universe.getQuest);
+
+app.post('/universe/questaddparticipation', app.controllers.universe.questAddParticipation);
+
+
 
 
 

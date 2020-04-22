@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet,questAddParticipation,listBioByPage,getBio};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,downGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet,questAddParticipation,listBioByPage,getBio,getQuest};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -200,6 +200,11 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.upGradeMember(body));
     }
+    
+    function downGradeMember(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.downGradeMember(body));
+    }
 
     function loadUsersGuild(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -248,6 +253,18 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.getBio(body));
     }
+
+    function getQuest(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.getQuest(body));
+    }
+
+    function questAddParticipation(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.questAddParticipation(body));
+    }
+
+    
     
     
 

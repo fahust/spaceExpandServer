@@ -76,3 +76,5 @@ IDEE SCENAR
 -> emprisoné des énemies de la faction pour assurer leur protection
 
 -> une mine sur un astéroide c'est effondré, envoyé des secours
+
+-> une explosion de supernova menace des installations scientifique

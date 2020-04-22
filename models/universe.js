@@ -32,6 +32,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.aopsc5 = 0;
             this.aopsc6 = 0;
             this.aopsc7 = 0;
+            this.loot = [];
             this.generate();
         }
 
@@ -111,45 +112,39 @@ function randomIntFromInterval(min, max) { // min and max included
         /*MESSAGE*/
         addMessage(body){
             var message = {};
-            if(body.m != ""){
-                var current_datetime = new Date()
-                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
-                if(body.g == ""){//guild 0
-                    message.m = body.m
-                    message.g = body.g
-                    message.d = formatted_date;
-                    message.t = 1; //type 1 no guild no private
-                    if(body.by)//id
-                        message.by = body.by;
-                    if(body.byn)//name
-                        message.byn = body.byn;
-                    if(body.to){//id //name
-                        message.to = body.to;
-                        message.ton = 'test';//body.ton;
-                        message.t = 2; //type 2 no guild but private
+            setTimeout(() => {
+                if(body.m != ""){
+                    var current_datetime = new Date()
+                    var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds() 
+                    if(body.g == ""){//guild 0
+                        message.m = body.m
+                        message.g = body.g
+                        message.d = formatted_date;
+                        message.t = 1; //type 1 no guild no private
+                        if(body.by)//id
+                            message.by = body.by;
+                        if(body.byn)//name
+                            message.byn = body.byn;
+                        if(body.to){//id //name
+                            message.to = body.to;
+                            message.ton = 'test';//body.ton;
+                            message.t = 2; //type 2 no guild but private
+                        }
+                        this.message.push(message);
+                    }else if(body.g != ""){
+                        message.g = body.g
+                        message.m = body.m
+                        message.d = formatted_date;
+                        message.t = 3; //type 1 no guild no private
+                        if(body.by)//id
+                            message.by = body.by;
+                        if(body.byn)//name
+                            message.byn = body.byn;
+                        this.message.push(message);
                     }
-                    this.message.push(message);
-                }else if(body.g != ""){
-                    message.g = body.g
-                    message.m = body.m
-                    message.d = formatted_date;
-                    message.t = 3; //type 1 no guild no private
-                    if(body.by)//id
-                        message.by = body.by;
-                    if(body.byn)//name
-                        message.byn = body.byn;
-                    this.message.push(message);
-                }
-            }
+                } 
+            }, 1);
             return this.loadLastTenMessage(body);
-        }
-
-        messageInfoSet(){
-            "you have conquered the planet that was once owned by the Julian player, your fleet of one hundred ships now takes possession of the planet."//conquired
-            "Your planet was conquered by the Julian player."//decolonize
-            "your fleet of a hundred ships was sent to your planet with a hundred resources in its hold."//fleet trip travel
-            "your fleet of a hundred ships was sent to attack the player's home planet."//fleet trip attack
-            "your fleet of a hundred ships was sent to attack the player's home planet."//under attack
         }
 
         loadLastTenMessage(body){
@@ -311,8 +306,16 @@ function randomIntFromInterval(min, max) { // min and max included
 
         upGradeMember(body){
             if(this.guilds[body.n] && this.guilds[body.n].u[body.cu] && this.guilds[body.n].u[body.cui]){
-                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master')
+                if ((this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master') && this.guilds[body.n].u[body.cui].t == 'master')
                     this.guilds[body.n].u[body.cui].t = 'officier';
+                return this.loadGuild(body);
+            } 
+        }
+
+        downGradeMember(body){
+            if(this.guilds[body.n] && this.guilds[body.n].u[body.cu] && this.guilds[body.n].u[body.cui]){
+                if (this.guilds[body.n].u[body.cu].t == 'officier' || this.guilds[body.n].u[body.cu].t == 'master')
+                    this.guilds[body.n].u[body.cui].t = 'recruit';
                 return this.loadGuild(body);
             } 
         }
@@ -332,6 +335,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.planets[body.id].r -= body.r;
             if(body.to != 0){
                 var transfer = {};
+                transfer.byn = this.planets[body.id].on;
                 transfer.sc1 = body.sc1;
                 transfer.sc2 = body.sc2;
                 transfer.sc3 = body.sc3;
@@ -372,8 +376,15 @@ function randomIntFromInterval(min, max) { // min and max included
                                 this.aopsc5 = this.transferShip[idUser][index].sc5;
                                 this.aopsc6 = this.transferShip[idUser][index].sc6;
                                 this.aopsc7 = this.transferShip[idUser][index].sc7;
+                                var strs2 = "";var strs3 = "";var strs4 = "";var strs5 = "";var strs6 = "";var strs7 = "";
+                                if(this.aopsc2 > 0) strs2 = " "+this.aopsc2+" Eagle,";
+                                if(this.aopsc3 > 0) strs3 = " "+this.aopsc3+" Terhen,";
+                                if(this.aopsc4 > 0) strs4 = " "+this.aopsc4+" Baltyor,";
+                                if(this.aopsc5 > 0) strs5 = " "+this.aopsc5+" Emperor,";
+                                if(this.aopsc6 > 0) strs6 = " "+this.aopsc6+" Crusader,";
+                                if(this.aopsc7 > 0) strs7 = " "+this.aopsc7+" Imperator,";
+                                this.planets[this.transferShip[idUser][index].to].setBio("Fleet trip","A fleet of"+this.transferShip[idUser][index].byn+" faction origin and composed of"+strs2+strs3+strs4+strs5+strs6+strs7+" and brings with it "+this.transferShip[idUser][index].r+" resources is arrived on your planet");
                                 delete this.transferShip[idUser][index];
-                                //this.setBio("Fleet trip","A fleet composed of "+str+strd+strt+"And a gain of "+strr+" Ressource");
                             }else{
                                 delete this.transferShip[idUser][index];
                             }
@@ -498,13 +509,13 @@ function randomIntFromInterval(min, max) { // min and max included
 
             /*for (let index = 0; index <= 500; index++) {
                 var fd = Date.now()+randomIntFromInterval(300000,1000000);
-                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,1,1,1,1,1,{});
+                var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,Date.now(),1,1,1,1,[],"");
                 planet.generateAttackPnj();
                 this.planets.push(planet);
             }
             this.Save();*/
             this.createQuest();
-            this.questCheck();
+            //this.questCheck();
             setInterval(() => {
                 this.Save();
             }, 26400000);
@@ -665,15 +676,15 @@ function randomIntFromInterval(min, max) { // min and max included
 
         addPrimeOnPlanet(body){
             this.planets[body.id].p += 1;
-            this.setBio("Hunting bounty","The planet received a million ressource hunting bounty");
+            this.planets[body.id].setBio("Hunting bounty","The planet received a million ressource hunting bounty");
             return this.loadById(body);
         }
     
         getPrimeOnPlanet(body){
             var gift;
-            if(this.gift[body.cu]){
-                gift = this.gift[body.cu]
-                delete this.gift[body.cu];
+            if(this.planets[body.id].p){
+                gift = this.planets[body.id].p;
+                this.planets[body.id].p = 0;
             }
             return gift;
         }
@@ -697,16 +708,27 @@ function randomIntFromInterval(min, max) { // min and max included
         }
 
         questAddParticipation(body){
-            this.quest.p[body.cu] = {};
-            this.quest.p[body.cu].r += body.r;
-            this.quest.p[body.cu].s += body.s;
-            this.quest.r += body.r;
-            this.quest.s += body.s;
+            if(this.planets[body.id]){
+                this.planets[body.id].sc2 -= body.sc2;
+                this.planets[body.id].sc3 -= body.sc3;
+                this.planets[body.id].sc4 -= body.sc4;
+                this.planets[body.id].sc5 -= body.sc5;
+                this.planets[body.id].sc6 -= body.sc6;
+                this.planets[body.id].sc7 -= body.sc7;
+                this.planets[body.id].r -= body.r;
+            }
+            if(this.quest.p[body.cu] == undefined)
+                this.quest.p[body.cu] = {};
+            if(body.r != undefined) this.quest.p[body.cu].r += body.r;
+            this.quest.p[body.cu].s += ((body.sc2*1)+(body.sc3*2)+(body.sc4*3)+(body.sc5*5)+(body.sc6*20)+(body.sc7*30));
+            if(body.r != undefined) this.quest.r += body.r;
+            this.quest.s += ((body.sc2*1)+(body.sc3*2)+(body.sc4*3)+(body.sc5*5)+(body.sc6*20)+(body.sc7*30));
             if(this.quest.r > this.quest.rmax)
                 this.quest.r = this.quest.rmax;
             if(this.quest.s > this.quest.smax)
                 this.quest.s = this.quest.smax;
             this.quest.p[body.cu].cu = body.cu;
+            return this.getQuest(body);
         }
 
         questCheck(){
@@ -714,15 +736,104 @@ function randomIntFromInterval(min, max) { // min and max included
                 this.questEnd();
         }
 
+        getQuest(body){
+            var obj = {};
+            obj.r = this.quest.r;
+            obj.s = this.quest.s;
+            obj.rmax = this.quest.rmax;
+            obj.smax = this.quest.smax;
+            obj.id = this.quest.id;
+            obj.p = this.quest.p.length;
+            obj.tbe = Math.floor((this.quest.tbe-Date.now())/60000);//minute restant
+            obj.pr = 0;
+            obj.ps = 0;
+            if(this.quest.p[body.cu] != undefined){
+                obj.pr = this.quest.p[body.cu].r;
+                obj.ps = this.quest.p[body.cu].s;
+            }
+            return obj;
+        }
+
         questEnd(){
             if(this.quest.p){
                 for (let index = 0; index < this.quest.p.length; index++) {
-                    this.giftQuest[this.quest.p[index].cu] = this.quest.p[index].r+(this.quest.p[index].s*1000);
+                    //this.giftQuest[this.quest.p[index].cu] = this.quest.p[index].r+(this.quest.p[index].s*1000);
+                    this.questAddLoot(this.quest.p[index].cu);
                 }
             }
             delete this.quest.p;
             if(Date.now() > this.quest.tbe+(3600000/4))//laisser la quete finish 1 quart d'h
                 this.createQuest();
+        }
+
+        questAddLoot(cu){
+            var loot = {};
+            loot.bonusRess = 1;//multiplie le loot de ressource
+            loot.bonusShip = 1;//multiplie la création des vaisseau
+            loot.bonusTech = 1;//multiplie la création de technologie
+            loot.bonusDef = 1;//multiplie la création de défense
+            loot.at0 = 1;
+            loot.at2 = 1;
+            loot.at3 = 1;
+            loot.at4 = 1;
+            loot.at5 = 1;
+            loot.at6 = 1;
+            loot.rc = 1;
+            loot.rx = 1;
+            loot.rd = 1;
+            if(!this.loot[cu])
+                this.loot[cu] = [];
+            this.loot[cu].push(loot)
+        }
+
+        /*questListLoot(){
+            var obj = {};
+            var str = '';
+            var page = 1;
+            var nbrPage = Math.floor(this.bio.length/10)+1;
+            //if(nbrPage < 1) nbrPage = 1;
+            if(body.page > 1){page = (body.page*5)}
+            for (let index = 0+page-1; index < page+10; index++) {
+                if(this.bio[index]) str = str+this.bio[index].t+"|";
+            }
+            this.bio.reverse();
+            obj.listbio = str;
+            obj.nbrpage = nbrPage;
+        }*/
+
+        questGetLoot(){
+            var obj = {};
+            if(this.loot[body.cu]){
+                for (let index = 0; index < this.loot[body.cu].length; index++) {
+                    if(index == body.idloot && this.loot[body.cu][index])
+                        return this.loot[body.cu][body.idloot];
+                }
+            }
+            return obj;
+        }
+
+        questEquipLoot(){
+            var obj = {};
+            if(this.loot[body.cu]){
+                for (let index = 0; index < this.loot[body.cu].length; index++) {
+                    if(index == body.idloot && this.loot[body.cu][index])
+                        this.lootEquiped = this.loot[body.cu][body.idloot];
+                }
+            }
+            return obj;
+        }
+
+        questDeleteLoot(){
+            var obj = {};
+            if(this.loot[body.cu]){
+                for (let index = 0; index < this.loot[body.cu].length; index++) {
+                    if(index == body.idloot && this.loot[body.cu][index]){
+                        delete this.loot[body.cu][body.idloot];
+                        return this.loot[body.cu][body.idloot];
+                    }
+                }
+            }
+            return obj;
         }
 
         listBioByPage(body){

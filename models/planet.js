@@ -11,6 +11,9 @@ class Planet{
         this.id = id; //id de la planet
         this.o = owner; //owner
         this.on; //ownername
+        if(this.o == 4) this.on = "Cehenyth";
+        if(this.o == 3) this.on = "Xahor";
+        if(this.o == 2) this.on = "Dominion";
         this.a; //attack obj
         this.aby;
         this.asc1;
@@ -49,7 +52,7 @@ class Planet{
         this.u = universe;
         this.lsd = Date.now()+3600000;//last ship destroy
         //this.cp = true;//connected player
-        this.ua;//under attack
+        this.ua = 0;//under attack
         this.lv = lastView;//last view on P by player for date rattrap
         this.ss;//Jauge Ship
         this.st;//Jauge Tech
@@ -61,8 +64,10 @@ class Planet{
         this.p = p;//prime
         this.bio = bio;
         this.abyn = abyn;
+        this.loot = [];
         //this.dba;
     }
+
 
     trade(){
         if(this.r){
@@ -75,7 +80,13 @@ class Planet{
                     this.r += gainR;
                 }
             }else{
-                var gainR = Math.floor((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/2500);
+                var bonusLoot = 1;
+                for (let index = 0; index < this.loot.length; index++) {
+                    if(this.loot[i].bonusRess > 1 )
+                        bonusLoot = this.loot[i].bonusRess;
+                    
+                }
+                var gainR = Math.floor(((((this.sc1*1)+(this.sc2*1.5)+(this.sc3*2)+(this.sc4*3)+(this.sc5*4)+(this.sc6*5)+(this.sc7*10))*(Date.now()-this.lv))/2500)*bonusLoot);
                 this.r += gainR;
             }
         }else{
@@ -179,13 +190,13 @@ class Planet{
                 strconstruct = "and he solves a construction of ";
                 if(str == "" && strd == "" && strt == "")
                 var strconstruct = "";
-                this.setBio("Building","An intense production on this planet has been launched "+strconstruct+str+strd+strt+", with a gain of "+strr+" Ressource");
+                this.setBio("Building","An intense production on this planet has been launched "+strconstruct+str+strd+strt+" with a gain of "+strr+" Ressource");
             }
             this.lv = Date.now();
         }
     }
 
-    prepareAttackClient(body,universe){
+    prepareAttackClient(body,universe){//console.log(body.d,Date.now(),Date.now()+(body.d*1000));
         if(this.aby){
             if(this.aby < 6){
                 this.tba = Date.now()+(body.d*1000);
@@ -229,6 +240,7 @@ class Planet{
                 this.aid = body.id;
                 this.aidP = body.idp;
         }
+        this.ua = 0;
         //universe.messageInfo[body.by] = "your fleet of a "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships was sent to attack the planet [nameplanet:"+this.id+"]."
     }
 
@@ -240,9 +252,9 @@ class Planet{
                 randPnjFinal = randPnj;
         }
         this.aby = randPnjFinal;
-        if(this.abyn == 1) this.abyn = "Cehenyth";
-        if(this.abyn == 2) this.abyn = "Xahor";
-        if(this.abyn == 3) this.abyn = "Dominion";
+        if(this.abyn == 4) this.abyn = "Cehenyth";
+        if(this.abyn == 3) this.abyn = "Xahor";
+        if(this.abyn == 2) this.abyn = "Dominion";
         if(this.o < 7){
             this.asc1 = randomIntFromInterval(this.sc1,this.sc1*2);
             this.asc2 = randomIntFromInterval(this.sc2,this.sc2*2);
@@ -377,8 +389,10 @@ class Planet{
             else if(cat == 5 && this.asc5 > 0){this.asc5 -= 1;}
             else if(cat == 6 && this.asc6 > 0){this.asc6 -= 1;}
             else if(cat == 7 && this.asc7 > 0){this.asc7 -= 1;}
-            if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9)
+            if(this.asc1+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7 <= 9){
+                this.setBio("Victory","The fleet of the "+this.abyn+" faction was being pushed back by the "+this.on+"");
                 this.generateAttackPnj();
+            }
         }else{
             if(cat == 1 && this.sc1 > 0){this.sc1 -= 1;}
             else if(cat == 2 && this.sc2 > 0){this.sc2 -= 1;}
@@ -404,7 +418,7 @@ class Planet{
                 p : this.p,
             }
             this.decolonize(universe);
-            if(this.gift.aby > 7)
+            if(this.aby > 7)
                 return gift;
         }
         return undefined;
@@ -412,7 +426,11 @@ class Planet{
 
     checkFight(universe){
         if(Date.now() > this.tba && this.ua == 0 && Date.now() < this.tea){
-            this.setBio("Under attack","A fleet of the "+this.abyn+" faction, composed of "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships attack this planet");
+            var fleet = 0+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7;
+            if(this.aby == 4) this.abyn = "Cehenyth";
+            if(this.aby == 3) this.abyn = "Xahor";
+            if(this.aby == 2) this.abyn = "Dominion";
+            this.setBio("Under attack","A fleet of the "+this.abyn+" faction, composed of "+fleet+" ships attack this planet");
             this.ua = 1;
         }else if(Date.now() > this.tba && this.ua == 1 && Date.now() > this.tea && this.aby > 7){
             this.decolonize(universe);
@@ -428,7 +446,7 @@ class Planet{
             var nbrPage = Math.floor(this.bio.length/10)+1;
             //if(nbrPage < 1) nbrPage = 1;
             if(body.page > 1){page = (body.page*5)}
-            for (let index = 0+(page); index < page+10; index++) {
+            for (let index = 0+page-1; index < page+10; index++) {
                 if(this.bio[index]) str = str+this.bio[index].t+"|";
             }
             this.bio.reverse();
@@ -462,9 +480,21 @@ class Planet{
 
     decolonize(universe){
             this.setBio("Conquest","The planet once owned by "+this.on+" was conquered and is now owned by "+this.abyn+" faction");
-            //universe.messageInfo = "you have conquered the planet [nameplanet:"+this.id+"] that was once owned by "+this.on+", your fleet of "+this.asc2+this.asc3+this.asc4+this.asc5+this.asc6+this.asc7+" ships now takes possession of the planet.";
-            //universe.messageInfo = "Your planet [nameplanet:"+this.id+"] was conquered by the Julian player."
+            //delete transfer ship to this planet if loosed
+            if(universe.transferShip[this.o]){
+                for (let index = 0; index < universe.transferShip[this.o].length; index++) {
+                    if(universe.transferShip[this.o][index]){
+                        if(universe.transferShip[this.o][index].to == this.id)
+                            delete universe.transferShip[this.o][index];
+                    }
+                }
+            }
+            this.p = 0;
             this.o = this.aby;
+            this.g = -1;
+            if(this.o == 4) this.on = "Cehenyth";
+            if(this.o == 3) this.on = "Xahor";
+            if(this.o == 2) this.on = "Dominion";
             this.sc1 = this.asc1+10; 
             this.sc2 = this.asc2; 
             this.sc3 = this.asc3; 

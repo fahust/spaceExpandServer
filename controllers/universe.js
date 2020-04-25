@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,downGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet,questAddParticipation,listBioByPage,getBio,getQuest};
+    return {loadById,loadAll,deleteShip,addShip,launchAttack,addDefense,deleteDefense,addTechnologie,stopAttack,transferShip,addRessourceByShipEvent,loadUsersScore,setUsersScore,addMessage,loadLastTenMessage,addGuild,quitGuild,changeNameUserGuild,loadGuild,addGuildRessource,takeGuildRessource,addScore,joinGuild,invitMember,kickMember,upGradeMember,downGradeMember,addShipMultipleShip,loadUsersGuild,addEventParticipant,sendShipEvent,deleteShipEventParticipant,addPrimeOnPlanet,questAddParticipation,listBioByPage,getBio,getQuest,sendPostMine};
 
     function loadById(req, res){
         var body = JSON.parse(Object.keys(req.body));
@@ -262,6 +262,11 @@ module.exports = app => {
     function questAddParticipation(req, res){
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.questAddParticipation(body));
+    }
+
+    function sendPostMine(req, res){
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sendPostMine(body));
     }
 
     

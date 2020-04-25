@@ -83,6 +83,8 @@ app.post('/universe/getquest', app.controllers.universe.getQuest);
 
 app.post('/universe/questaddparticipation', app.controllers.universe.questAddParticipation);
 
+app.post('/universe/sendpostmine', app.controllers.universe.sendPostMine);
+
 
 
 

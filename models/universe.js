@@ -18,6 +18,7 @@ function randomIntFromInterval(min, max) { // min and max included
             this.commerce = [];
             this.guilds = [];
             this.gift = [];
+            this.postMine = [];
             this.giftQuest = {};
             this.giftQuest.p = {};
             this.quest = {};
@@ -842,6 +843,36 @@ function randomIntFromInterval(min, max) { // min and max included
 
         getBio(body){
             return this.planets[body.id].getBio(body);
+        }
+
+        sendPostMine(body){
+            if(!this.postMine[body.cu])
+                this.postMine[body.cu] = {};
+            this.postMine[body.cu].x = body.x;
+            this.postMine[body.cu].y = body.y;
+            this.postMine[body.cu].a = body.a;
+            this.postMine[body.cu].cu = body.cu;
+            this.postMine[body.cu].id = body.id;
+            this.postMine[body.cu].n = body.n;
+            this.postMine[body.cu].hp = body.hp;
+            var obj = {};
+            obj.x = '';
+            obj.y = '';
+            obj.a = '';
+            obj.cu = '';
+            obj.id = '';
+            obj.n = '';
+            obj.hp = '';
+            this.postMine.forEach(element => {
+                obj.x = obj.x+element.x+'|';
+                obj.y = obj.y+element.y+'|';
+                obj.a = obj.a+element.a+'|';
+                obj.cu = obj.cu+element.cu+'|';
+                obj.id = obj.id+element.id+'|';
+                obj.n = obj.n+element.n+'|';
+                obj.hp = obj.hp+element.hp+'|';
+            });console.log(obj);
+            return obj;
         }
     
 

@@ -85,6 +85,13 @@ module.exports = app => {
 
     app.post('/universe/sendpostmine', app.controllers.universe.sendPostMine);
 
+    //
+    app.post('/universe/addbuildorbit', app.controllers.universe.addBuildOrbit);
+
+    app.post('/universe/getbuildorbit', app.controllers.universe.getBuildOrbit);
+
+    app.post('/universe/deletebuildorbit', app.controllers.universe.deleteBuildOrbit);
+
 
 
 

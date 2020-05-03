@@ -415,6 +415,7 @@ class Universe {
     loadById(body) {
         if (body.id) {
             var biosave = this.planets[body.id].bio;
+            var buildOrbitsave = this.planets[body.id].build;
             if (body.t0) this.planets[body.id].t0 = body.t0
             if (body.t2) this.planets[body.id].t2 = body.t2
             if (body.t3) this.planets[body.id].t3 = body.t3
@@ -458,14 +459,17 @@ class Universe {
                 this.aopsc6 = 0;
                 this.aopsc7 = 0;
             }
+            stringifiedPlanet.bo = this.planets[body.id].getBuildOrbit();
             stringifiedPlanet.questR = this.quest.r;
             stringifiedPlanet.questS = this.quest.s;
             stringifiedPlanet.questRmax = this.quest.rmax;
             stringifiedPlanet.questSmax = this.quest.smax;
             stringifiedPlanet.questId = this.quest.id;
             stringifiedPlanet.bio = {};
+            stringifiedPlanet.build = [];
             this.planets[body.id].u = this;
             this.planets[body.id].bio = biosave;
+            this.planets[body.id].build = buildOrbitsave;
             return stringifiedPlanet;
         }
     }
@@ -507,6 +511,9 @@ class Universe {
             console.error(err);
         }
         try {
+            this.usersScore = this.usersScore.filter(function (el) { //suprimer empty element of array
+                return el != null || undefined;
+            });
             let data = JSON.stringify(this.usersScore);
             fs.writeFile('saveUsersScore.json', data, (err) => {
                 if (err) throw err;
@@ -553,7 +560,7 @@ class Universe {
         //this.questCheck();
         setInterval(() => {
             this.Save();
-        }, 26400000);
+        }, 2640000);//26400000
     }
 
     actualizOne(id) {

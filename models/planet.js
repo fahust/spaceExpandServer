@@ -7,7 +7,7 @@ function randomIntFromInterval(min, max) { // min and max included
 
 module.exports =
     class Planet {
-        constructor(universe, id, owner, timeBeginAttack, timeEndAttack, attackedBy, shipCat1, shipCat2, shipCat3, shipCat4, shipCat5, defenseLevel, ressource, technologie, technoLaser, technoMissile, technoBouclier, technoAlliage, shipCat6, shipCat7, lastView = Date.now(), rc = 1, rx = 1, rd = 1, p = 0, bio = [], abyn = "") {
+        constructor(universe, id, owner, timeBeginAttack, timeEndAttack, attackedBy, shipCat1, shipCat2, shipCat3, shipCat4, shipCat5, defenseLevel, ressource, technologie, technoLaser, technoMissile, technoBouclier, technoAlliage, shipCat6, shipCat7, lastView = Date.now(), rc = 1, rx = 1, rd = 1, p = 0, bio = [], abyn = "", build = []) {
             this.id = id; //id de la planet
             this.o = owner; //owner
             this.on; //ownername
@@ -63,6 +63,7 @@ module.exports =
             this.rd = rd;//reputation dominion
             this.p = p;//prime
             this.bio = bio;
+            this.build = build;
             this.abyn = abyn;
             this.loot = [];
             //this.dba;
@@ -481,6 +482,39 @@ module.exports =
             this.bio.push(bio);
         }
 
+        addBuildOrbit(body) {
+            var obj = {};
+            obj.dist = body.dist;
+            obj.hp = body.hp;
+            obj.dir = body.dir;
+            obj.m = body.m;
+            obj.i = body.i;
+            this.build.push(obj);
+            return {};
+        }
+
+        getBuildOrbit() {
+            var bo = '';
+            for (let index = 0; index < this.build.length; index++) {//console.log()
+                if (this.build[index])
+                    bo = bo + this.build[index].dist + '|' + this.build[index].hp + '|' + this.build[index].dir + '|' + this.build[index].m + '|' + this.build[index].i + '#';
+            }
+            //console.log(bo)
+            return bo;
+        }
+
+        deleteBuildOrbit(body) {
+            for (let index = 0; index < this.build.length; index++) {
+                if (this.build[index]) {
+                    if (this.build[index].i == body.i) {
+                        //console.log(this.build[index].i)
+                        delete this.build[index];
+                    }
+                }
+            }
+            return {};
+        }
+
         decolonize(universe) {
             this.setBio("Conquest", "The planet once owned by " + this.on + " was conquered and is now owned by " + this.abyn + " faction");
             //delete transfer ship to this planet if loosed
@@ -495,6 +529,7 @@ module.exports =
             this.p = 0;
             this.o = this.aby;
             this.g = -1;
+            this.build = [];
             if (this.o == 4) this.on = "Cehenyth";
             if (this.o == 3) this.on = "Xahor";
             if (this.o == 2) this.on = "Dominion";

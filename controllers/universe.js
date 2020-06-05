@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return { loadById, loadAll, deleteShip, addShip, launchAttack, addDefense, deleteDefense, addTechnologie, stopAttack, transferShip, addRessourceByShipEvent, loadUsersScore, setUsersScore, addMessage, loadLastTenMessage, addGuild, quitGuild, changeNameUserGuild, loadGuild, addGuildRessource, takeGuildRessource, addScore, joinGuild, invitMember, kickMember, upGradeMember, downGradeMember, addShipMultipleShip, loadUsersGuild, addEventParticipant, sendShipEvent, deleteShipEventParticipant, addPrimeOnPlanet, questAddParticipation, listBioByPage, getBio, getQuest, sendPostMine, addBuildOrbit, getBuildOrbit, deleteBuildOrbit };
+    return { loadById, loadAll, deleteShip, addShip, launchAttack, addDefense, deleteDefense, addTechnologie, stopAttack, transferShip, addRessourceByShipEvent, loadUsersScore, setUsersScore, addMessage, loadLastTenMessage, addGuild, quitGuild, changeNameUserGuild, loadGuild, addGuildRessource, takeGuildRessource, addScore, joinGuild, invitMember, kickMember, upGradeMember, downGradeMember, addShipMultipleShip, loadUsersGuild, addEventParticipant, sendShipEvent, deleteShipEventParticipant, addPrimeOnPlanet, questAddParticipation, listBioByPage, getBio, getQuest, sendPostMine, addBuildOrbit, getBuildOrbit, deleteBuildOrbit, dmgEM, changeTbm, changeTm, changeVs, changeVt, changeVd, changePs, changePt, changePd, getPolitics, addElu, voteElu, unvoteElu, votePre, unvotePre, listBioPre, pickMoney, sendMineTaxe, sendCargoDestroy };
 
     function loadById(req, res) {
         var body = JSON.parse(Object.keys(req.body));
@@ -283,6 +283,110 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.planets[body.id].deleteBuildOrbit(body));
     }
+
+    function dmgEM(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.dmgEM(body));
+    }
+
+    function changeTbm(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeTbm(body));
+    }
+
+    function changeTm(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeTm(body));
+    }
+
+    function changeVs(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeVs(body));
+    }
+
+    function changeVt(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeVt(body));
+    }
+
+    function changeVd(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changeVd(body));
+    }
+
+    function changePs(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changePs(body));
+    }
+
+    function changePt(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changePt(body));
+    }
+
+    function changePd(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.changePd(body));
+    }
+
+    function getPolitics(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.getPolitics(body));
+    }
+
+    function addElu(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.addElu(body));
+    }
+
+    function voteElu(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.voteElu(body));
+    }
+
+    function unvoteElu(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.unvoteElu(body));
+    }
+
+    function votePre(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.votePre(body));
+    }
+
+    function unvotePre(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.unvotePre(body));
+    }
+
+    function listBioPre(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.listBioPre(body));
+    }
+
+    function pickMoney(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.pickMoney(body));
+    }
+
+    function sendMineTaxe(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sendMineTaxe(body));
+    }
+
+    function sendCargoDestroy(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sendCargoDestroy(body));
+    }
+    
+    
+
+    
+
+    
+    
+
+    
 
 
 

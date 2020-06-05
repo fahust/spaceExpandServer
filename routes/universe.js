@@ -93,7 +93,48 @@ module.exports = app => {
     app.post('/universe/deletebuildorbit', app.controllers.universe.deleteBuildOrbit);
 
 
+    app.post('/universe/dmgem', app.controllers.universe.dmgEM);
 
+    
+    app.post('/universe/changetbm', app.controllers.universe.changeTbm);
+    
+    app.post('/universe/changetm', app.controllers.universe.changeTm);
+    
+    app.post('/universe/changevs', app.controllers.universe.changeVs);
+    
+    app.post('/universe/changevt', app.controllers.universe.changeVt);
+    
+    app.post('/universe/changevd', app.controllers.universe.changeVd);
+    
+    app.post('/universe/changeps', app.controllers.universe.changePs);
+    
+    app.post('/universe/changept', app.controllers.universe.changePt);
+    
+    app.post('/universe/changepd', app.controllers.universe.changePd);
+    
+    app.post('/universe/getpolitics', app.controllers.universe.getPolitics);
+    
+    app.post('/universe/addelu', app.controllers.universe.addElu);
+    
+    app.post('/universe/voteelu', app.controllers.universe.voteElu);
+    
+    app.post('/universe/unvoteelu', app.controllers.universe.unvoteElu);
+    
+    app.post('/universe/votepre', app.controllers.universe.votePre);
+    
+    app.post('/universe/unvotepre', app.controllers.universe.unvotePre);
+    
+    app.post('/universe/listbiopre', app.controllers.universe.listBioPre);
+    
+    app.post('/universe/pickmoney', app.controllers.universe.pickMoney);
+    
+    app.post('/universe/sendminetaxe', app.controllers.universe.sendMineTaxe);
+    
+    app.post('/universe/sendcargodestroy', app.controllers.universe.sendCargoDestroy);
+
+    
+
+    
 
 
 

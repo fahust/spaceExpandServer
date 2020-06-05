@@ -7,7 +7,18 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-
+function hours_with_leading_zeros(dt) 
+{ 
+  return (dt.getHours() < 10 ? '0' : '') + dt.getHours();
+}
+function minutes_with_leading_zeros(dt) 
+{ 
+  return (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
+}
+function secondes_with_leading_zeros(dt) 
+{ 
+  return (dt.getSeconds() < 10 ? '0' : '') + dt.getSeconds();
+}
 
 class Universe {
 
@@ -18,14 +29,17 @@ class Universe {
         this.commerce = [];
         this.guilds = [];
         this.gift = [];
-        this.postMine = [];
+        this.postMine = {};
         this.giftQuest = {};
         this.giftQuest.p = {};
         this.quest = {};
         this.quest.p = {};
         this.message = [];
         this.messageInfo = {};
-        this.event = 0;
+        this.event = {};
+        this.postMineEm= {};
+        this.postMineEm.hp = 0;
+        this.postMineEm.system = 1;
         this.aopsc1 = 0;
         this.aopsc2 = 0;
         this.aopsc3 = 0;
@@ -34,7 +48,12 @@ class Universe {
         this.aopsc6 = 0;
         this.aopsc7 = 0;
         this.loot = [];
+        this.politique = {};
+        this.bioPre = [];
         this.generate();
+        this.createEvent();
+        this.createEM();
+        this.createPolitics();
     }
 
     /*SCORE*/
@@ -123,7 +142,7 @@ class Universe {
             //setTimeout(() => {
             if (body.m != "") {
                 var current_datetime = new Date()
-                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds()
+                var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + hours_with_leading_zeros(current_datetime) + ":" + minutes_with_leading_zeros(current_datetime) + ":" + secondes_with_leading_zeros(current_datetime);
                 if (body.g == "") {//guild 0
                     message.m = body.m
                     message.g = body.g
@@ -428,7 +447,7 @@ class Universe {
             }
             new Promise((resolve, reject) => {
                 this.actualizOne(body.id);
-                this.planets[body.id].rattrapageShipTechDef();
+                this.planets[body.id].rattrapageShipTechDef(this.politique);
                 resolve('OK');
             })//.then(OK => console.log('Trade Tech Def Ship')).catch(err => console.log(err));
             if (body.cu)
@@ -467,6 +486,9 @@ class Universe {
             stringifiedPlanet.questId = this.quest.id;
             stringifiedPlanet.bio = {};
             stringifiedPlanet.build = [];
+            this.checkEvent();
+            stringifiedPlanet.ems = this.postMineEm.system;
+            stringifiedPlanet.emhp = this.postMineEm.hp;
             this.planets[body.id].u = this;
             this.planets[body.id].bio = biosave;
             this.planets[body.id].build = buildOrbitsave;
@@ -485,7 +507,6 @@ class Universe {
             let data = JSON.stringify(this.transferShip);
             fs.writeFile('saveTransfer.json', data, (err) => {
                 if (err) throw err;
-                console.log('Data written to file');
             });
         } catch (err) {
             console.error(err);
@@ -494,7 +515,6 @@ class Universe {
             let data = JSON.stringify(this.guilds);
             fs.writeFile('saveGuilds.json', data, (err) => {
                 if (err) throw err;
-                console.log('Data written to file');
             });
         } catch (err) {
             console.error(err);
@@ -504,7 +524,6 @@ class Universe {
             let data = JSON.stringify(this.planets);
             fs.writeFile('save.json', data, (err) => {
                 if (err) throw err;
-                console.log('Data written to file');
                 this.addUtoAll();
             });
         } catch (err) {
@@ -516,6 +535,22 @@ class Universe {
             });
             let data = JSON.stringify(this.usersScore);
             fs.writeFile('saveUsersScore.json', data, (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            let data = JSON.stringify(this.bioPre);
+            fs.writeFile('biopre.json', data, (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            let data = JSON.stringify(this.politique);
+            fs.writeFile('politique.json', data, (err) => {
                 if (err) throw err;
                 console.log('Data written to file');
             });
@@ -547,6 +582,16 @@ class Universe {
             if (err) throw err;
             this.usersScore = JSON.parse(data);
         });
+        
+        fs.readFile('politique.json', (err, data) => {
+            if (err) throw err;
+            this.politique = JSON.parse(data);
+        });
+        
+        fs.readFile('biopre.json', (err, data) => {
+            if (err) throw err;
+            this.bioPre = JSON.parse(data);
+        });
 
 
         /*for (let index = 0; index <= 500; index++) {
@@ -555,6 +600,8 @@ class Universe {
             planet.generateAttackPnj();
             this.planets.push(planet);
         }
+        this.createPolitics();
+        this.politique.e = 1;
         this.Save();*/
         this.createQuest();
         //this.questCheck();
@@ -619,7 +666,7 @@ class Universe {
         //Envoi quand -hp death star by ship owner
         */
 
-    endEvent() {
+    /*endEvent() {
         this.event.tba = Date.now() + (randomIntFromInterval(1640000, 8600000));//time before attack
         this.event.tea = this.tba + (86400000 / 12);//2heure
         this.event.ua = 0;
@@ -712,7 +759,7 @@ class Universe {
             }
         }
         return {};
-    }
+    }*/
 
 
 
@@ -889,16 +936,74 @@ class Universe {
         return this.planets[body.id].getBio(body);
     }
 
+    createEvent(){
+        for (let index = 0; index <= 50; index++) {
+            this.postMine[index] = {};
+        }
+        this.postMineEm.system = 0;
+        this.event.tba = Date.now() + (86400000 / 12)/*+ (randomIntFromInterval(1640000, 8600000))*/;//1 jour
+        this.event.tea = this.tba + (86400000 / 12);//2heure
+    }
+
+    checkEvent() {
+        if (Date.now() > this.event.tba/*&& this.event.ua == 0*/) {
+            if(this.postMineEm.hp <= 0)
+                this.createEM();
+        }
+    }
+
+    createEM(){
+        this.event.tba = Date.now() + (86400000 / 12);//2heure
+        this.postMineEm.a = 0;
+        this.postMineEm.d = Date.now();
+        this.postMineEm.hp = 100000;
+        this.postMineEm.system = randomIntFromInterval(1,49);
+    }
+
+    dmgEM(){
+        if (this.postMineEm){
+            this.postMineEm.hp -= 1;
+            if (this.postMineEm.hp <= 0){
+                this.destroyEM();
+            }
+        }//console.log(this.postMineEm.hp)
+    }
+
+    destroyEM(){
+        this.createEvent();
+    }
+
+    sendMineTaxe(body){
+        var obj = {};
+        this.politique.f += -Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1)));
+        //console.log(body.tr);
+        //console.log('%',this.politique.tm);
+        //console.log('soustrait',-Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1))));
+        obj.tr = body.tr+Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1)));
+        //console.log(obj.tr);
+        return obj;
+    }
+
+    sendCargoDestroy(body){
+        this.politique.f -= 1000000;
+        return {};
+    }
+
     sendPostMine(body) {
-        if (!this.postMine[body.cu])
-            this.postMine[body.cu] = {};
-        this.postMine[body.cu].x = body.x;
-        this.postMine[body.cu].y = body.y;
-        this.postMine[body.cu].a = body.a;
-        this.postMine[body.cu].cu = body.cu;
-        this.postMine[body.cu].id = body.id;
-        this.postMine[body.cu].n = body.n;
-        this.postMine[body.cu].hp = body.hp;
+        if (body.cu){
+            if (!this.postMine[body.ss])
+                this.postMine[body.ss] = {};
+            if (!this.postMine[body.ss][body.cu])
+                this.postMine[body.ss][body.cu] = {};
+            this.postMine[body.ss][body.cu].x = body.x;
+            this.postMine[body.ss][body.cu].y = body.y;
+            this.postMine[body.ss][body.cu].a = body.a;
+            this.postMine[body.ss][body.cu].cu = body.cu;
+            this.postMine[body.ss][body.cu].id = body.id;
+            this.postMine[body.ss][body.cu].n = body.n;
+            this.postMine[body.ss][body.cu].hp = body.hp;
+            this.postMine[body.ss][body.cu].d = Date.now();
+        }
         var obj = {};
         obj.x = '';
         obj.y = '';
@@ -907,19 +1012,313 @@ class Universe {
         obj.id = '';
         obj.n = '';
         obj.hp = '';
-        this.postMine.forEach(element => {
-            obj.x = obj.x + element.x + '|';
-            obj.y = obj.y + element.y + '|';
-            obj.a = obj.a + element.a + '|';
-            obj.cu = obj.cu + element.cu + '|';
-            obj.id = obj.id + element.id + '|';
-            obj.n = obj.n + element.n + '|';
-            obj.hp = obj.hp + element.hp + '|';
-        });//console.log(obj);
-
-        //if (!this.postMineStation[body.cu])
+        //console.log(body.ss)
+        if(body.ss != undefined){
+            for (let [key, value] of Object.entries(this.postMine[body.ss])) {
+                if(value.d+1000 > Date.now()){
+                    obj.hp = obj.hp + 0 + '|';
+                }else{
+                    obj.hp = obj.hp + value.hp + '|';
+                }
+                obj.x = obj.x + value.x + '|';
+                obj.y = obj.y + value.y + '|';
+                obj.a = obj.a + value.a + '|';
+                obj.cu = obj.cu + value.cu + '|';
+                obj.id = obj.id + value.id + '|';
+                obj.n = obj.n + value.n + '|';
+            }
+        }
+        this.checkEvent();
+        //if(this.postMineEm.hp > 0){
+            if(this.postMineEm.d+10 < Date.now()){
+                //console.log(this.postMineEm.a);
+                this.postMineEm.d = Date.now();
+                if(this.postMineEm.a > 359){
+                    this.postMineEm.a = 0;
+                }else{
+                    this.postMineEm.a += 0.01;
+                }
+            }
+            this.postMineEm.a = Math.floor(this.postMineEm.a* 1000) / 1000
+            obj.ema = this.postMineEm.a;//etoile de la mort angle
+        //}
+        obj.ems = this.postMineEm.system;
+        obj.emhp = this.postMineEm.hp;//etoile de la mort hp
         return obj;
     }
+
+    createPolitics(){
+        this.politique = {};
+        this.politique.f = 10000000;//fortune
+        this.politique.tbm = 50;//taxeByMinute
+        this.politique.tm = 50;//taxeMining
+        //this.politique.vitMining = 100;
+        this.politique.vs = 50;//vitShip
+        this.politique.vt = 50;//vitTech
+        this.politique.vd = 50;//vitDef
+        //this.politique.prodMining = 100;
+        this.politique.ps = 50;//prodShip
+        this.politique.pt = 50;//prodTech
+        this.politique.pd = 50;//prodDef
+        this.politique.pn = '';//president name
+        this.politique.pid = 0;//president id
+        this.politique.vp = 0;//president id
+        this.politique.tbpf = Date.now();//time before pick fortune
+
+        this.politique.alreadyVote = [];
+        this.politique.alreadyVotePre = [];
+
+        this.politique.te = Date.now();//timeElection
+        this.clearElu();
+    }
+
+    changeTbm(body){
+        this.politique.tbm = body.tbm;
+        return this.getPolitics(body);
+    }
+
+    changeTm(body){
+        this.politique.tm = body.tm;
+        return this.getPolitics(body);
+    }
+
+    changeVs(body){
+        this.politique.vs = body.vs;
+        return this.getPolitics(body);
+    }
+
+    changeVt(body){
+        this.politique.vt = body.vt;
+        return this.getPolitics(body);
+    }
+
+    changeVd(body){
+        this.politique.vd = body.vd;
+        return this.getPolitics(body);
+    }
+
+    changePs(body){
+        this.politique.ps = body.ps;
+        return this.getPolitics(body);
+    }
+
+    changePt(body){
+        this.politique.pt = body.pt;
+        return this.getPolitics(body);
+    }
+
+    changePd(body){
+        this.politique.pd = body.pd;
+        return this.getPolitics(body);
+    }
+
+    getPolitics(body){//envoi toutes les 10 minute et au lancement côter client
+        var obj = {};
+        obj.f = this.politique.f;
+        obj.tbm = this.politique.tbm;
+        obj.tm = this.politique.tm;
+        obj.vs = this.politique.vs;
+        obj.vt = this.politique.vt;
+        obj.vd = this.politique.vd;
+        obj.ps = this.politique.ps;
+        obj.pt = this.politique.pt;
+        obj.pd = this.politique.pd;
+        obj.pn = this.politique.pn;
+        obj.pid = this.politique.pid;
+        obj.te = this.politique.te;
+
+        obj.elun1 = this.politique.elu[0].n;
+        obj.elun2 = this.politique.elu[1].n;
+        obj.elun3 = this.politique.elu[2].n;
+        obj.elun4 = this.politique.elu[3].n;
+        obj.elun5 = this.politique.elu[4].n;
+        obj.elun6 = this.politique.elu[5].n;
+        obj.elun7 = this.politique.elu[6].n;
+        obj.elun8 = this.politique.elu[7].n;
+        obj.elun9 = this.politique.elu[8].n;
+        obj.elun10 = this.politique.elu[9].n;
+        obj.eluv1 = this.politique.elu[0].vote;
+        obj.eluv2 = this.politique.elu[1].vote;
+        obj.eluv3 = this.politique.elu[2].vote;
+        obj.eluv4 = this.politique.elu[3].vote;
+        obj.eluv5 = this.politique.elu[4].vote;
+        obj.eluv6 = this.politique.elu[5].vote;
+        obj.eluv7 = this.politique.elu[6].vote;
+        obj.eluv8 = this.politique.elu[7].vote;
+        obj.eluv9 = this.politique.elu[8].vote;
+        obj.eluv10 = this.politique.elu[9].vote;
+        obj.pv = this.politique.pv;
+        this.politique.e = 0;
+        obj.v = 0;
+        obj.vp = 0;
+        if(this.politique.alreadyVote.indexOf(body.id) != -1)
+            obj.v = 1;
+        if(this.politique.alreadyVotePre.indexOf(body.id) != -1)
+            obj.vp = 1;
+        if(Date.now() > this.politique.tbpf && body.id == this.politique.pid){
+            obj.timePf = 'Take 1 M resources from the state coffers';
+        }else if (body.id == this.politique.pid){
+            obj.timePf = 'Wait '+Math.floor(-((Date.now()-(this.politique.tbpf))/60000))+' minute'
+        }
+        if(Date.now() > this.politique.te && Date.now() < this.politique.te+(60000*10))
+            obj.time = 'Election in '+Math.floor(-((Date.now()-(this.politique.te+(60000*10)))/60000))+' minute'
+        if(Date.now() > this.politique.te+(60000*10) && Date.now() < this.politique.te+(60000*60))
+            obj.time = 'New election in '+Math.floor(-((Date.now()-(this.politique.te+(60000*60)))/60000))+' minute'
+        if(Date.now() > this.politique.te+(60000*10)){// 10 minute
+            this.elir();
+        }
+        if(Date.now() > this.politique.te+(60000*60)){//1 heure
+            this.clearElu();
+        }
+        obj.e = this.politique.e;
+        return obj;
+    }
+
+    addElu(body){
+        var already = 0
+        for (let index = 0; index < 5; index++) {
+            if(this.politique.elu[index].id == body.eluid){
+                already = 1
+            }
+        }
+        if (already == 0) {
+            for (let index = 0; index < 5; index++) {
+                if(this.politique.elu[index].id == ''){
+                    this.politique.elu[index].id = body.eluid;//eluid
+                    this.politique.elu[index].n = body.elun;//eluName
+                    break;
+                }
+            }
+        }
+        return this.getPolitics(body);
+    }
+
+    elir(){
+        var elir = -1;
+        var vote = 0;
+        for (let index = 0; index < 10; index++) {
+            if(this.politique.elu[index].id != '' && this.politique.elu[index].vote > vote){
+                elir = index;
+            }
+        }
+        if(elir == -1){
+            for (let index = 0; index < 10; index++) {
+                if(this.politique.elu[index].id != ''){
+                    elir = index;
+                }
+            }
+        }else{
+            this.politique.pid = this.politique.elu[elir].id;
+            this.politique.pn = this.politique.elu[elir].n;
+        }
+        if(this.politique.pid != 0)
+            this.politique.e = 1;
+    }
+
+    voteElu(body){
+        if(this.politique.alreadyVote.indexOf(body.id) == -1){
+            this.politique.elu[body.vote].vote += 1;
+            this.politique.alreadyVote.push(body.id)
+        }
+        return this.getPolitics(body);
+    }
+
+    unvoteElu(body){
+        if(this.politique.alreadyVote.indexOf(body.id) != -1){
+            this.politique.elu[body.vote].vote -= 1;
+            this.politique.alreadyVote.splice(this.politique.alreadyVote.indexOf(body.id), 1);
+        }
+        return this.getPolitics(body);
+    }
+
+    votePre(body){
+        if(this.politique.alreadyVotePre.indexOf(body.id) == -1){
+            this.politique.pv += 1;
+            this.politique.alreadyVotePre.push(body.id)
+        }
+        return this.getPolitics(body);
+    }
+
+    unvotePre(body){
+        if(this.politique.alreadyVotePre.indexOf(body.id) != -1){
+            this.politique.pv -= 1;
+            this.politique.alreadyVotePre.splice(this.politique.alreadyVotePre.indexOf(body.id), 1);
+        }
+        return this.getPolitics(body);
+    }
+
+    clearElu(){
+        this.setBioPre(this.politique.pn,this.politique.pv);
+        this.politique.elu = [];
+        for (let index = 0; index < 10; index++) {
+            this.politique.elu[index] = {};//elu
+            this.politique.elu[index].id = '';//eluid
+            this.politique.elu[index].n = '';//eluName
+            this.politique.elu[index].vote = 0;//eluVote
+        }//console.log(this.politique.elu[0]);
+        this.politique.pid = 0;
+        this.politique.pn = '';
+        this.politique.pv = 0;
+        this.politique.te = Date.now();//timeElection
+
+        this.politique.alreadyVote = [];
+        this.politique.alreadyVotePre = [];
+    }
+
+    setBioPre(t, d1) {
+        if (t != 0 && t != '') {
+            var bio = {};
+            var current_datetime = new Date();
+            var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "  -  " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds();
+            bio.t = t;
+            bio.d = formatted_date;
+            bio.d1 = d1;
+            this.bioPre.push(bio);
+        }
+    }
+
+    listBioPre(body) {
+        if (body.page) {
+            this.bioPre.reverse();
+            var obj = {};
+            var str = '';
+            var page = 1;
+            var nbrPage = Math.floor(this.bioPre.length / 10) + 1;
+            //if(nbrPage < 1) nbrPage = 1;
+            if (body.page > 1) { page = (body.page * 5) }
+            for (let index = 0 + page - 1; index < page + 10; index++) {
+                if (this.bioPre[index]) str = str + this.bioPre[index].d + " - " + this.bioPre[index].t + " : "+ this.bioPre[index].d1 + " Vote" + "|";
+            }
+            this.bioPre.reverse();
+            obj.listbio = str;
+            obj.nbrpage = nbrPage;
+            return obj;
+        }
+    }
+
+    pickMoney(body){
+        var obj = this.getPolitics(body);
+        if (Date.now() > this.politique.tbpf){
+            this.politique.tbpf = Date.now()+(60000*10);//time before pick money
+            this.politique.f -= 1000000;
+            obj.pf = 1;//pick fortune
+            return obj;
+        }
+        return obj;
+    }
+
+    /*getBioPre(body) {
+        var obj = {};
+        for (let index = 0; index < this.bioPre.length; index++) {
+            if (body.bio == this.bioPre[index].t) {
+                obj.t = this.bioPre[index].t;
+                obj.d = this.bioPre[index].d;
+                obj.d1 = this.bioPre[index].d1;
+            }
+        }
+        return obj;
+    }*/
+
 
 
 }

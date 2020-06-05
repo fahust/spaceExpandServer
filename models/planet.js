@@ -5,6 +5,19 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function hours_with_leading_zeros(dt) 
+{ 
+  return (dt.getHours() < 10 ? '0' : '') + dt.getHours();
+}
+function minutes_with_leading_zeros(dt) 
+{ 
+  return (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
+}
+function secondes_with_leading_zeros(dt) 
+{ 
+  return (dt.getSeconds() < 10 ? '0' : '') + dt.getSeconds();
+}
+
 module.exports =
     class Planet {
         constructor(universe, id, owner, timeBeginAttack, timeEndAttack, attackedBy, shipCat1, shipCat2, shipCat3, shipCat4, shipCat5, defenseLevel, ressource, technologie, technoLaser, technoMissile, technoBouclier, technoAlliage, shipCat6, shipCat7, lastView = Date.now(), rc = 1, rx = 1, rd = 1, p = 0, bio = [], abyn = "", build = []) {
@@ -70,10 +83,16 @@ module.exports =
         }
 
 
-        trade() {
+        trade(politics) {
             if (this.r) {
                 if (this.o < 7) {
                     var gainR = Math.floor((((this.sc1 * 1) + (this.sc2 * 1.5) + (this.sc3 * 2) + (this.sc4 * 3) + (this.sc5 * 4) + (this.sc6 * 5) + (this.sc7 * 10)) * (Date.now() - this.lv)) / 10000);
+                    politics.f += -Math.floor(gainR-(gainR*((politics.tm/100)+1)));
+                    /*console.log(gainR);
+                    console.log('%',politics.tm);
+                    console.log('soustrait',-Math.floor(gainR-(gainR*((politics.tm/100)+1))));*/
+                    gainR = gainR+Math.floor(gainR-(gainR*((politics.tm/100)+1)));
+                    //console.log(gainR);
                     if (gainR > 1) {
                         this.r += gainR;
                     } else {
@@ -88,6 +107,8 @@ module.exports =
 
                     }
                     var gainR = Math.floor(((((this.sc1 * 1) + (this.sc2 * 1.5) + (this.sc3 * 2) + (this.sc4 * 3) + (this.sc5 * 4) + (this.sc6 * 5) + (this.sc7 * 10)) * (Date.now() - this.lv)) / 2500) * bonusLoot);
+                    politics.f += -Math.floor(gainR-(gainR*((politics.tm/100)+1)));
+                    gainR = gainR+Math.floor(gainR-(gainR*((politics.tm/100)+1)));
                     this.r += gainR;
                 }
             } else {
@@ -97,19 +118,26 @@ module.exports =
             return gainR;
         }
 
-        rattrapageShipTechDef() {
-            var loopBuilt = Math.floor((Date.now() - this.lv) / 5000);
+        rattrapageShipTechDef(politics) {
+            var loopBuilt = Math.floor(((Date.now() - this.lv) / 5000)*((politics.vs/100)+1));
             var str = '';
             var strt = "";
             var strd = "";
             var nbr = 0;
+            var tbm = 0;
             if (loopBuilt > 1) {
-                var strr = this.trade();
+                if (this.r > 1000000) {
+                    tbm = loopBuilt*politics.tbm;
+                    politics.f += tbm;
+                    this.r -= tbm;
+                }
+                var strr = this.trade(politics);
+                //this.ss = 10;this.r = 5000000;politics.pt = 10//A SUPPRIMER
                 if (this.ss >= 10 && this.ss < 20) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 50000) {
-                            this.addShip(1);
+                        if (this.r > 50000-Math.floor(50000*(politics.ps/100))) {
+                            this.addShip(1,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -119,8 +147,8 @@ module.exports =
                 } else if (this.ss >= 20 && this.ss < 40) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 200000) {
-                            this.addShip(2);
+                        if (this.r > 200000-Math.floor(200000*(politics.ps/100))) {
+                            this.addShip(2,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -130,8 +158,8 @@ module.exports =
                 } else if (this.ss >= 40 && this.ss < 60) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 450000) {
-                            this.addShip(3);
+                        if (this.r > 450000-Math.floor(450000*(politics.ps/100))) {
+                            this.addShip(3,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -141,8 +169,8 @@ module.exports =
                 } else if (this.ss >= 60 && this.ss < 70) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 800000) {
-                            this.addShip(4);
+                        if (this.r > 800000-Math.floor(800000*(politics.ps/100))) {
+                            this.addShip(4,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -152,8 +180,8 @@ module.exports =
                 } else if (this.ss >= 70 && this.ss < 80) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 1250000) {
-                            this.addShip(5);
+                        if (this.r > 1250000-Math.floor(1250000*(politics.ps/100))) {
+                            this.addShip(5,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -163,8 +191,8 @@ module.exports =
                 } else if (this.ss >= 80 && this.ss < 90) {
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
-                        if (this.r > 10800000) {
-                            this.addShip(6);
+                        if (this.r > 10800000-Math.floor(10800000*(politics.ps/100))) {
+                            this.addShip(6,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -175,7 +203,7 @@ module.exports =
                     nbr = 0;
                     for (let index = 0; index < loopBuilt; index++) {
                         if (this.r > 17150000) {
-                            this.addShip(7);
+                            this.addShip(7,politics);
                             nbr += 1;
                         } else {
                             break;
@@ -184,14 +212,14 @@ module.exports =
                     str = str + nbr + ' Imperator, ';
                 }
                 if (this.st > 10)
-                    strt = this.addTechnologie(this.st);
+                    strt = this.addTechnologie(this.st,politics);
                 if (this.sd > 10)
-                    strd = this.addDefense(this.sd);
+                    strd = this.addDefense(this.sd,politics);
                 if (loopBuilt >= 100) {
                     strconstruct = "and he solves a construction of ";
                     if (str == "" && strd == "" && strt == "")
                         var strconstruct = "";
-                    this.setBio("Building", "An intense production on this planet has been launched " + strconstruct + str + strd + strt + " with a gain of " + strr + " Ressource");
+                    this.setBio("Building", "An intense production on this planet has been launched " + strconstruct + str + strd + strt + " with a gain of " + (strr - tbm) + " Ressource");
                 }
                 this.lv = Date.now();
             }
@@ -317,43 +345,51 @@ module.exports =
             }
         }
 
-        addShip(cat) {
-            if (cat == 1 && this.r > 50000) {
+        addShip(cat,politics) {
+            if (cat == 1 && this.r > 50000-Math.floor(50000*(politics.ps/100))) {
                 this.sc1 += 1;
-                this.r -= 50000;
+                this.r -= 50000-Math.floor(50000*(politics.ps/100));
+                politics.f -= Math.floor(50000*(politics.ps/100));
             }
-            if (cat == 2 && this.r > 200000) {
+            if (cat == 2 && this.r > 200000-Math.floor(200000*(politics.ps/100))) {
                 this.sc2 += 1;
-                this.r -= 200000;
+                this.r -= 200000-Math.floor(200000*(politics.ps/100));
+                politics.f -= Math.floor(200000*(politics.ps/100));
             }
-            if (cat == 3 && this.r > 450000) {
+            if (cat == 3 && this.r > 450000-Math.floor(450000*(politics.ps/100))) {
                 this.sc3 += 1;
-                this.r -= 450000;
+                this.r -= 450000-Math.floor(450000*(politics.ps/100));
+                politics.f -= Math.floor(450000*(politics.ps/100));
             }
-            if (cat == 4 && this.r > 800000) {
+            if (cat == 4 && this.r > 800000-Math.floor(800000*(politics.ps/100))) {
                 this.sc4 += 1;
-                this.r -= 800000;
+                this.r -= 800000-Math.floor(800000*(politics.ps/100));
+                politics.f -= Math.floor(800000*(politics.ps/100));
             }
-            if (cat == 5 && this.r > 1250000) {
+            if (cat == 5 && this.r > 1250000-Math.floor(1250000*(politics.ps/100))) {
                 this.sc5 += 1;
-                this.r -= 1250000;
+                this.r -= 1250000-Math.floor(1250000*(politics.ps/100));
+                politics.f -= Math.floor(1250000*(politics.ps/100));
             }
-            if (cat == 6 && this.r > 10800000) {
+            if (cat == 6 && this.r > 10800000-Math.floor(10800000*(politics.ps/100))) {
                 this.sc6 += 1;
-                this.r -= 10800000;
+                this.r -= 10800000-Math.floor(10800000*(politics.ps/100));
+                politics.f -= Math.floor(10800000*(politics.ps/100));
             }
-            if (cat == 7 && this.r > 17150000) {
+            if (cat == 7 && this.r > 17150000-Math.floor(17150000*(politics.ps/100))) {
                 this.sc7 += 1;
-                this.r -= 17150000;
+                this.r -= 17150000-Math.floor(17150000*(politics.ps/100));
+                politics.f -= Math.floor(17150000*(politics.ps/100));
             }
         }
 
-        addTechnologie(stat) {
-            if (this.r > Math.floor(stat * 10000)) {
-                this.t += (Math.floor(stat) / 100);
+        addTechnologie(stat,politics) {
+            if (this.r > Math.floor(stat * 10000)-Math.floor((stat * 10000)*(politics.pt/100))) {
+                this.t += Math.floor((stat / 100)*((politics.vt/100)+1));
                 if (this.t <= 100) {
-                    this.r -= Math.floor(stat * 10000);
-                    return "a " + (Math.floor(stat) / 100) + " % improvement in technology";
+                    this.r -= Math.floor(stat * 10000)-Math.floor((stat * 10000)*(politics.pt/100));
+                    politics.f -= Math.floor((stat * 10000)*(politics.pt/100));
+                    return "a " + Math.floor((stat / 100)*((politics.vt/100)+1)); + " % improvement in technology";
                 } else {
                     this.t = 100;
                 }
@@ -361,12 +397,13 @@ module.exports =
             return "";
         }
 
-        addDefense(stat) {
-            if (this.r > Math.floor(stat * 10000)) {
-                this.d += (Math.floor(stat) / 100);
+        addDefense(stat,politics) {
+            if (this.r > Math.floor(stat * 10000)-Math.floor((stat * 10000)*(politics.pd/100))) {
+                this.d += Math.floor((stat / 100)*((politics.vd/100)+1));
                 if (this.d <= 100) {
-                    this.r -= Math.floor(stat * 10000);
-                    return "a " + (Math.floor(stat) / 100) + " % improvement in technology";
+                    this.r -= Math.floor(stat * 10000)-Math.floor((stat * 10000)*(politics.pd/100));
+                    politics.f -= Math.floor((stat * 10000)*(politics.pd/100));
+                    return "a " + Math.floor((stat / 100)*((politics.vd/100)+1)); + " % improvement in defense";
                 } else {
                     this.d = 100;
                 }
@@ -475,7 +512,7 @@ module.exports =
         setBio(t, d1) {
             var bio = {};
             var current_datetime = new Date();
-            var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "  -  " + current_datetime.getHours() + ":" + current_datetime.getMinutes() + ":" + current_datetime.getSeconds();
+            var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + "  -  " + hours_with_leading_zeros(current_datetime) + ":" + minutes_with_leading_zeros(current_datetime) + ":" + secondes_with_leading_zeros(current_datetime);
             bio.t = this.bio.length + " - " + t;
             bio.d = formatted_date;
             bio.d1 = d1;
@@ -489,6 +526,7 @@ module.exports =
             obj.dir = body.dir;
             obj.m = body.m;
             obj.i = body.i;
+            this.r -= body.c;
             this.build.push(obj);
             return {};
         }

@@ -131,6 +131,18 @@ module.exports = app => {
     app.post('/universe/sendminetaxe', app.controllers.universe.sendMineTaxe);
     
     app.post('/universe/sendcargodestroy', app.controllers.universe.sendCargoDestroy);
+    
+    app.post('/universe/sellsuccesstrade', app.controllers.universe.sellSuccessTrade);
+    
+    app.post('/universe/buysuccesstrade', app.controllers.universe.buySuccessTrade);
+    
+    app.post('/universe/listsuccesstrade', app.controllers.universe.listSuccessTrade);
+
+    app.post('/universe/sellshiptrade', app.controllers.universe.sellShipTrade);
+    
+    app.post('/universe/buyshiptrade', app.controllers.universe.buyShipTrade);
+    
+    app.post('/universe/listshiptrade', app.controllers.universe.listShipTrade);
 
     
 

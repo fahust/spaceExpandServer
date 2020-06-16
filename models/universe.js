@@ -24,14 +24,17 @@ class Universe {
 
     constructor() {
         this.planets = [];
-        this.usersScore = [];
+        this.usersScore = {};
         this.transferShip = [];
         this.commerce = [];
-        this.guilds = [];
+        this.guilds = {};
         this.gift = [];
         this.postMine = {};
+        this.tradeSuccess = {};
+        this.tradeShip = {};
         this.giftQuest = {};
         this.giftQuest.p = {};
+        this.giftTrade = {};
         this.quest = {};
         this.quest.p = {};
         this.message = [];
@@ -58,41 +61,33 @@ class Universe {
 
     /*SCORE*/
     setUsersScore(body) {
-        new Promise((resolve, reject) => {
+        //new Promise((resolve, reject) => {
             var userExist = false;
-            for (let index = 0; index < this.usersScore.length; index++) {
-                if (this.usersScore[index]) {
-                    if (this.usersScore[index].cu == body.cu) {
-                        userExist = true;
-                        this.usersScore[index].r = body.r;
-                        this.usersScore[index].s = body.s;
-                        this.usersScore[index].t = body.t;
-                        this.usersScore[index].d = body.d;
-                        this.usersScore[index].n = body.n;
-                        this.usersScore[index].cu = body.cu;
-                        this.usersScore[index].st = body.r / 1000000 + body.s + (body.t * 50) + (body.d * 10);
-                        break;
-                    }
-                }
-            }
-            if (userExist == false) {
+            if (!this.usersScore[body.cu]) 
                 this.usersScore[body.cu] = {};
-                this.usersScore[body.cu].r = body.r;
-                this.usersScore[body.cu].s = body.s;
-                this.usersScore[body.cu].t = body.t;
-                this.usersScore[body.cu].d = body.d;
-                this.usersScore[body.cu].n = body.n;
-                this.usersScore[body.cu].cu = body.cu;
-                this.usersScore[body.cu].st = body.r / 1000000 + body.s + (body.t * 50) + (body.d * 2);
-            }
-            resolve('OK');
-        })//.then(OK => console.log('User Score Setted')).catch(err => console.log(err));
+            this.usersScore[body.cu].r = body.r;
+            this.usersScore[body.cu].s = body.s;
+            this.usersScore[body.cu].t = body.t;
+            this.usersScore[body.cu].d = body.d;
+            this.usersScore[body.cu].n = body.n;
+            this.usersScore[body.cu].cu = body.cu;
+            this.usersScore[body.cu].dn = Date.now();
+            this.usersScore[body.cu].st = body.r / 1000000 + body.s + (body.t * 50) + (body.d * 10);
+        //    resolve('OK');
+        //})//.then(OK => console.log('User Score Setted')).catch(err => console.log(err));
     }
 
     loadUsersScore(body) {
         var closest = 500000;
         var userClose;
-        var usersScore = this.usersScore;
+        var usersScore = [];
+        for (var key in this.usersScore) {
+            if(Date.now() > this.usersScore[key].dn+(86400000*30) ){
+                delete this.usersScore[key];
+            }else{
+                usersScore.push(this.usersScore[key]);
+            }
+        }
         usersScore.sort(function (a, b) {
             if (a.st - b.st < closest) {
                 closest = a.st - b.st;
@@ -109,7 +104,7 @@ class Universe {
                 breakIndex += 1;
                 str = str + usersScore[index].n + "-" + "" + "-" + Math.floor(usersScore[index].st) + "-" + usersScore[index].r + "-" + usersScore[index].s + "-" + usersScore[index].t + "-" + usersScore[index].d + "-" + '' + "-" + '' + "-" + '' + "-" + '' + "-" + '' + "-|";
             }
-            if (breakIndex > 6)
+            if (breakIndex >= 17)
                 break;
         }
         usersScore = usersScore.filter(function (el) { //suprimer empty element of array
@@ -138,8 +133,7 @@ class Universe {
     /*MESSAGE*/
     addMessage(body) {
         var message = {};
-        new Promise((resolve, reject) => {
-            //setTimeout(() => {
+        //new Promise((resolve, reject) => {
             if (body.m != "") {
                 var current_datetime = new Date()
                 var formatted_date = current_datetime.getFullYear() + "/" + (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() + ";" + hours_with_leading_zeros(current_datetime) + ":" + minutes_with_leading_zeros(current_datetime) + ":" + secondes_with_leading_zeros(current_datetime);
@@ -170,9 +164,8 @@ class Universe {
                     this.message.push(message);
                 }
             }
-            //}, 1);
-            resolve('OK');
-        })//.then(OK => console.log('User Score Setted')).catch(err => console.log(err));
+        //    resolve('OK');
+        //})//.then(OK => console.log('User Score Setted')).catch(err => console.log(err));
         return this.loadLastTenMessage(body);
     }
 
@@ -188,9 +181,9 @@ class Universe {
                 messages.push(this.message[index])
             }
         }
-        for (let index = messages.length - 20; index < messages.length; index++) {
+        for (let index = messages.length - 17; index < messages.length; index++) {
             if (messages[index])
-                str = str +/*''+"-"+""+"-"+*/messages[index].m/*+"-"*/ + "-" + messages[index].d + "-" + messages[index].by + "-" +/*messages[index].ton+"-"*/messages[index].byn +/*"-"+messages[index].t+*/"|";
+                str = str + messages[index].m + "-" + messages[index].d + "-" + messages[index].by + "-" + messages[index].byn + "|";
         }
         return str;
     }
@@ -224,7 +217,7 @@ class Universe {
     }
 
     quitGuild(body) {
-        new Promise((resolve, reject) => {
+        //new Promise((resolve, reject) => {
             if (this.guilds[body.n] && body.cu && this.guilds[body.n].u[body.cu]) {
                 delete this.guilds[body.n].u[body.cu]
                 var count = 0;
@@ -237,8 +230,8 @@ class Universe {
                     delete this.guilds[body.n]
                 }
             }
-            resolve('OK');
-        })//.then(OK => console.log('guild quitted')).catch(err => console.log(err));
+        //    resolve('OK');
+        //})//.then(OK => console.log('guild quitted')).catch(err => console.log(err));
         var obj = {};
         obj.cg = 0;
         obj.n = undefined;
@@ -291,7 +284,7 @@ class Universe {
                 this.guilds[body.n].r -= 1000000;
                 obj.rgain = 1;
             }
-            return obj;//this.loadGuild(body);
+            return obj;
         }
         return obj;
     }
@@ -354,10 +347,9 @@ class Universe {
 
     /*TRANSFER SHIP AND RESSOURCE*/
     transferShipToOther(body) {
-        //this.messageInfo[body.cu] = "your fleet of a "+this.sc2+this.sc3+this.sc4+this.sc5+this.sc6+this.sc7+" was sent to your planet [nameplanet:"+body.to+"] with "+body.r+"resources in its hold."
         if (!this.transferShip[JSON.stringify(body.cu)])
             this.transferShip[JSON.stringify(body.cu)] = [];
-        this.planets[body.id].sc1 -= body.sc1;
+        this.planets[body.id].sc1 -= 0;
         this.planets[body.id].sc2 -= body.sc2;
         this.planets[body.id].sc3 -= body.sc3;
         this.planets[body.id].sc4 -= body.sc4;
@@ -368,7 +360,7 @@ class Universe {
         if (body.to != 0) {
             var transfer = {};
             transfer.byn = this.planets[body.id].on;
-            transfer.sc1 = body.sc1;
+            transfer.sc1 = 0;
             transfer.sc2 = body.sc2;
             transfer.sc3 = body.sc3;
             transfer.sc4 = body.sc4;
@@ -433,35 +425,32 @@ class Universe {
     ///LOAD
     loadById(body) {
         if (body.id) {
-            var biosave = this.planets[body.id].bio;
-            var buildOrbitsave = this.planets[body.id].build;
-            if (body.t0) this.planets[body.id].t0 = body.t0
-            if (body.t2) this.planets[body.id].t2 = body.t2
-            if (body.t3) this.planets[body.id].t3 = body.t3
-            if (body.t4) this.planets[body.id].t4 = body.t4
-            if (body.t5) this.planets[body.id].t5 = body.t5
-            if (body.t6) this.planets[body.id].t6 = body.t6
-            if (body.n) {
-                if (body.cu == this.planets[body.id].o)
-                    this.planets[body.id].on = body.n
-            }
-            new Promise((resolve, reject) => {
+                var biosave = this.planets[body.id].bio;
+                var buildOrbitsave = this.planets[body.id].build;
+                if (body.gn) this.planets[body.id].gn = body.gn
+                if (body.t0) this.planets[body.id].t0 = body.t0
+                if (body.t2) this.planets[body.id].t2 = body.t2
+                if (body.t3) this.planets[body.id].t3 = body.t3
+                if (body.t4) this.planets[body.id].t4 = body.t4
+                if (body.t5) this.planets[body.id].t5 = body.t5
+                if (body.t6) this.planets[body.id].t6 = body.t6
+                if (body.n) {
+                    if (body.cu == this.planets[body.id].o)
+                        this.planets[body.id].on = body.n
+                }
+                //new Promise((resolve, reject) => {
                 this.actualizOne(body.id);
                 this.planets[body.id].rattrapageShipTechDef(this.politique);
-                resolve('OK');
-            })//.then(OK => console.log('Trade Tech Def Ship')).catch(err => console.log(err));
+                //resolve('OK');
+                //})//.then(OK => console.log('Trade Tech Def Ship')).catch(err => console.log(err));
             if (body.cu)
-                this.checkTransferShip(body.cu);
-            this.planets[body.id].dba = Date.now() - this.planets[body.id].tba
+                    this.checkTransferShip(body.cu);
+            this.planets[body.id].dba = Math.floor(Date.now() - this.planets[body.id].tba);
             this.planets[body.id].u = [];
             var stringifiedPlanet = Object.assign(new Planet(), this.planets[body.id]);
             var gift = this.getPrimeOnPlanet(body);
             if (gift != undefined)
                 stringifiedPlanet.gift = gift;
-            if (this.giftQuest.p[body.cu]) {
-                stringifiedPlanet.giftQuest =
-                    delete this.giftQuest.p[body.cu];
-            }
             if (this.aopsc1 + this.aopsc2 + this.aopsc3 + this.aopsc4 + this.aopsc5 + this.aopsc6 + this.aopsc7 > 0) {
                 stringifiedPlanet.aopsc1 = this.aopsc1;
                 stringifiedPlanet.aopsc2 = this.aopsc2;
@@ -479,11 +468,6 @@ class Universe {
                 this.aopsc7 = 0;
             }
             stringifiedPlanet.bo = this.planets[body.id].getBuildOrbit();
-            stringifiedPlanet.questR = this.quest.r;
-            stringifiedPlanet.questS = this.quest.s;
-            stringifiedPlanet.questRmax = this.quest.rmax;
-            stringifiedPlanet.questSmax = this.quest.smax;
-            stringifiedPlanet.questId = this.quest.id;
             stringifiedPlanet.bio = {};
             stringifiedPlanet.build = [];
             this.checkEvent();
@@ -492,6 +476,8 @@ class Universe {
             this.planets[body.id].u = this;
             this.planets[body.id].bio = biosave;
             this.planets[body.id].build = buildOrbitsave;
+            stringifiedPlanet.gst = this.checkSuccessTrade(body);
+            stringifiedPlanet.gsht = this.checkShipTrade(body);
             return stringifiedPlanet;
         }
     }
@@ -530,9 +516,6 @@ class Universe {
             console.error(err);
         }
         try {
-            this.usersScore = this.usersScore.filter(function (el) { //suprimer empty element of array
-                return el != null || undefined;
-            });
             let data = JSON.stringify(this.usersScore);
             fs.writeFile('saveUsersScore.json', data, (err) => {
                 if (err) throw err;
@@ -548,6 +531,32 @@ class Universe {
         } catch (err) {
             console.error(err);
         }
+        try {
+            let data = JSON.stringify(this.tradeSuccess);
+            fs.writeFile('tradeSuccess.json', data, (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            let data = JSON.stringify(this.tradeShip);
+            fs.writeFile('tradeShip.json', data, (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+        try {
+            let data = JSON.stringify(this.giftTrade);
+            fs.writeFile('giftTrade.json', data, (err) => {
+                if (err) throw err;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+
+        
         try {
             let data = JSON.stringify(this.politique);
             fs.writeFile('politique.json', data, (err) => {
@@ -592,11 +601,34 @@ class Universe {
             if (err) throw err;
             this.bioPre = JSON.parse(data);
         });
+        
+        fs.readFile('giftTrade.json', (err, data) => {
+            if (err) throw err;
+            this.giftTrade = JSON.parse(data);
+        });
+        
+        fs.readFile('tradeSuccess.json', (err, data) => {
+            if (err) throw err;
+            this.tradeSuccess = JSON.parse(data);
+        });
+        
+        fs.readFile('tradeShip.json', (err, data) => {
+            if (err) throw err;
+            this.tradeShip = JSON.parse(data);
+        });
+
+        
 
 
         /*for (let index = 0; index <= 500; index++) {
             var fd = Date.now()+randomIntFromInterval(300000,1000000);
             var planet = new Planet(this,index,randomIntFromInterval(2,4),fd,fd+randomIntFromInterval(10000,90000),randomIntFromInterval(0,3),randomIntFromInterval(15,25),randomIntFromInterval(3,5),randomIntFromInterval(3,5),0,0,0,randomIntFromInterval(1,5),0,0,0,0,0,0,0,Date.now(),1,1,1,1,[],"");
+            planet.t0 = 1; //laser
+            planet.t2 = 1; //missile
+            planet.t3 = 1; //shield
+            planet.t4 = 1; //alloy
+            planet.t5 = 1; //plasma
+            planet.t6 = 1; //combustion
             planet.generateAttackPnj();
             this.planets.push(planet);
         }
@@ -626,142 +658,6 @@ class Universe {
             this.planets[index].u = this;
         }
     }
-
-    /*HTTP : 
-    //creation des ship event galactic
-        if http[? "ua"] = 1 {
-            if !instance_exists(obj_deathStar){
-                with(instance_create(obj_deathStar)){
-                    planetparent = 2
-                }
-            }
-            for (index = 0; index < 6; index++) {
-                if index = 0 {scnow = http[? "sc2"] }
-                if index = 1 {scnow = http[? "sc3"]}
-                if index = 2 {scnow = http[? "sc4"]}
-                if index = 3 {scnow = http[? "sc5"]}
-                if index = 4 {scnow = http[? "sc6"]}
-                if index = 5 {scnow = http[? "sc7"]}
-                global.typeEvent = index+2
-                for (index = 0; index < sc2.length; index++) {
-                    with(instance_create(obj_ship)){
-                        if (other.index = 0 && obj_highscore.http[? "soc"] = global.typeEvent)
-                            enemy = global.idfixe 
-                        noAttackPvp = 1;
-                        type = global.typeEvent;
-                        augmenter le temps de vol, 2 minute alarm
-                        toutelesvariable;
-                    }
-                }
-            }
-        }
-        if !is_undefined(http[? "gift"]){
-            ds_grid_add(obj_planetary.planetary,money,http[? "gift"])
-            with(obj_deathStar){
-                explosion = 1;
-            }
-        }
-        
-        //Envoi quand ship owner destroy
-        //Envoi quand -hp death star by ship owner
-        */
-
-    /*endEvent() {
-        this.event.tba = Date.now() + (randomIntFromInterval(1640000, 8600000));//time before attack
-        this.event.tea = this.tba + (86400000 / 12);//2heure
-        this.event.ua = 0;
-    }
-
-    startEvent() {
-        if (Date.now() > this.event.tba && this.event.ua == 0) {
-            this.event.ua = 1;
-            this.event.hp = 1000000000
-        }
-    }
-
-    addEventParticipant(body) {
-        if (!this.event.p[body.cu]) {
-            var participant = {};
-            participant.sc2 = body.sc2;
-            participant.sc3 = body.sc3;
-            participant.sc4 = body.sc4;
-            participant.sc5 = body.sc5;
-            participant.sc6 = body.sc6;
-            participant.sc7 = body.sc7;
-            participant.cu = body.cu;//global.idfixe
-            participant.cun = body.cun;//global.name
-            this.event.p[participant.cu] = participant;
-            this.event.p = this.event.p.filter(function (el) { //suprimer empty element of array
-                return el != null || undefined;
-            });
-        }
-    }
-
-    substractHpEvent(body) {
-        this.event.hp -= body.hp;
-    }
-
-    sendShipEvent(body) {//envoi un ship de chaque participant
-        if (this.event.ua == 0)
-            this.startEvent();
-        if (body.hp)
-            this.substractHpEvent(body)
-        var obj = {
-            tsc2: 0,
-            tsc3: 0,
-            tsc4: 0,
-            tsc5: 0,
-            tsc6: 0,
-            tsc7: 0,
-        };
-        if (this.event.hp <= 0 && this.event.p[body.cu]) {
-            this.endEvent();
-            delete this.event.p[body.cu];
-            this.event.p = this.event.p.filter(function (el) {
-                return el != null || undefined;
-            });
-            obj.gift = 10000000;//explode death star side client
-        }
-
-        this.event.p.forEach(participant => {
-            if (participant.sc2 > 0) { obj.tsc2 += 1; var soc = 2; } else
-                if (participant.sc3 > 0) { obj.tsc3 += 1; var soc = 3; } else
-                    if (participant.sc4 > 0) { obj.tsc4 += 1; var soc = 4; } else
-                        if (participant.sc5 > 0) { obj.tsc5 += 1; var soc = 5; } else
-                            if (participant.sc6 > 0) { obj.tsc6 += 1; var soc = 6; } else
-                                if (participant.sc7 > 0) { obj.tsc7 += 1; var soc = 7; }
-            if (body.cu = participant.cu)
-                obj.soc = soc;//coter client a la premiere catégorie soc créer, en faire enemy global.idfixe avec couleur differente et seul lui envoi c dgt hp et son destroy si destroy
-        })
-        return obj;
-    }
-
-
-    deleteShipEventParticipant(body) {
-        if (this.event.p[body.cu]) {
-            if (body.sc2 > 0)
-                if (this.event.p[body.cu].sc2 >= body.sc2) { this.event.p[body.cu].sc2 -= body.sc2 } else { this.event.p[body.cu].sc2 = 0 }
-            if (body.sc3 > 0)
-                if (this.event.p[body.cu].sc3 >= body.sc3) { this.event.p[body.cu].sc3 -= body.sc3 } else { this.event.p[body.cu].sc3 = 0 }
-            if (body.sc4 > 0)
-                if (this.event.p[body.cu].sc4 >= body.sc4) { this.event.p[body.cu].sc4 -= body.sc4 } else { this.event.p[body.cu].sc4 = 0 }
-            if (body.sc5 > 0)
-                if (this.event.p[body.cu].sc5 >= body.sc5) { this.event.p[body.cu].sc5 -= body.sc5 } else { this.event.p[body.cu].sc5 = 0 }
-            if (body.sc6 > 0)
-                if (this.event.p[body.cu].sc6 >= body.sc6) { this.event.p[body.cu].sc6 -= body.sc6 } else { this.event.p[body.cu].sc6 = 0 }
-            if (body.sc7 > 0)
-                if (this.event.p[body.cu].sc7 >= body.sc7) { this.event.p[body.cu].sc7 -= body.sc7 } else { this.event.p[body.cu].sc7 = 0 }
-            if (this.event.p[body.cu].sc2 + this.event.p[body.cu].sc3 + this.event.p[body.cu].sc4 + this.event.p[body.cu].sc5 + this.event.p[body.cu].sc6 + this.event.p[body.cu].sc7 <= 0) {
-                delete this.event.p[body.cu];
-                this.event.p = this.event.p.filter(function (el) { //suprimer empty element of array
-                    return el != null || undefined;
-                });
-            }
-        }
-        return {};
-    }*/
-
-
 
     addPrimeOnPlanet(body) {
         this.planets[body.id].p += 1;
@@ -793,7 +689,6 @@ class Universe {
                 break;
         }
         this.quest.id = newquest;
-        //console.log(this.quest);
     }
 
     questAddParticipation(body) {
@@ -847,7 +742,6 @@ class Universe {
         new Promise((resolve, reject) => {
             if (this.quest.p) {
                 for (let index = 0; index < this.quest.p.length; index++) {
-                    //this.giftQuest[this.quest.p[index].cu] = this.quest.p[index].r+(this.quest.p[index].s*1000);
                     this.questAddLoot(this.quest.p[index].cu);
                 }
             }
@@ -855,7 +749,7 @@ class Universe {
             if (Date.now() > this.quest.tbe + (3600000 / 4))//laisser la quete finish 1 quart d'h
                 this.createQuest();
             resolve('OK');
-        })//.then(OK => console.log('end Quest')).catch(err => console.log(err));
+        })
     }
 
     questAddLoot(cu) {
@@ -966,7 +860,7 @@ class Universe {
             if (this.postMineEm.hp <= 0){
                 this.destroyEM();
             }
-        }//console.log(this.postMineEm.hp)
+        }
     }
 
     destroyEM(){
@@ -976,16 +870,26 @@ class Universe {
     sendMineTaxe(body){
         var obj = {};
         this.politique.f += -Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1)));
-        //console.log(body.tr);
-        //console.log('%',this.politique.tm);
-        //console.log('soustrait',-Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1))));
         obj.tr = body.tr+Math.floor(body.tr-(body.tr*((this.politique.tm/100)+1)));
-        //console.log(obj.tr);
         return obj;
     }
 
     sendCargoDestroy(body){
         this.politique.f -= 1000000;
+        if(body.pc == 1)
+            this.politique.sc1 -= 1;
+        if(body.pc == 2)
+            this.politique.sc2 -= 1;
+        if(body.pc == 3)
+            this.politique.sc3 -= 1;
+        if(body.pc == 4)
+            this.politique.sc4 -= 1;
+        if(body.pc == 5)
+            this.politique.sc5 -= 1;
+        if(body.pc == 6)
+            this.politique.sc6 -= 1;
+        if(body.pc == 7)
+            this.politique.sc7 -= 1;
         return {};
     }
 
@@ -995,6 +899,7 @@ class Universe {
                 this.postMine[body.ss] = {};
             if (!this.postMine[body.ss][body.cu])
                 this.postMine[body.ss][body.cu] = {};
+            this.postMine[body.ss][body.cu].idg = body.idg;
             this.postMine[body.ss][body.cu].x = body.x;
             this.postMine[body.ss][body.cu].y = body.y;
             this.postMine[body.ss][body.cu].a = body.a;
@@ -1005,6 +910,7 @@ class Universe {
             this.postMine[body.ss][body.cu].d = Date.now();
         }
         var obj = {};
+        obj.idg = '';
         obj.x = '';
         obj.y = '';
         obj.a = '';
@@ -1012,14 +918,28 @@ class Universe {
         obj.id = '';
         obj.n = '';
         obj.hp = '';
-        //console.log(body.ss)
         if(body.ss != undefined){
+            if(body.pc == 1)
+                this.politique.sc1 += body.pv/10;
+            if(body.pc == 2)
+                this.politique.sc2 += body.pv/10;
+            if(body.pc == 3)
+                this.politique.sc3 += body.pv/10;
+            if(body.pc == 4)
+                this.politique.sc4 += body.pv/10;
+            if(body.pc == 5)
+                this.politique.sc5 += body.pv/10;
+            if(body.pc == 6)
+                this.politique.sc6 += body.pv/10;
+            if(body.pc == 7)
+                this.politique.sc7 += body.pv;
             for (let [key, value] of Object.entries(this.postMine[body.ss])) {
-                if(value.d+1000 > Date.now()){
+                if(Date.now() > value.d+1000 ){
                     obj.hp = obj.hp + 0 + '|';
                 }else{
                     obj.hp = obj.hp + value.hp + '|';
                 }
+                obj.idg = obj.idg + value.idg + '|';
                 obj.x = obj.x + value.x + '|';
                 obj.y = obj.y + value.y + '|';
                 obj.a = obj.a + value.a + '|';
@@ -1029,9 +949,7 @@ class Universe {
             }
         }
         this.checkEvent();
-        //if(this.postMineEm.hp > 0){
             if(this.postMineEm.d+10 < Date.now()){
-                //console.log(this.postMineEm.a);
                 this.postMineEm.d = Date.now();
                 if(this.postMineEm.a > 359){
                     this.postMineEm.a = 0;
@@ -1041,7 +959,6 @@ class Universe {
             }
             this.postMineEm.a = Math.floor(this.postMineEm.a* 1000) / 1000
             obj.ema = this.postMineEm.a;//etoile de la mort angle
-        //}
         obj.ems = this.postMineEm.system;
         obj.emhp = this.postMineEm.hp;//etoile de la mort hp
         return obj;
@@ -1064,6 +981,13 @@ class Universe {
         this.politique.pid = 0;//president id
         this.politique.vp = 0;//president id
         this.politique.tbpf = Date.now();//time before pick fortune
+        this.politique.sc1 = 1000;
+        this.politique.sc2 = 1000;
+        this.politique.sc3 = 1000;
+        this.politique.sc4 = 1000;
+        this.politique.sc5 = 1000;
+        this.politique.sc6 = 1000;
+        this.politique.sc7 = 1000;
 
         this.politique.alreadyVote = [];
         this.politique.alreadyVotePre = [];
@@ -1148,6 +1072,14 @@ class Universe {
         obj.eluv9 = this.politique.elu[8].vote;
         obj.eluv10 = this.politique.elu[9].vote;
         obj.pv = this.politique.pv;
+        obj.sc1 = Math.floor(this.politique.sc1);
+        obj.sc2 = Math.floor(this.politique.sc2);
+        obj.sc3 = Math.floor(this.politique.sc3);
+        obj.sc4 = Math.floor(this.politique.sc4);
+        obj.sc5 = Math.floor(this.politique.sc5);
+        obj.sc6 = Math.floor(this.politique.sc6);
+        obj.sc7 = Math.floor(this.politique.sc7);
+
         this.politique.e = 0;
         obj.v = 0;
         obj.vp = 0;
@@ -1255,7 +1187,7 @@ class Universe {
             this.politique.elu[index].id = '';//eluid
             this.politique.elu[index].n = '';//eluName
             this.politique.elu[index].vote = 0;//eluVote
-        }//console.log(this.politique.elu[0]);
+        }
         this.politique.pid = 0;
         this.politique.pn = '';
         this.politique.pv = 0;
@@ -1284,7 +1216,6 @@ class Universe {
             var str = '';
             var page = 1;
             var nbrPage = Math.floor(this.bioPre.length / 10) + 1;
-            //if(nbrPage < 1) nbrPage = 1;
             if (body.page > 1) { page = (body.page * 5) }
             for (let index = 0 + page - 1; index < page + 10; index++) {
                 if (this.bioPre[index]) str = str + this.bioPre[index].d + " - " + this.bioPre[index].t + " : "+ this.bioPre[index].d1 + " Vote" + "|";
@@ -1307,19 +1238,230 @@ class Universe {
         return obj;
     }
 
-    /*getBioPre(body) {
+    sellSuccessTrade(body){
         var obj = {};
-        for (let index = 0; index < this.bioPre.length; index++) {
-            if (body.bio == this.bioPre[index].t) {
-                obj.t = this.bioPre[index].t;
-                obj.d = this.bioPre[index].d;
-                obj.d1 = this.bioPre[index].d1;
+        var alreadySent = 0;
+        obj.success = 0;
+        if(!this.tradeSuccess[body.id]){
+            this.tradeSuccess[body.id] = [];
+            this.tradeSuccess[body.id] = this.tradeSuccess[body.id].filter(function (el) { //suprimer empty element of array
+                return el != empty;
+            });
+        }
+        for (let index = 0; index < this.tradeSuccess[body.id].length; index++) {
+            if(this.tradeSuccess[body.id][index].cu = body.cu){
+                alreadySent = 1
+            }
+        }
+        if(alreadySent == 0){
+            var newObj = {};
+            newObj.price = body.p;
+            newObj.namePlayer = body.np;
+            newObj.cu = body.cu;
+            this.tradeSuccess[body.id].push(newObj);
+            obj.success = 1;
+            obj.isuccess = body.id;
+        }
+        return obj;
+    }
+
+    checkSuccessTrade(body){
+        var prime = 0;
+        if(this.giftTrade[body.cu]){
+            prime = this.giftTrade[body.cu].prime;
+            this.giftTrade[body.cu].prime = 0;
+        }
+        return prime;
+    }
+
+    buySuccessTrade(body){
+        var obj = {};
+        obj.success = 0;
+        var success = 0;
+        if(this.tradeSuccess[body.id]){
+            for (let index = 0; index < this.tradeSuccess[body.id].length; index++) {
+                if(this.tradeSuccess[body.id][index].cu == body.i){
+                    success = this.tradeSuccess[body.id][index].price;
+                    if(!this.giftTrade[this.tradeSuccess[body.id][index].cu]){
+                        this.giftTrade[this.tradeSuccess[body.id][index].cu] = {}; 
+                        this.giftTrade[this.tradeSuccess[body.id][index].cu].prime = 0;
+                        this.giftTrade[this.tradeSuccess[body.id][index].cu].cu = body.cu; 
+                    }
+                    this.giftTrade[this.tradeSuccess[body.id][index].cu].prime += success;
+                    this.tradeSuccess[body.id].splice(this.tradeSuccess[body.id].indexOf(index), 1);
+                    obj = this.listSuccessTrade(body);
+                    obj.success = parseInt(success);
+                    obj.isuccess = body.id;
+                }
             }
         }
         return obj;
-    }*/
+    }
+
+    listSuccessTrade(body) {
+        if (body.page) {
+            var obj = {};
+            var str = '';
+            var page = 1;
+            var key = 1;
+            if(this.tradeSuccess[body.id]){
+                var nbrPage = Math.floor(this.tradeSuccess[body.id].length / 10) + 1;
+            }else{
+                var nbrPage = 1
+            }
+            if (body.page > 1) { page = (body.page * 5) }
+            if(this.tradeSuccess[body.id]){
+                for (let index = 0 + page - 1; index < page + 10; index++) {
+                    if (this.tradeSuccess[body.id][index]){
+                        str = str +  (body.id+1) + '-' + this.tradeSuccess[body.id][index].namePlayer + '-' + this.tradeSuccess[body.id][index].price + '|';
+                        obj[key] = this.tradeSuccess[body.id][index].cu;
+                        obj[key+10] = this.tradeSuccess[body.id][index].price;
+                        key += 1;
+                    }
+                }
+            }
+            obj.str = str;
+            obj.nbrpage = nbrPage;
+            return obj;
+        }
+    }
 
 
+    
+
+    sellShipTrade(body){
+        var obj = {};
+        obj.success = 0;
+        if(!this.tradeShip[body.id]){
+            this.tradeShip[body.id] = [];
+            this.tradeShip[body.id] = this.tradeShip[body.id].filter(function (el) { //suprimer empty element of array
+                return el != empty;
+            });
+        }
+            var newObj = {};
+            newObj.price = body.p;
+            newObj.namePlayer = body.np;
+            newObj.nameShip = body.ns;
+            newObj.planetnowid = body.pn;
+            newObj.cu = body.cu;
+            newObj.id = body.id;
+            newObj.idaleat = randomIntFromInterval(1,99999999);
+            newObj.nbr = body.nbr;
+            newObj.pn = body.pn;
+            newObj.d = Date.now();
+            this.tradeShip[body.id].push(newObj);
+            obj.success = 1;
+            obj.isuccess = body.id;
+            obj.pn = body.pn;
+            obj.nbr = body.nbr;
+            if(this.planets[body.pn].sc1 >= body.nbr && body.id == 0)
+                this.planets[body.pn].sc1 -= body.nbr;
+            if(this.planets[body.pn].sc2 >= body.nbr && body.id == 1)
+                this.planets[body.pn].sc2 -= body.nbr;
+            if(this.planets[body.pn].sc3 >= body.nbr && body.id == 2)
+                this.planets[body.pn].sc3 -= body.nbr;
+            if(this.planets[body.pn].sc4 >= body.nbr && body.id == 3)
+                this.planets[body.pn].sc4 -= body.nbr;
+            if(this.planets[body.pn].sc5 >= body.nbr && body.id == 4)
+                this.planets[body.pn].sc5 -= body.nbr;
+            if(this.planets[body.pn].sc6 >= body.nbr && body.id == 5)
+                this.planets[body.pn].sc6 -= body.nbr;
+            if(this.planets[body.pn].sc7 >= body.nbr && body.id == 6)
+                this.planets[body.pn].sc7 -= body.nbr;
+        return obj;
+    }
+
+    checkShipTrade(body){
+        var prime = 0;
+        if(this.giftTrade[body.cu]){
+            prime = this.giftTrade[body.cu].prime;
+            this.giftTrade[body.cu].prime = 0;
+        }
+        return prime;
+    }
+
+    buyShipTrade(body){
+        var obj = {};
+        obj.success = 0;
+        var success = 0;
+        var pn = 0;
+        var nbr = 0;
+        if(body.pn == 0){
+            this.planets[body.pn].r = 1000000000;
+        }
+        if(this.tradeShip[body.id]){
+            for (let index = 0; index < this.tradeShip[body.id].length; index++) {
+                if(this.tradeShip[body.id][index].cu == body.i && this.planets[body.pn].r >= this.tradeShip[body.id][index].price){
+                    success = this.tradeShip[body.id][index].price;
+                    pn = this.tradeShip[body.id][index].pn;
+                    nbr = this.tradeShip[body.id][index].nbr;
+                    if(!this.giftTrade[this.tradeShip[body.id][index].cu]){
+                        this.giftTrade[this.tradeShip[body.id][index].cu] = {}; 
+                        this.giftTrade[this.tradeShip[body.id][index].cu].prime = 0;
+                        this.giftTrade[this.tradeShip[body.id][index].cu].cu = this.tradeShip[body.id][index].cu; 
+                    }
+
+                    this.planets[body.pn].r -= success;
+                    if(this.tradeShip[body.id][index].id == 0)
+                        this.planets[body.pn].sc1 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 1)
+                        this.planets[body.pn].sc2 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 2)
+                        this.planets[body.pn].sc3 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 3)
+                        this.planets[body.pn].sc4 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 4)
+                        this.planets[body.pn].sc5 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 5)
+                        this.planets[body.pn].sc6 += this.tradeShip[body.id][index].nbr;
+                    if(this.tradeShip[body.id][index].id == 6)
+                        this.planets[body.pn].sc7 += this.tradeShip[body.id][index].nbr;
+
+                    this.giftTrade[this.tradeShip[body.id][index].cu].prime += success;
+                    this.tradeShip[body.id].splice(this.tradeShip[body.id].indexOf(index), 1);
+                    obj = this.listSuccessTrade(body);
+                    obj.success = parseInt(success);
+                    obj.isuccess = body.id;
+                    obj.pn = parseInt(pn);
+                    obj.nbr = parseInt(nbr);
+                }
+            }
+        }
+        return obj;
+    }
+
+    listShipTrade(body) {
+        if (body.page) {
+            var obj = {};
+            var str = '';
+            var page = 1;
+            var key = 1;
+            if(this.tradeShip[body.id]){
+                var nbrPage = Math.floor(this.tradeShip[body.id].length / 10) + 1;
+            }else{
+                var nbrPage = 1
+            }
+            if (body.page > 1) { page = (body.page * 5) }
+            if(this.tradeShip[body.id]){
+                for (let index = 0 + page - 1; index < page + 10; index++) {
+                    if (this.tradeShip[body.id][index]){
+                        if(Date.now() > this.tradeShip[body.id][index].d+(86400000*30)){
+                            this.tradeShip[body.id].splice(this.tradeShip[body.id].indexOf(index), 1);
+                        }else{
+                            str = str +  this.tradeShip[body.id][index].namePlayer + " sell " + this.tradeShip[body.id][index].nbr +" " + this.tradeShip[body.id][index].nameShip + ' for ' + this.tradeShip[body.id][index].price + '|';
+                            obj[key] = this.tradeShip[body.id][index].cu;
+                            obj[key+10] = this.tradeShip[body.id][index].price;
+                            key += 1;
+                        }
+                    }
+                }
+            }
+            obj.str = str;
+            obj.nbrpage = nbrPage;
+            return obj;
+        }
+    }
+    
 
 }
 

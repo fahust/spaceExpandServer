@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports = app => {
-    return { loadById, loadAll, deleteShip, addShip, launchAttack, addDefense, deleteDefense, addTechnologie, stopAttack, transferShip, addRessourceByShipEvent, loadUsersScore, setUsersScore, addMessage, loadLastTenMessage, addGuild, quitGuild, changeNameUserGuild, loadGuild, addGuildRessource, takeGuildRessource, addScore, joinGuild, invitMember, kickMember, upGradeMember, downGradeMember, addShipMultipleShip, loadUsersGuild, addEventParticipant, sendShipEvent, deleteShipEventParticipant, addPrimeOnPlanet, questAddParticipation, listBioByPage, getBio, getQuest, sendPostMine, addBuildOrbit, getBuildOrbit, deleteBuildOrbit, dmgEM, changeTbm, changeTm, changeVs, changeVt, changeVd, changePs, changePt, changePd, getPolitics, addElu, voteElu, unvoteElu, votePre, unvotePre, listBioPre, pickMoney, sendMineTaxe, sendCargoDestroy };
+    return { loadById, loadAll, deleteShip, addShip, launchAttack, addDefense, deleteDefense, addTechnologie, stopAttack, transferShip, addRessourceByShipEvent, loadUsersScore, setUsersScore, addMessage, loadLastTenMessage, addGuild, quitGuild, changeNameUserGuild, loadGuild, addGuildRessource, takeGuildRessource, addScore, joinGuild, invitMember, kickMember, upGradeMember, downGradeMember, addShipMultipleShip, loadUsersGuild, addEventParticipant, sendShipEvent, deleteShipEventParticipant, addPrimeOnPlanet, questAddParticipation, listBioByPage, getBio, getQuest, sendPostMine, addBuildOrbit, getBuildOrbit, deleteBuildOrbit, dmgEM, changeTbm, changeTm, changeVs, changeVt, changeVd, changePs, changePt, changePd, getPolitics, addElu, voteElu, unvoteElu, votePre, unvotePre, listBioPre, pickMoney, sendMineTaxe, sendCargoDestroy, sellSuccessTrade, buySuccessTrade, listSuccessTrade, sellShipTrade, buyShipTrade, listShipTrade };
 
     function loadById(req, res) {
         var body = JSON.parse(Object.keys(req.body));
@@ -93,20 +93,25 @@ module.exports = app => {
     }
 
     function setUsersScore(req, res) {
+        //var time = Date.now();
         var body = JSON.parse(Object.keys(req.body));
         if (body.sr) app.universe.planets[body.id].sr = body.sr;
         if (body.ss) app.universe.planets[body.id].ss = body.ss;
         if (body.st) app.universe.planets[body.id].st = body.st;
         if (body.sd) app.universe.planets[body.id].sd = body.sd;
-        app.universe.setUsersScore(body);
+        if (body.s) app.universe.setUsersScore(body);
         var planetLoad = app.universe.loadById(body);
         var lts = ""; //list travel ship
         var lfs = ""; //list fight ship
         app.universe.planets.filter(function (el) {
-            if (el.aby == body.cu)
-                lfs = lfs + JSON.stringify(el.id) +/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
+            if (el.aby == body.cu){
+                var dist = Math.floor(((el.tba-Date.now())/1000));
+                if (Date.now() > el.tba)
+                    dist = 0;
+                lfs = lfs + JSON.stringify(el.id) + "-" + JSON.stringify(dist) + "-" + JSON.stringify(el.asc2+el.asc3+el.asc4+el.asc5+el.asc6+el.asc7) + "|"
+            }
             if (el.o == body.cu && el.ua > 0)//si planet owned attacked now
-                lfs = lfs + JSON.stringify(el.id) +/*"-"+el.sc2+el.sc3+el.sc4+el.sc5+el.sc6+el.sc7+*/"|"
+                lfs = lfs + JSON.stringify(el.id) + "-" + JSON.stringify(0) + "-" + JSON.stringify(el.asc2+el.asc3+el.asc4+el.asc5+el.asc6+el.asc7) + "|"
             if (el.o == body.cu) {
                 app.universe.planets[el.id].g = body.g;
                 app.universe.planets[el.id].rc = body.rc;
@@ -120,12 +125,16 @@ module.exports = app => {
         });
         if (app.universe.transferShip[JSON.stringify(body.cu)]) {
             app.universe.transferShip[body.cu].forEach(element => {
-                lts = lts + JSON.stringify(element.to) + "|"
+                var dist = Math.floor(((Date.now()-element.time)/1000));
+                if (Date.now() > element.time)
+                    dist = 0;
+                lts = lts + JSON.stringify(element.to) + "-" + JSON.stringify(Math.floor((Date.now()-element.time)/1000)) + "-" +  JSON.stringify(element.sc2+element.sc3+element.sc4+element.sc5+element.sc6+element.sc7) + "|"
             });
         }
         planetLoad.lts = lts;//list travel ship
         planetLoad.lfs = lfs;//list fight ship
         planetLoad.tsl = body.t;//tech score load
+        //console.log('loadID',Date.now()-time);
         res.json(planetLoad);
     }
 
@@ -378,28 +387,38 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         res.json(app.universe.sendCargoDestroy(body));
     }
+
+    function sellSuccessTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sellSuccessTrade(body));
+    }
+
+    function buySuccessTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.buySuccessTrade(body));
+    }
+
+    function listSuccessTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.listSuccessTrade(body));
+    }
+
+    function sellShipTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.sellShipTrade(body));
+    }
+
+    function buyShipTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.buyShipTrade(body));
+    }
+
+    function listShipTrade(req, res) {
+        var body = JSON.parse(Object.keys(req.body));
+        res.json(app.universe.listShipTrade(body));
+    }
     
     
-
-    
-
-    
-    
-
-    
-
-
-
-
-
-
-
-
-
-    /*function colonize(req, res){
-        app.universe.planets[body.id].prepareAttackClient(req);
-        res.send("ok");
-    }*/
 
 
 };

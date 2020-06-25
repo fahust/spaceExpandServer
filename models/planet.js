@@ -533,7 +533,7 @@ module.exports =
         }
 
         check(universe) {
-            if (this.sc1 + this.sc2 + this.sc3 + this.sc4 + this.sc5 + this.sc6 + this.sc7 <= 9) {
+            if (this.sc1 + this.sc2 + this.sc3 + this.sc4 + this.sc5 + this.sc6 + this.sc7 <= 10) {
                 var gift = {
                     by: this.aby,
                     p: this.p,

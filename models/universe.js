@@ -69,6 +69,7 @@ class Universe {
             this.usersScore[body.cu].s = body.s;
             this.usersScore[body.cu].t = body.t;
             this.usersScore[body.cu].d = body.d;
+            this.usersScore[body.cu].g = body.sg;
             this.usersScore[body.cu].n = body.n;
             this.usersScore[body.cu].cu = body.cu;
             this.usersScore[body.cu].dn = Date.now();
@@ -98,11 +99,20 @@ class Universe {
         usersScore.reverse();
         var indexClose = usersScore.indexOf(userClose);
         var breakIndex = 0;
-        var str = "";
+        var str = {};
         for (let index = indexClose - 10; index < usersScore.length; index++) {
             if (usersScore[index]) {
                 breakIndex += 1;
-                str = str + usersScore[index].n + "-" + "" + "-" + Math.floor(usersScore[index].st) + "-" + usersScore[index].r + "-" + usersScore[index].s + "-" + usersScore[index].t + "-" + usersScore[index].d + "-" + '' + "-" + '' + "-" + '' + "-" + '' + "-" + '' + "-|";
+                let connected = '1';
+                if (usersScore[index].dn > Date.now()-10000)
+                    connected = '0';
+                if(usersScore[index].g === undefined)
+                    usersScore[index].g = '';
+                str[breakIndex] = usersScore[index].n + "-" + "" + "-" + Math.floor(usersScore[index].st) + "-" + Math.floor(usersScore[index].r/1000000) + "-" + usersScore[index].s + "-" + usersScore[index].t + "-" + usersScore[index].d + "-" + usersScore[index].g + "-" +  connected + "|";
+            }
+            if (body.bi){
+                if (breakIndex >= 7)
+                    break;
             }
             if (breakIndex >= 17)
                 break;
@@ -359,7 +369,7 @@ class Universe {
         this.planets[body.id].r -= body.r;
         if (body.to != 0) {
             var transfer = {};
-            transfer.byn = this.planets[body.id].on;
+            transfer.byn = body.n;
             transfer.sc1 = 0;
             transfer.sc2 = body.sc2;
             transfer.sc3 = body.sc3;

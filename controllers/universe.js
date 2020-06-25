@@ -88,7 +88,23 @@ module.exports = app => {
         var body = JSON.parse(Object.keys(req.body));
         var score = app.universe.loadUsersScore(body)
         var planetLoad = app.universe.loadById(body);
-        planetLoad.score = score
+        planetLoad.score1 = score[1]
+        planetLoad.score2 = score[2]
+        planetLoad.score3 = score[3]
+        planetLoad.score4 = score[4]
+        planetLoad.score5 = score[5]
+        planetLoad.score6 = score[6]
+        planetLoad.score7 = score[7]
+        planetLoad.score8 = score[8]
+        planetLoad.score9 = score[9]
+        planetLoad.score10 = score[10]
+        planetLoad.score11 = score[11]
+        planetLoad.score12 = score[12]
+        planetLoad.score13 = score[13]
+        planetLoad.score14 = score[14]
+        planetLoad.score15 = score[15]
+        planetLoad.score16 = score[16]
+        planetLoad.score17 = score[17]
         res.json(planetLoad);
     }
 
